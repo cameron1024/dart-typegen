@@ -1,0 +1,4 @@
+class "Foo" {
+  field "name" "String";
+  field "age" "int";
+}
