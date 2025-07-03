@@ -1,4 +1,4 @@
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use knus::{Decode, span::Span};
 use miette::IntoDiagnostic;
@@ -48,6 +48,10 @@ pub struct Class {
     /// Extra text to include into the class body
     #[knus(children(name = "extra_dart"))]
     pub extra_dart: Vec<ExtraDart>,
+
+    /// Path to a file containing markdown-formatted docs
+    #[knus(child, unwrap(argument))]
+    pub docs: Option<SpannedScalar<PathBuf>>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Decode)]
@@ -61,5 +65,5 @@ pub struct Field {
     #[knus(argument)]
     pub name: SpannedScalar<String>,
     #[knus(property(name = "type"))]
-    pub ty: String,
+    pub ty: SpannedScalar<String>,
 }

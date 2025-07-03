@@ -4,7 +4,7 @@ use convert_case::{Case, Casing};
 use miette::{Diagnostic, NamedSource, Result, SourceSpan};
 use thiserror::Error;
 
-use crate::context::Context;
+use crate::context::{Context, ResolvePathError};
 
 impl Context {
     pub fn validate(&self) -> Result<()> {
@@ -15,6 +15,7 @@ impl Context {
         incorrect_class_name_case(self, &mut errors, &source);
         duplicate_class_names(self, &mut errors, &source);
         duplicate_field_names(self, &mut errors, &source);
+        broken_paths(self, &mut errors, &source);
 
         if errors.is_empty() {
             return Ok(());
@@ -136,5 +137,42 @@ fn duplicate_field_names(
                 );
             }
         }
+    }
+}
+
+// === Broken paths ===
+//
+#[derive(Debug, Error, Diagnostic)]
+#[error("Path could not be resolved")]
+#[help = "Paths are resolved relative to the directory containing the `.kdl` file"]
+struct BrokenPath {
+    #[source_code]
+    src: NamedSource<String>,
+    #[label]
+    source_span: SourceSpan,
+
+    #[source]
+    #[diagnostic_source]
+    resolve_error: ResolvePathError,
+}
+
+fn broken_paths(context: &Context, errors: &mut Vec<miette::Report>, source: &NamedSource<String>) {
+    for class in &context.library.classes {
+        let Some(path) = &class.docs else {
+            continue;
+        };
+
+        let Err(resolve_error) = context.resolve_path(path) else {
+            continue;
+        };
+
+        errors.push(
+            BrokenPath {
+                src: source.to_owned(),
+                source_span: path.span,
+                resolve_error,
+            }
+            .into(),
+        );
     }
 }

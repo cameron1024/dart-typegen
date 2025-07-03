@@ -6,7 +6,6 @@ use miette::IntoDiagnostic;
 use crate::{
     args::{Args, Cmd},
     context::Context,
-    model::Library,
 };
 
 mod args;
@@ -30,13 +29,13 @@ fn main() -> miette::Result<()> {
             println!("{library:#?}");
         }
         Cmd::Generate { input, output } => {
-            let context = Context::from_path(path)?;
+            let context = Context::from_path(&input)?;
             context.validate()?;
 
             let output = File::create(&output).into_diagnostic()?;
-            let output = BufWriter::new(output);
+            let mut output = BufWriter::new(output);
 
-            codegen::codegen(&mut output, &context.library)?;
+            codegen::codegen(context, &mut output)?;
         }
     }
 

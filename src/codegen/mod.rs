@@ -1,27 +1,29 @@
-use std::fmt::Write;
+use std::{fmt::Write, path::Path};
 
 use miette::{IntoDiagnostic, Result};
 
 use crate::{
     codegen::util::{braced, dart_format},
+    context::Context,
     model::*,
 };
 
 mod util;
 
-struct Context {
-    buffer: String,
-}
-
 impl Context {
-    fn codegen_immutable_class(&mut self, class: &Class) -> std::fmt::Result {
-        write!(
-            self.buffer,
-            "final class {} with EquatableMixin",
-            class.name
-        )?;
+    fn codegen_immutable_class(
+        &self,
+        buf: &mut String,
+        library: &Library,
+        class: &Class,
+    ) -> std::fmt::Result {
+        if let Some(source) = &class.docs {
+            self.write_doc_comment(buf, &source)?;
+        }
 
-        braced(&mut self.buffer, |out| {
+        write!(buf, "final class {} with EquatableMixin", class.name)?;
+
+        braced(buf, |out| {
             for field in &class.fields {
                 writeln!(out, "final {} {};", field.ty, field.name)?;
             }
@@ -34,29 +36,125 @@ impl Context {
             }
             writeln!(out, "}});")?;
 
+            writeln!(out)?;
+
             writeln!(out, "@override List<Object?> get props => [")?;
             for field in &class.fields {
                 writeln!(out, "{},", field.name)?;
             }
             writeln!(out, "];")?;
 
+            writeln!(out)?;
+
+            // TODO: allow configuring
+            let builder_name = format!("{}Builder", class.name);
+
+            writeln!(out, "{builder_name} toBuilder() => {builder_name}(")?;
+            for field in &class.fields {
+                // TODO: more robust handling of types
+                let field_needs_to_builder = library
+                    .classes
+                    .iter()
+                    .any(|c| c.name.as_str() == field.ty.as_str());
+
+                let name = field.name.as_str();
+                let to_builder = if field_needs_to_builder {
+                    ".toBuilder()"
+                } else {
+                    ""
+                };
+                writeln!(out, "{name}: {name}{to_builder},")?;
+            }
+            writeln!(out, ");")?;
+
             Ok(())
         })?;
 
         Ok(())
     }
-}
 
-pub fn codegen(out: &mut impl std::io::Write, model: &Library) -> Result<()> {
-    let mut ctx = Context {
-        buffer: String::new(),
-    };
+    fn codegen_mutable_class(
+        &self,
+        buf: &mut String,
+        library: &Library,
+        class: &Class,
+    ) -> std::fmt::Result {
+        // TODO: allow configuring
+        let builder_name = format!("{}Builder", class.name);
 
-    for class in &model.classes {
-        ctx.codegen_immutable_class(class).into_diagnostic()?;
+        write!(buf, "final class {builder_name}",)?;
+
+        braced(buf, |out| {
+            for field in &class.fields {
+                // TODO: more robust handling of types
+                let field_needs_build = library
+                    .classes
+                    .iter()
+                    .any(|c| c.name.as_str() == field.ty.as_str());
+
+                let ty_name = if field_needs_build {
+                    format!("{}Builder", field.ty)
+                } else {
+                    field.ty.to_string()
+                };
+
+                writeln!(out, "{ty_name} {};", field.name)?;
+            }
+
+            writeln!(out)?;
+
+            writeln!(out, "{builder_name}({{")?;
+            for field in &class.fields {
+                writeln!(out, "required this.{},", field.name)?;
+            }
+            writeln!(out, "}});")?;
+
+            writeln!(out)?;
+
+            writeln!(out, "{0} build() => {0}(", class.name)?;
+            for field in &class.fields {
+                // TODO: more robust handling of types
+                let field_needs_build = library
+                    .classes
+                    .iter()
+                    .any(|c| c.name.as_str() == field.ty.as_str());
+
+                let name = field.name.as_str();
+                let build = if field_needs_build { ".build()" } else { "" };
+                writeln!(out, "{name}: {name}{build},")?;
+            }
+            writeln!(out, ");")?;
+
+            Ok(())
+        })?;
+
+        Ok(())
     }
 
-    let formatted = dart_format(ctx.buffer)?;
+    fn write_doc_comment(&self, buf: &mut String, source: &Path) -> std::fmt::Result {
+        // unwrap is fine here because we checked it during validation.
+        // yes it's a TOCTOU, no I don't care
+        let path = self.resolve_path(source).unwrap();
+        let text = std::fs::read_to_string(path).unwrap();
+
+        for line in text.lines() {
+            writeln!(buf, "/// {line}")?;
+        }
+
+        Ok(())
+    }
+}
+
+pub fn codegen(ctx: Context, out: &mut impl std::io::Write) -> Result<()> {
+    let mut buf = String::new();
+    for class in &ctx.library.classes {
+        ctx.codegen_immutable_class(&mut buf, &ctx.library, class)
+            .into_diagnostic()?;
+        ctx.codegen_mutable_class(&mut buf, &ctx.library, class)
+            .into_diagnostic()?;
+    }
+
+    let formatted = dart_format(buf)?;
     out.write_all(formatted.as_bytes()).into_diagnostic()?;
 
     Ok(())
