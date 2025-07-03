@@ -10,5 +10,6 @@ pub struct Args {
 
 #[derive(Debug, Subcommand)]
 pub enum Cmd {
+    /// Parse the config file at the given path and print a pretty representation of the AST
     Parse { path: PathBuf },
 }
