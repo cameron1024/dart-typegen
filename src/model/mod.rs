@@ -6,12 +6,13 @@ use miette::IntoDiagnostic;
 #[cfg(test)]
 mod tests;
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct Config {
-    pub items: Vec<Item>,
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Decode)]
+pub struct Library {
+    #[knus(children(name = "class"))]
+    pub classes: Vec<Class>,
 }
 
-impl Config {
+impl Library {
     pub fn parse_file(path: &Path) -> miette::Result<Self> {
         let name = Some(path.to_string_lossy());
         let text = std::fs::read_to_string(path).into_diagnostic()?;
@@ -19,11 +20,11 @@ impl Config {
         Self::parse_impl(name.as_deref(), &text)
     }
 
-    fn parse_impl(name: Option<&str>, text: &str) -> miette::Result<Self> {
+    pub(crate) fn parse_impl(name: Option<&str>, text: &str) -> miette::Result<Self> {
         let name = name.unwrap_or("<memory>");
-        let items = knus::parse(name, text).into_diagnostic()?;
+        let library = knus::parse(name, text).into_diagnostic()?;
 
-        Ok(Config { items })
+        Ok(library)
     }
 }
 

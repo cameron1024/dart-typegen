@@ -1,6 +1,4 @@
 class "Foo" {
-  field "name" "String";
-  field "age" "int";
-
-  extra_dart "void foo() {}"
+  field "name" type="String";
+  field "age" type="int";
 }

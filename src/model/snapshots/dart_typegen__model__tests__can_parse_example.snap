@@ -2,27 +2,25 @@
 source: src/model/tests.rs
 expression: config
 ---
-Config {
-    items: [
-        Class(
-            Class {
-                name: "Foo",
-                fields: [
-                    Field {
-                        name: "name",
-                        ty: "String",
-                    },
-                    Field {
-                        name: "age",
-                        ty: "int",
-                    },
-                ],
-                extra_dart: [
-                    ExtraDart {
-                        text: "void printMe() => print((name, age));",
-                    },
-                ],
-            },
-        ),
+Library {
+    classes: [
+        Class {
+            name: "Foo",
+            fields: [
+                Field {
+                    name: "name",
+                    ty: "String",
+                },
+                Field {
+                    name: "age",
+                    ty: "int",
+                },
+            ],
+            extra_dart: [
+                ExtraDart {
+                    text: "void printMe() => print((name, age));",
+                },
+            ],
+        },
     ],
 }

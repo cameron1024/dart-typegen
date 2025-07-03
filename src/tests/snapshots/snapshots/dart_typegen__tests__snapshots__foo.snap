@@ -1,0 +1,10 @@
+---
+source: src/tests/snapshots/mod.rs
+expression: generated
+---
+final class Foo with EquatableMixin {
+  final String name;
+  final int age;
+
+  const Foo({required this.name, required this.age});
+}

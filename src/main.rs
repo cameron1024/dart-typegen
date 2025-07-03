@@ -1,10 +1,10 @@
 use clap::Parser;
 
-use crate::{args::{Args, Cmd}, model::Config};
+use crate::{args::{Args, Cmd}, model::Library};
 
 mod args;
+mod codegen;
 mod context;
-// mod codegen;
 mod model;
 
 #[cfg(test)]
@@ -15,7 +15,7 @@ fn main() {
 
     match &args.cmd {
         Cmd::Parse { path }  => {
-            let config = Config::parse_file(path).unwrap();
+            let config = Library::parse_file(path).unwrap();
             println!("{config:#?}");
         },
     }
