@@ -1,7 +1,11 @@
 use std::path::Path;
 
-use knus::Decode;
+use knus::{Decode, span::Span};
 use miette::IntoDiagnostic;
+
+use crate::model::util::SpannedScalar;
+
+mod util;
 
 #[cfg(test)]
 mod tests;
@@ -35,8 +39,10 @@ pub enum Item {
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Decode)]
 pub struct Class {
+    #[knus(unwrap(span))]
+    pub span: Span,
     #[knus(argument)]
-    pub name: String,
+    pub name: SpannedScalar<String>,
     #[knus(children(name = "field"))]
     pub fields: Vec<Field>,
     /// Extra text to include into the class body
@@ -53,7 +59,7 @@ pub struct ExtraDart {
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Decode)]
 pub struct Field {
     #[knus(argument)]
-    pub name: String,
+    pub name: SpannedScalar<String>,
     #[knus(property(name = "type"))]
     pub ty: String,
 }

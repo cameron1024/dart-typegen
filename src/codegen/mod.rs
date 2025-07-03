@@ -29,12 +29,16 @@ impl Context {
             writeln!(out)?;
 
             writeln!(out, "const {}({{", class.name)?;
-
             for field in &class.fields {
                 writeln!(out, "required this.{},", field.name)?;
             }
-
             writeln!(out, "}});")?;
+
+            writeln!(out, "@override List<Object?> get props => [")?;
+            for field in &class.fields {
+                writeln!(out, "{},", field.name)?;
+            }
+            writeln!(out, "];")?;
 
             Ok(())
         })?;

@@ -6,5 +6,7 @@ edition = "2024"
 [dependencies]
 clap = { version = "4.5.40", features = ["derive", "string"] }
 insta = "1.43.1"
-miette = { version = "7.6.0", features = ["fancy"] }
+miette = { version = "7.6.0", features = ["fancy", "syntect-highlighter"] }
 knus = "3.3.1"
+convert_case = "0.8.0"
+thiserror = "2.0.12"
