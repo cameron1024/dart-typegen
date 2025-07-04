@@ -5,15 +5,59 @@ expression: config
 Library {
     classes: [
         Class {
-            name: "Foo",
+            span: Span(
+                0,
+                0,
+            ),
+            name: SpannedScalar {
+                value: "Foo",
+                span: SourceSpan {
+                    offset: SourceOffset(
+                        6,
+                    ),
+                    length: 5,
+                },
+            },
             fields: [
                 Field {
-                    name: "name",
-                    ty: "String",
+                    name: SpannedScalar {
+                        value: "name",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                22,
+                            ),
+                            length: 6,
+                        },
+                    },
+                    ty: SpannedScalar {
+                        value: "String",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                34,
+                            ),
+                            length: 8,
+                        },
+                    },
                 },
                 Field {
-                    name: "age",
-                    ty: "int",
+                    name: SpannedScalar {
+                        value: "age",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                51,
+                            ),
+                            length: 5,
+                        },
+                    },
+                    ty: SpannedScalar {
+                        value: "int",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                62,
+                            ),
+                            length: 5,
+                        },
+                    },
                 },
             ],
             extra_dart: [
@@ -21,6 +65,7 @@ Library {
                     text: "void printMe() => print((name, age));",
                 },
             ],
+            docs: None,
         },
     ],
 }

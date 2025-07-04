@@ -7,6 +7,18 @@ final class Foo with EquatableMixin {
   final int age;
 
   const Foo({required this.name, required this.age});
+
   @override
   List<Object?> get props => [name, age];
+
+  FooBuilder toBuilder() => FooBuilder(name: name, age: age);
+}
+
+final class FooBuilder {
+  String name;
+  int age;
+
+  FooBuilder({required this.name, required this.age});
+
+  Foo build() => Foo(name: name, age: age);
 }
