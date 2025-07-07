@@ -15,10 +15,12 @@ pub enum Cmd {
 
     /// Generate the Dart for a given library definition
     Generate {
+        /// Path to the KDL config file
         #[clap(long, short)]
         input: PathBuf,
 
+        /// The path to write the output to. If not provided, it will be printed to stdout
         #[clap(long, short)]
-        output: PathBuf,
+        output: Option<PathBuf>,
     },
 }

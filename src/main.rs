@@ -1,4 +1,7 @@
-use std::{fs::File, io::BufWriter};
+use std::{
+    fs::File,
+    io::{BufWriter, stdout},
+};
 
 use clap::Parser;
 use miette::IntoDiagnostic;
@@ -32,10 +35,18 @@ fn main() -> miette::Result<()> {
             let context = Context::from_path(&input)?;
             context.validate()?;
 
-            let output = File::create(&output).into_diagnostic()?;
-            let mut output = BufWriter::new(output);
+            match &output {
+                Some(output) => {
+                    let output = File::create(&output).into_diagnostic()?;
+                    let mut output = BufWriter::new(output);
 
-            codegen::codegen(context, &mut output)?;
+                    codegen::codegen(context, &mut output)?;
+                }
+                None => {
+                    let mut output = BufWriter::new(stdout().lock());
+                    codegen::codegen(context, &mut output)?;
+                }
+            }
         }
     }
 
