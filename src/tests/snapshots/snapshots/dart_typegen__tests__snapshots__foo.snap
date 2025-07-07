@@ -5,20 +5,59 @@ expression: generated
 final class Foo with EquatableMixin {
   final String name;
   final int age;
+  final Bar bar;
 
-  const Foo({required this.name, required this.age});
+  const Foo({required this.name, required this.age, required this.bar});
 
   @override
-  List<Object?> get props => [name, age];
+  List<Object?> get props => [name, age, bar];
 
-  FooBuilder toBuilder() => FooBuilder(name: name, age: age);
+  FooBuilder toBuilder() =>
+      FooBuilder(name: name, age: age, bar: bar.toBuilder());
+
+  Map<String, dynamic> toJson() => {
+    "name": name,
+    "age": age,
+    "bar": bar.toJson(),
+  };
+  factory Foo.fromJson(Map<String, dynamic> json) => Foo(
+    name: json["name"] as String,
+    age: json["age"] as int,
+    bar: Bar.fromJson(json["bar"] as Map<String, dynamic>),
+  );
 }
 
 final class FooBuilder {
   String name;
   int age;
+  BarBuilder bar;
 
-  FooBuilder({required this.name, required this.age});
+  FooBuilder({required this.name, required this.age, required this.bar});
 
-  Foo build() => Foo(name: name, age: age);
+  Foo build() => Foo(name: name, age: age, bar: bar.build());
+}
+
+final class Bar with EquatableMixin {
+  final String x;
+  final String y;
+
+  const Bar({required this.x, required this.y});
+
+  @override
+  List<Object?> get props => [x, y];
+
+  BarBuilder toBuilder() => BarBuilder(x: x, y: y);
+
+  Map<String, dynamic> toJson() => {"x": x, "y": y};
+  factory Bar.fromJson(Map<String, dynamic> json) =>
+      Bar(x: json["x"] as String, y: json["y"] as String);
+}
+
+final class BarBuilder {
+  String x;
+  String y;
+
+  BarBuilder({required this.x, required this.y});
+
+  Bar build() => Bar(x: x, y: y);
 }

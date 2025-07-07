@@ -1,4 +1,10 @@
 class "Foo" {
   field "name" type="String";
   field "age" type="int";
+  field "bar" type="Bar";
+}
+
+class "Bar" {
+  field "x" type="String";
+  field "y" type="String";
 }

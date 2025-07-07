@@ -8,6 +8,7 @@ use crate::{
     model::*,
 };
 
+mod json;
 mod util;
 
 impl Context {
@@ -66,6 +67,11 @@ impl Context {
                 writeln!(out, "{name}: {name}{to_builder},")?;
             }
             writeln!(out, ");")?;
+
+            writeln!(out)?;
+
+            self.generate_to_json(out, library, class)?;
+            self.generate_from_json(out, library, class)?;
 
             Ok(())
         })?;
