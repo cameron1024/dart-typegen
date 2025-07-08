@@ -1,6 +1,13 @@
-use std::path::PathBuf;
+use std::{
+    fs::File,
+    io::{BufWriter, stdout},
+    path::PathBuf,
+};
 
 use clap::{Parser, Subcommand};
+use miette::IntoDiagnostic;
+
+use crate::{codegen, context::Context};
 
 #[derive(Debug, Parser)]
 pub struct Args {
@@ -10,8 +17,8 @@ pub struct Args {
 
 #[derive(Debug, Subcommand)]
 pub enum Cmd {
-    /// Parse the config file at the given path and print a pretty representation of the AST
-    Parse { path: PathBuf },
+    /// Parse the config file at the given path and check for errors
+    Validate { path: PathBuf },
 
     /// Generate the Dart for a given library definition
     Generate {
@@ -23,4 +30,32 @@ pub enum Cmd {
         #[clap(long, short)]
         output: Option<PathBuf>,
     },
+}
+
+pub fn run(args: &Args) -> miette::Result<()> {
+    match &args.cmd {
+        Cmd::Validate { path } => {
+            let context = Context::from_path(path)?;
+            context.validate()?;
+        }
+        Cmd::Generate { input, output } => {
+            let context = Context::from_path(&input)?;
+            context.validate()?;
+
+            match &output {
+                Some(output) => {
+                    let output = File::create(&output).into_diagnostic()?;
+                    let mut output = BufWriter::new(output);
+
+                    codegen::codegen(context, &mut output)?;
+                }
+                None => {
+                    let mut output = BufWriter::new(stdout().lock());
+                    codegen::codegen(context, &mut output)?;
+                }
+            }
+        }
+    }
+
+    Ok(())
 }

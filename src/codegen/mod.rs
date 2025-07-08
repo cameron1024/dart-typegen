@@ -153,6 +153,9 @@ impl Context {
 
 pub fn codegen(ctx: Context, out: &mut impl std::io::Write) -> Result<()> {
     let mut buf = String::new();
+
+    writeln!(buf, "import \"package:equatable/equatable.dart\";").into_diagnostic()?;
+
     for class in &ctx.library.classes {
         ctx.codegen_immutable_class(&mut buf, &ctx.library, class)
             .into_diagnostic()?;

@@ -2,6 +2,8 @@
 source: src/tests/snapshots/mod.rs
 expression: generated
 ---
+import "package:equatable/equatable.dart";
+
 final class Foo with EquatableMixin {
   final String name;
   final int age;
