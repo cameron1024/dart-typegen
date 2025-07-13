@@ -8,6 +8,7 @@ use crate::{
     model::*,
 };
 
+mod json;
 mod util;
 
 impl Context {
@@ -66,6 +67,11 @@ impl Context {
                 writeln!(out, "{name}: {name}{to_builder},")?;
             }
             writeln!(out, ");")?;
+
+            writeln!(out)?;
+
+            self.generate_to_json(out, library, class)?;
+            self.generate_from_json(out, library, class)?;
 
             Ok(())
         })?;
@@ -147,6 +153,9 @@ impl Context {
 
 pub fn codegen(ctx: Context, out: &mut impl std::io::Write) -> Result<()> {
     let mut buf = String::new();
+
+    writeln!(buf, "import \"package:equatable/equatable.dart\";").into_diagnostic()?;
+
     for class in &ctx.library.classes {
         ctx.codegen_immutable_class(&mut buf, &ctx.library, class)
             .into_diagnostic()?;
