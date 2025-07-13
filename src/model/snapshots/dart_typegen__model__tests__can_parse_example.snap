@@ -61,9 +61,12 @@ Library {
                 },
             ],
             extra_dart: [
-                ExtraDart {
-                    text: "void printMe() => print((name, age));",
-                },
+                String(
+                    "void printMe() => print((name, age));",
+                ),
+                Path(
+                    "./foo.dart",
+                ),
             ],
             docs: None,
         },

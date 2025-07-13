@@ -12,6 +12,10 @@ pub struct Context {
 }
 
 impl Context {
+    pub fn from_memory(text: &str) -> Result<Self> {
+        todo!()
+    }
+
     pub fn from_path(path: &Path) -> Result<Self> {
         let text = std::fs::read_to_string(path).into_diagnostic()?;
         let parsed = Library::parse_file(path)?;

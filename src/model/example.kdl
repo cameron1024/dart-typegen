@@ -2,5 +2,6 @@ class "Foo" {
   field "name" type="String"
   field "age" type="int"
 
-   extra_dart "void printMe() => print((name, age));"
+  extra_dart "void printMe() => print((name, age));"
+  extra_dart path="./foo.dart"
 }

@@ -3,7 +3,7 @@ use std::path::{Path, PathBuf};
 use knus::{Decode, span::Span};
 use miette::IntoDiagnostic;
 
-use crate::model::util::SpannedScalar;
+use crate::model::util::{SpannedScalar, StringOrPath};
 
 mod util;
 
@@ -12,6 +12,12 @@ mod tests;
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Decode)]
 pub struct Library {
+    /// Text to append before the start of the generated file (for example, linter directives,
+    /// imports, etx.)
+    #[knus(child)]
+    pub preamble: Option<StringOrPath>,
+
+    /// A list of class definitions to be generated
     #[knus(children(name = "class"))]
     pub classes: Vec<Class>,
 }
@@ -47,17 +53,11 @@ pub struct Class {
     pub fields: Vec<Field>,
     /// Extra text to include into the class body
     #[knus(children(name = "extra_dart"))]
-    pub extra_dart: Vec<ExtraDart>,
+    pub extra_dart: Vec<StringOrPath>,
 
     /// Path to a file containing markdown-formatted docs
-    #[knus(child, unwrap(argument))]
-    pub docs: Option<SpannedScalar<PathBuf>>,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq, Hash, Decode)]
-pub struct ExtraDart {
     #[knus(argument)]
-    text: String,
+    pub docs: Option<SpannedScalar<StringOrPath>>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Decode)]
