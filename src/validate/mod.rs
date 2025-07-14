@@ -4,7 +4,10 @@ use convert_case::{Case, Casing};
 use miette::{Diagnostic, NamedSource, Result, SourceSpan};
 use thiserror::Error;
 
-use crate::context::{Context, ResolvePathError};
+use crate::{
+    context::{Context, ResolvePathError},
+    model::StringOrPath,
+};
 
 impl Context {
     pub fn validate(&self) -> Result<()> {
@@ -158,7 +161,11 @@ struct BrokenPath {
 
 fn broken_paths(context: &Context, errors: &mut Vec<miette::Report>, source: &NamedSource<String>) {
     for class in &context.library.classes {
-        let Some(path) = &class.docs else {
+        let Some(string_or_path) = &class.docs else {
+            continue;
+        };
+            
+        let StringOrPath::Path(path) = &string_or_path.value else {
             continue;
         };
 
@@ -169,7 +176,7 @@ fn broken_paths(context: &Context, errors: &mut Vec<miette::Report>, source: &Na
         errors.push(
             BrokenPath {
                 src: source.to_owned(),
-                source_span: path.span,
+                source_span: string_or_path.span,
                 resolve_error,
             }
             .into(),

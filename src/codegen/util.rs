@@ -33,3 +33,19 @@ pub fn braced<W: Write>(
 
     Ok(())
 }
+
+#[test]
+fn dart_format_works() {
+    let unformatted = "
+        class Foo
+
+
+        {
+
+
+        }
+        ";
+
+    let formatted = dart_format(unformatted.to_string()).unwrap();
+    assert_eq!(formatted.trim(), "class Foo {}");
+}

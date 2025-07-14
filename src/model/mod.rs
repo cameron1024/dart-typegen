@@ -1,9 +1,9 @@
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 use knus::{Decode, span::Span};
 use miette::IntoDiagnostic;
 
-use crate::model::util::{SpannedScalar, StringOrPath};
+pub use crate::model::util::{SpannedScalar, StringOrPath};
 
 mod util;
 
@@ -55,8 +55,7 @@ pub struct Class {
     #[knus(children(name = "extra_dart"))]
     pub extra_dart: Vec<StringOrPath>,
 
-    /// Path to a file containing markdown-formatted docs
-    #[knus(argument)]
+    #[knus(unwrap(child))]
     pub docs: Option<SpannedScalar<StringOrPath>>,
 }
 
@@ -66,4 +65,7 @@ pub struct Field {
     pub name: SpannedScalar<String>,
     #[knus(property(name = "type"))]
     pub ty: SpannedScalar<String>,
+
+    #[knus(unwrap(child))]
+    pub docs: Option<SpannedScalar<StringOrPath>>,
 }

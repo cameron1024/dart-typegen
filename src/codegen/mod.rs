@@ -1,4 +1,4 @@
-use std::{fmt::Write, path::Path};
+use std::fmt::Write;
 
 use miette::{IntoDiagnostic, Result};
 
@@ -26,6 +26,13 @@ impl Context {
 
         braced(buf, |out| {
             for field in &class.fields {
+                if let Some(string_or_path) = &class.docs {
+                    // TODO(cameron): make this whole function return a miette result
+                    let docs = self.read_path_or_string(string_or_path).unwrap();
+                    for line in docs.lines() {
+                        writeln!(out, "/// {line}")?;
+                    }
+                };
                 writeln!(out, "final {} {};", field.ty, field.name)?;
             }
 
@@ -137,14 +144,22 @@ impl Context {
         Ok(())
     }
 
-    fn write_doc_comment(&self, buf: &mut String, source: &Path) -> std::fmt::Result {
-        // unwrap is fine here because we checked it during validation.
-        // yes it's a TOCTOU, no I don't care
-        let path = self.resolve_path(source).unwrap();
-        let text = std::fs::read_to_string(path).unwrap();
-
-        for line in text.lines() {
-            writeln!(buf, "/// {line}")?;
+    fn write_doc_comment(&self, buf: &mut String, source: &StringOrPath) -> std::fmt::Result {
+        match source {
+            StringOrPath::String(text) => {
+                for line in text.lines() {
+                    writeln!(buf, "/// {line}")?;
+                }
+            }
+            StringOrPath::Path(path) => {
+                // unwrap is fine here because we checked it during validation.
+                // yes it's a TOCTOU, no I don't care
+                let path = self.resolve_path(path).unwrap();
+                let text = std::fs::read_to_string(path).unwrap();
+                for line in text.lines() {
+                    writeln!(buf, "/// {line}")?;
+                }
+            }
         }
 
         Ok(())

@@ -3,6 +3,11 @@ source: src/model/tests.rs
 expression: config
 ---
 Library {
+    preamble: Some(
+        String(
+            "// my cool comment",
+        ),
+    ),
     classes: [
         Class {
             span: Span(
@@ -13,7 +18,7 @@ Library {
                 value: "Foo",
                 span: SourceSpan {
                     offset: SourceOffset(
-                        6,
+                        37,
                     ),
                     length: 5,
                 },
@@ -24,7 +29,7 @@ Library {
                         value: "name",
                         span: SourceSpan {
                             offset: SourceOffset(
-                                22,
+                                53,
                             ),
                             length: 6,
                         },
@@ -33,18 +38,19 @@ Library {
                         value: "String",
                         span: SourceSpan {
                             offset: SourceOffset(
-                                34,
+                                65,
                             ),
                             length: 8,
                         },
                     },
+                    docs: None,
                 },
                 Field {
                     name: SpannedScalar {
                         value: "age",
                         span: SourceSpan {
                             offset: SourceOffset(
-                                51,
+                                82,
                             ),
                             length: 5,
                         },
@@ -53,19 +59,17 @@ Library {
                         value: "int",
                         span: SourceSpan {
                             offset: SourceOffset(
-                                62,
+                                93,
                             ),
                             length: 5,
                         },
                     },
+                    docs: None,
                 },
             ],
             extra_dart: [
                 String(
                     "void printMe() => print((name, age));",
-                ),
-                Path(
-                    "./foo.dart",
                 ),
             ],
             docs: None,
