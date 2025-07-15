@@ -79,6 +79,14 @@ impl Context {
 
             self.generate_to_json(out, library, class)?;
             self.generate_from_json(out, library, class)?;
+            
+            writeln!(out)?;
+
+            for extra in &class.extra_dart {
+                // TODO(cameron): proper error handling
+                let text = self.read_path_or_string(extra).unwrap();
+                writeln!(out, "{text}")?;
+            }
 
             Ok(())
         })?;
