@@ -25,7 +25,7 @@ impl Context {
             library: parsed,
         })
     }
-    
+
     pub fn read_path_or_string<'a>(
         &self,
         string_or_path: &'a StringOrPath,
@@ -80,4 +80,3 @@ pub struct ResolvePathError {
     #[source]
     io: std::io::Error,
 }
-

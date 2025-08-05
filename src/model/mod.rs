@@ -1,6 +1,6 @@
 use std::path::Path;
 
-use knus::{ast::Value, span::Span, Decode};
+use knus::{Decode, ast::Value, span::Span};
 use miette::IntoDiagnostic;
 
 pub use crate::model::util::{SpannedScalar, StringOrPath};
@@ -63,7 +63,6 @@ pub struct Class {
     /// Extra text to include into the class body
     #[knus(children)]
     pub extra_dart: Vec<StringOrPath>,
-
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Decode)]
@@ -79,11 +78,10 @@ pub struct Field {
 
     #[knus(child, unwrap(argument))]
     pub defaults_to_dart: Option<SpannedScalar<String>>,
-    
+
     #[knus(child, unwrap(argument))]
     pub docs: Option<SpannedScalar<String>>,
 }
-
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Decode)]
 #[knus(span_type = Span)]
@@ -95,7 +93,7 @@ pub struct Union {
     #[knus(property)]
     pub sealed: Option<SpannedScalar<bool>>,
     #[knus(child, unwrap(argument))]
-    pub json_discrimminant: Option<SpannedScalar<String>>, 
+    pub json_discrimminant: Option<SpannedScalar<String>>,
     #[knus(child, unwrap(argument))]
     pub docs: Option<SpannedScalar<String>>,
     #[knus(children(name = "class"))]
