@@ -19,9 +19,7 @@ union "Animal" {
   class "Cat" {
     field "color" type="String" {
       defaults-to null;
-      always-required;
       docs "some docs";
-
     }
   }
 }

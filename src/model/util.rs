@@ -4,10 +4,10 @@ use std::{
     path::PathBuf,
 };
 
-use knus::{Decode, DecodeScalar, errors::DecodeError, traits::ErrorSpan};
+use knus::{Decode, DecodeScalar, ast::Value, errors::DecodeError, span::Span, traits::ErrorSpan};
 use miette::SourceSpan;
 
-use crate::model::Library;
+use crate::model::{Class, Field, Library};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct SpannedScalar<T> {
@@ -95,14 +95,23 @@ where
 }
 
 impl Library {
-    pub fn type_names(&self) -> impl Iterator<Item = &SpannedScalar<String>> {
-        let class_names = self.classes.iter().map(|class| &class.name);
-        let union_names = self.unions.iter().map(|union| &union.name);
-        let union_class_names = self
-            .unions
+    pub fn all_classes(&self) -> impl Iterator<Item = &Class> {
+        self.classes
             .iter()
-            .flat_map(|union| union.classes.iter().map(|class| &class.name));
+            .chain(self.unions.iter().flat_map(|union| &union.classes))
+    }
+    pub fn type_names(&self) -> impl Iterator<Item = &SpannedScalar<String>> {
+        let class_names = self.all_classes().map(|class| &class.name);
+        let union_names = self.unions.iter().map(|union| &union.name);
 
-        class_names.chain(union_names).chain(union_class_names)
+        class_names.chain(union_names)
+    }
+
+    pub fn all_fields(&self) -> impl Iterator<Item = &Field> {
+        self.all_classes().flat_map(|class| &class.fields)
+    }
+
+    pub fn all_raw_values(&self) -> impl Iterator<Item = &Value<Span>> {
+        self.all_fields().flat_map(|field| &field.defaults_to)
     }
 }

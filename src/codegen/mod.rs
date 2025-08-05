@@ -1,4 +1,4 @@
-use std::fmt::Write;
+use std::{collections::VecDeque, fmt::Write};
 
 use knus::{
     ast::{Decimal, Integer, Literal, Radix, Value},
@@ -27,6 +27,10 @@ impl Context {
             .as_ref()
             .map(|spanned| spanned.value.as_str())
             .unwrap_or("type");
+
+        if let Some(docs) = &union.docs {
+            self.write_doc_comment(buf, docs)?;
+        }
 
         let modifiers = match union.sealed {
             None => "abstract final",
@@ -99,17 +103,27 @@ impl Context {
 
             writeln!(out, "const {}({{", class.name)?;
             for field in &class.fields {
-                let required_kw = if field.always_required || field.defaults_to.is_none() {
+                let required_kw = if field.defaults_to.is_none() {
                     "required"
                 } else {
                     ""
                 };
 
-
                 write!(out, "{required_kw} this.{}", field.name)?;
-                if let Some(defaults_to) = &field.defaults_to {
-                    let dart = format_dart_literal_const(defaults_to);
-                    writeln!(out, "= {dart}")?;
+                match (&field.defaults_to, &field.defaults_to_dart) {
+                    (Some(_), Some(_)) => unreachable!("checked in validation"),
+                    (None, None) => {}
+                    (Some(defaults_to), None) => {
+                        let dart = format_dart_literal_const(defaults_to);
+                        if dart != "null" {
+                            writeln!(out, "= {dart}")?;
+                        }
+                    }
+                    (None, Some(defaults_to_dart)) => {
+                        if &**defaults_to_dart != "null" {
+                            writeln!(out, "= {defaults_to_dart}")?;
+                        }
+                    }
                 }
                 writeln!(out, ",")?;
             }
@@ -227,7 +241,15 @@ impl Context {
     }
 
     fn write_doc_comment(&self, buf: &mut String, source: &str) -> std::fmt::Result {
-        for line in source.lines() {
+        let mut lines: VecDeque<_> = source.lines().collect();
+        while let Some(line) = lines.pop_front()
+            && line.trim().is_empty()
+        {}
+        while let Some(line) = lines.pop_back()
+            && line.trim().is_empty()
+        {}
+
+        for line in lines {
             writeln!(buf, "/// {line}")?;
         }
 

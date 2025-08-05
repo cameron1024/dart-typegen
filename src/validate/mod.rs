@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 
 use convert_case::{Case, Casing};
+use knus::ast::{Integer, Literal, Radix};
 use miette::{Diagnostic, NamedSource, Result, SourceSpan};
 use thiserror::Error;
 
@@ -28,6 +29,8 @@ impl Context {
         duplicate_type_names(self, &mut errors, &source);
         duplicate_field_names(self, &mut errors, &source);
         empty_union(self, &mut errors, &source);
+        field_with_both_defaults(self, &mut errors, &source);
+        invalid_int_literal(self, &mut errors, &source);
 
         errors
     }
@@ -166,6 +169,78 @@ fn empty_union(context: &Context, errors: &mut Vec<miette::Report>, source: &Nam
             src: source.clone(),
             source_span: union.span.into(),
         });
+
+    errors.extend(errs.map(Into::into));
+}
+
+// === Empty union ===
+
+#[derive(Debug, Error, Diagnostic)]
+#[error("Field has a definition for both `defaults-to` and `defaults-to-dart`")]
+#[help = "`defaults-to` allows you to translate native KDL types to Dart. If you need something
+that cannot be expressed in KDL (such as class instances, collection literals)"]
+struct FieldWithBothDefaults {
+    #[source_code]
+    src: NamedSource<String>,
+
+    #[label = "`defaults-to` defined here"]
+    defaults_to: SourceSpan,
+
+    #[label = "`defaults-to-dart` defined here"]
+    defaults_to_dart: SourceSpan,
+}
+
+fn field_with_both_defaults(
+    context: &Context,
+    errors: &mut Vec<miette::Report>,
+    source: &NamedSource<String>,
+) {
+    let errs = context.library.all_fields().filter_map(|field| {
+        let defaults_to = field.defaults_to.as_ref()?;
+        let defaults_to_dart = field.defaults_to_dart.as_ref()?;
+
+        Some(FieldWithBothDefaults {
+            src: source.clone(),
+            defaults_to: (*defaults_to.literal.span()).into(),
+            defaults_to_dart: defaults_to_dart.span,
+        })
+    });
+
+    errors.extend(errs.map(Into::into));
+}
+
+// === Invalid Int Literals ===
+
+#[derive(Debug, Error, Diagnostic)]
+#[error("Invalid integer literal")]
+#[help = "Integer literals must be either decimal (i.e. `1234`) or hexadecimal (i.e. `0x1234`)"]
+struct InvalidIntLiteral {
+    #[source_code]
+    src: NamedSource<String>,
+
+    #[label = "invalid"]
+    span: SourceSpan,
+}
+
+fn invalid_int_literal(
+    context: &Context,
+    errors: &mut Vec<miette::Report>,
+    source: &NamedSource<String>,
+) {
+    let errs = context.library.all_raw_values().filter_map(|value| {
+        let Literal::Int(Integer(radix, str)) = &*value.literal else {
+            return None;
+        };
+
+        if matches!(radix, Radix::Dec | Radix::Hex) {
+            return None;
+        }
+
+        Some(InvalidIntLiteral {
+            src: source.clone(),
+            span: (*value.literal.span()).into(),
+        })
+    });
 
     errors.extend(errs.map(Into::into));
 }

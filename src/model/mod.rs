@@ -76,10 +76,10 @@ pub struct Field {
 
     #[knus(child, unwrap(argument))]
     pub defaults_to: Option<Value<Span>>,
-    
-    #[knus(child)]
-    pub always_required: bool,
 
+    #[knus(child, unwrap(argument))]
+    pub defaults_to_dart: Option<SpannedScalar<String>>,
+    
     #[knus(child, unwrap(argument))]
     pub docs: Option<SpannedScalar<String>>,
 }
@@ -96,6 +96,8 @@ pub struct Union {
     pub sealed: Option<SpannedScalar<bool>>,
     #[knus(child, unwrap(argument))]
     pub json_discrimminant: Option<SpannedScalar<String>>, 
+    #[knus(child, unwrap(argument))]
+    pub docs: Option<SpannedScalar<String>>,
     #[knus(children(name = "class"))]
     pub classes: Vec<Class>,
 }

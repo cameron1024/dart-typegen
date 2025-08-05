@@ -5,9 +5,8 @@ config file.
 
 ## Motivation
 
-I created it out of frustration with the existing
-`build_runner`-based solutions. Some particular issues with existing solutions
-that bothered me are:
+I created it out of frustration with the existing `build_runner`-based
+solutions. Some particular issues with existing solutions that bothered me are:
 - generating non-idiomatic or stylized code (e.g. `built_value`) - I want users
   of this tool to not notice they are using generated code
 - performance - generating a handful of classes should not take 20+ seconds on
@@ -19,6 +18,10 @@ that bothered me are:
 
 It also generates builders instead of `.copyWith()`. See [below](#why-builders)
 for the reason why.
+
+It also generates to/from JSON functions, because I dream of a
+`build_runner`-free life, and we already have all the information, so why not
+generate it ¯\\_(ツ)_/¯.
 
 ## Usage
 
@@ -70,8 +73,121 @@ final class FooBuilder {
 }
 ```
 
-### Unions ()
+### What's that config file format?
 
+It's [KDL][kdl]. It's pretty neat.
+
+Most syntax is supported except multi-line strings. But raw strings work, so
+it's not a big deal:
+
+```kdl
+// instead of:
+docs """
+  My docs that are very
+  long and need multiple
+  lines
+"""
+
+// write:
+docs r"
+  My docs that are very
+  long and need multiple
+  lines
+"
+
+/- btw {
+  isnt "this"
+  comment "syntax"
+  pretty "neat"
+}
+```
+
+### Unions (a.k.a. enums, sum types, sealed classes, etc.)
+
+Dart doesn't have a convenient way to express that a type may be one of many
+possible variants (comparable to Rust's `enum`s or TypeScript's union types).
+
+The closest approximation we have are abstract/sealed classes with a subclass
+per variant.
+
+This is not ideal for a few reasons:
+- `json_serializable`, the de-facto standard JSON library for Dart, still has
+  not implemented support for sealed classes, despite a [two year old
+  issue][json sealed]. This requires manually stitching together the parts that
+  `json_serializable` *can* generate
+- it's a pretty large amount of boilerplate
+
+So let's generate them.
+
+To generate "unions", declare them in your config file:
+```kdl
+// It wouldn't be an OO example without some animals...
+union "Animal" {
+  class "Dog" {
+    field "breed" type="String";
+  }
+
+  class "Cat" {
+    field "color" type="int";
+  }
+}
+```
+This will generate:
+- an abstract class `Animal`
+- subclasses `Dog` and `Cat` with value equality, builders, and JSON conversions
+- specialized JSON code in `Animal` which encodes the type in a `"type"` field
+  in the resulting JSON
+
+#### Why not a sealed class?
+
+In a library, `sealed` classes can pose a semver hazard. When you publish a
+sealed class, users may write code that fails to compile if new variants are
+added. However, often, library authors want to add new variants to a union
+after publishing, without bumping the major version.
+
+If you are confident you will never need to add a new variant (without a
+breaking change), you can opt into using sealed classes with:
+```kdl
+union "MyUnion" sealed=true {
+  // ...
+}
+```
+
+### Default values
+
+Fields can be given default values:
+```kdl
+class "Foo" {
+  field "bar" type="String" {
+    defaults-to "stuff"
+  }
+}
+```
+The generated constructor will now contain `this.bar = "stuff"` instead of
+`required this.bar`. Fields without defaults are always `required`. 
+If you have a nullable field that you would like to not be `required`, simply
+assign it `defaults-to null`.
+
+The value provided is interpreted as a KDL scalar value and converted directly
+to Dart. However, this is not able to express certain Dart values (such as
+collection literals, identifiers, etc.). For these cases, the
+`defaults-to-dart` argument can be used instead. It takes a single string which
+is interpreted as Dart code:
+```kdl
+class "Foo" {
+  field "bar" type="List<int>" {
+    defaults-to-dart "const [1, 2, 3]"
+  }
+}
+```
+It is an error to have both `defaults-to` and `defaults-to-dart` on the same
+field.
+
+
+### Docs
+
+Most entities have a `docs` property. This will be converted to a standard Dart
+`///` doc comment.
 
 ## Why builders?
 
@@ -181,3 +297,6 @@ have chosen are oriented towards library development, rather than application
 development. For example, I cannot require users of my code to be familiar with
 `freezed`, `built_value`, or any other library. Keep this in mind when
 evaluating this tool.
+
+[kdl]: https://kdl.dev
+[json sealed]: https://github.com/google/json_serializable.dart/issues/1342

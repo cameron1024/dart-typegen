@@ -44,6 +44,7 @@ Library {
                         },
                     },
                     defaults_to: None,
+                    defaults_to_dart: None,
                     always_required: false,
                     docs: None,
                 },
@@ -67,6 +68,7 @@ Library {
                         },
                     },
                     defaults_to: None,
+                    defaults_to_dart: None,
                     always_required: false,
                     docs: None,
                 },
@@ -96,6 +98,7 @@ Library {
             },
             sealed: None,
             json_discrimminant: None,
+            docs: None,
             classes: [
                 Class {
                     span: Span(
@@ -145,6 +148,7 @@ Library {
                                     },
                                 },
                             ),
+                            defaults_to_dart: None,
                             always_required: false,
                             docs: None,
                         },
@@ -198,6 +202,7 @@ Library {
                                     },
                                 },
                             ),
+                            defaults_to_dart: None,
                             always_required: true,
                             docs: Some(
                                 SpannedScalar {
