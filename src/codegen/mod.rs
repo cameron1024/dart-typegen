@@ -37,7 +37,7 @@ impl Context {
             Some(_) => "sealed",
         };
 
-        write!(buf, "{modifiers} class {} ", union.name)?;
+        write!(buf, "{modifiers} class {} with EquatableMixin ", union.name)?;
 
         braced(buf, |out| {
             writeln!(out, "const {}();", union.name)?;
@@ -191,6 +191,7 @@ impl Context {
         // TODO: allow configuring
         let builder_name = format!("{}Builder", class.name);
 
+        self.write_doc_comment(buf, &format!("Builder class for [{}]", class.name))?;
         write!(buf, "final class {builder_name}",)?;
 
         braced(buf, |out| {
@@ -242,12 +243,16 @@ impl Context {
 
     fn write_doc_comment(&self, buf: &mut String, source: &str) -> std::fmt::Result {
         let mut lines: VecDeque<_> = source.lines().collect();
-        while let Some(line) = lines.pop_front()
-            && line.trim().is_empty()
-        {}
-        while let Some(line) = lines.pop_back()
-            && line.trim().is_empty()
-        {}
+        while let Some(s) = lines.front()
+            && s.trim().is_empty()
+        {
+            lines.pop_front();
+        }
+        while let Some(s) = lines.back()
+            && s.trim().is_empty()
+        {
+            lines.pop_back();
+        }
 
         for line in lines {
             writeln!(buf, "/// {line}")?;
