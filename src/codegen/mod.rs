@@ -1,5 +1,9 @@
 use std::fmt::Write;
 
+use knus::{
+    ast::{Decimal, Integer, Literal, Radix, Value},
+    span::Span,
+};
 use miette::{IntoDiagnostic, Result};
 
 use crate::{
@@ -98,7 +102,18 @@ impl Context {
 
             writeln!(out, "const {}({{", class.name)?;
             for field in &class.fields {
-                writeln!(out, "required this.{},", field.name)?;
+                let required_kw = if field.always_required || field.defaults_to.is_none() {
+                    "required"
+                } else {
+                    ""
+                };
+
+                write!(out, "{required_kw} this.{}", field.name)?;
+                if let Some(defaults_to) = &field.defaults_to {
+                    let dart = format_dart_literal_const(defaults_to);
+                    writeln!(out, "= {dart}")?;
+                }
+                writeln!(out, ",")?;
             }
             match superclass {
                 Some(_) => writeln!(out, "}}) : super();")?,
@@ -232,6 +247,26 @@ impl Context {
         }
 
         Ok(())
+    }
+}
+
+fn format_dart_literal_const(defaults_to: &Value<Span>) -> String {
+    match &*defaults_to.literal {
+        Literal::Null => "null".into(),
+        Literal::Bool(true) => "true".into(),
+        Literal::Bool(false) => "false".into(),
+        Literal::Int(Integer(radix, str)) => {
+            let prefix = match radix {
+                Radix::Bin | Radix::Oct => unreachable!("checked in validate"),
+                Radix::Dec => "",
+                Radix::Hex => "0x",
+            };
+
+            format!("{prefix}{str}")
+        }
+        Literal::Decimal(Decimal(str)) => str.to_string(),
+        // TODO: deal with escaping
+        Literal::String(str) => format!("\"{str}\""),
     }
 }
 

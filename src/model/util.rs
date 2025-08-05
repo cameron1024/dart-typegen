@@ -7,7 +7,7 @@ use std::{
 use knus::{Decode, DecodeScalar, errors::DecodeError, traits::ErrorSpan};
 use miette::SourceSpan;
 
-use crate::model::{Item, Library};
+use crate::model::Library;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct SpannedScalar<T> {
