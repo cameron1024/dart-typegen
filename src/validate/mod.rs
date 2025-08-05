@@ -228,7 +228,7 @@ fn invalid_int_literal(
     source: &NamedSource<String>,
 ) {
     let errs = context.library.all_raw_values().filter_map(|value| {
-        let Literal::Int(Integer(radix, str)) = &*value.literal else {
+        let Literal::Int(Integer(radix, _str)) = &*value.literal else {
             return None;
         };
 
