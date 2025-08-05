@@ -35,7 +35,7 @@ class "Foo" {
 ```
 Then, run the command:
 ```shell
-dart-typegen -i foo.kdl -o foo.dart
+dart-typegen generate -i foo.kdl -o foo.dart
 ```
 This will generate the following Dart in `foo.dart`:
 ```dart
