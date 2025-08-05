@@ -32,7 +32,7 @@ impl Library {
 
     pub(crate) fn parse_impl(name: Option<&str>, text: &str) -> miette::Result<Self> {
         let name = name.unwrap_or("<memory>");
-        let library = knus::parse(name, text).into_diagnostic()?;
+        let library = knus::parse(name, text)?;
 
         Ok(library)
     }

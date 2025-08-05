@@ -21,7 +21,7 @@ impl Context {
         broken_paths(self, &mut errors, &source);
 
         if errors.is_empty() {
-            return Ok(());
+            Ok(())
         } else {
             miette::bail!(MultiError { errors })
         }
@@ -164,7 +164,7 @@ fn broken_paths(context: &Context, errors: &mut Vec<miette::Report>, source: &Na
         let Some(string_or_path) = &class.docs else {
             continue;
         };
-            
+
         let StringOrPath::Path(path) = &string_or_path.value else {
             continue;
         };

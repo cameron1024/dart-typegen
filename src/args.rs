@@ -39,12 +39,12 @@ pub fn run(args: &Args) -> miette::Result<()> {
             context.validate()?;
         }
         Cmd::Generate { input, output } => {
-            let context = Context::from_path(&input)?;
+            let context = Context::from_path(input)?;
             context.validate()?;
 
             match &output {
                 Some(output) => {
-                    let output = File::create(&output).into_diagnostic()?;
+                    let output = File::create(output).into_diagnostic()?;
                     let mut output = BufWriter::new(output);
 
                     codegen::codegen(context, &mut output)?;

@@ -59,7 +59,7 @@ impl Context {
             if needs_from_json {
                 write!(buf, " as Map<String, dynamic>)")?;
             } else {
-                write!(buf, "as {}", field_ty)?;
+                write!(buf, "as {field_ty}")?;
             }
             writeln!(buf, ",")?;
         }

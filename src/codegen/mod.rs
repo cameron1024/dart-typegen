@@ -19,7 +19,7 @@ impl Context {
         class: &Class,
     ) -> std::fmt::Result {
         if let Some(source) = &class.docs {
-            self.write_doc_comment(buf, &source)?;
+            self.write_doc_comment(buf, source)?;
         }
 
         write!(buf, "final class {} with EquatableMixin", class.name)?;
