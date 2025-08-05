@@ -95,7 +95,8 @@ class Dog {
 This allows users to call `dog.copyWith(name: "new name")`, and the old age
 will be preserved in the new object.
 
-This is simple and convenient, but it has two major issues.
+This is simple and convenient, but it has two major issues, both of which are
+solved by using builders.
 
 ### Nullable fields
 
@@ -150,4 +151,31 @@ foo.bar.baz.qux = "new value";
 ```
 We're giving up a lot of ergonomics in exchange for immutability.
 
+### Builders to the rescue!
 
+With builders, this gets reduced to:
+```dart
+final newFoo = foo.builder()
+  ..bar.baz.qux = "new value"
+  .build();
+```
+Not perfect, but it's much better.
+
+Importantly, the boilerplate doesn't scale with the depth of the nesting.
+
+## Should I use this?
+
+It depends. It has several advantages over more standard tooling (performance,
+reliability, etc.), but also some downsides:
+- it's much less configurable - I've added support for features I personally
+  need, and very little else
+- it doesn't have access to type information - if you need to be able to
+  customize code generation based on the types of fields, use `build_runner`
+- less community support
+
+This tool is very much influenced by problems I encountered at work, where I
+work on a library, not an application. This means that many of the tradeoffs I
+have chosen are oriented towards library development, rather than application
+development. For example, I cannot require users of my code to be familiar with
+`freezed`, `built_value`, or any other library. Keep this in mind when
+evaluating this tool.
