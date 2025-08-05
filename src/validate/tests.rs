@@ -1,7 +1,5 @@
 use tempdir::TempDir;
 
-use crate::validate;
-
 use super::*;
 
 fn assert_error_count(count: usize, source: &str) {

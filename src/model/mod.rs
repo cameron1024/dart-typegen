@@ -1,6 +1,6 @@
 use std::path::Path;
 
-use knus::{Decode, span::Span};
+use knus::{ast::Value, span::Span, Decode};
 use miette::IntoDiagnostic;
 
 pub use crate::model::util::{SpannedScalar, StringOrPath};
@@ -11,6 +11,7 @@ mod util;
 mod tests;
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Decode)]
+#[knus(span_type = Span)]
 pub struct Library {
     /// Text to append before the start of the generated file (for example, linter directives,
     /// imports, etx.)
@@ -43,11 +44,13 @@ impl Library {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Decode)]
+#[knus(span_type = Span)]
 pub enum Item {
     Class(Class),
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Decode)]
+#[knus(span_type = Span)]
 pub struct Class {
     #[knus(unwrap(span))]
     pub span: Span,
@@ -55,25 +58,35 @@ pub struct Class {
     pub name: SpannedScalar<String>,
     #[knus(children(name = "field"))]
     pub fields: Vec<Field>,
+    #[knus(child, unwrap(argument))]
+    pub docs: Option<SpannedScalar<String>>,
     /// Extra text to include into the class body
-    #[knus(children(name = "extra_dart"))]
+    #[knus(children)]
     pub extra_dart: Vec<StringOrPath>,
 
-    #[knus(unwrap(child))]
-    pub docs: Option<SpannedScalar<StringOrPath>>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Decode)]
+#[knus(span_type = Span)]
 pub struct Field {
     #[knus(argument)]
     pub name: SpannedScalar<String>,
     #[knus(property(name = "type"))]
     pub ty: SpannedScalar<String>,
-    #[knus(unwrap(child))]
-    pub docs: Option<SpannedScalar<StringOrPath>>,
+
+    #[knus(child, unwrap(argument))]
+    pub defaults_to: Option<Value<Span>>,
+    
+    #[knus(child)]
+    pub always_required: bool,
+
+    #[knus(child, unwrap(argument))]
+    pub docs: Option<SpannedScalar<String>>,
 }
 
+
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Decode)]
+#[knus(span_type = Span)]
 pub struct Union {
     #[knus(unwrap(span))]
     pub span: Span,

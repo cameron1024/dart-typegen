@@ -28,7 +28,7 @@ preamble "// ignore_for_file: some_lint"
 
 class "Foo" {
   field "name" type="String"
-  field "age" type="int"
+  field "age" type="int" { defaults-to 123; }
 
   extra_dart "void printMe() => print((name, age));"
 }
@@ -46,7 +46,7 @@ final class Foo with EquatableMixin {
   final String name;
   final int age;
 
-  const Foo({required this.name, required this.age});
+  const Foo({required this.name, this.age = 123});
 
   @override
   List<Object?> get props => [name, age];

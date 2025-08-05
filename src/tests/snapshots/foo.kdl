@@ -1,8 +1,8 @@
 preamble "// some comment"
 
 class "Foo" {
-  field "name" type="String";
-  field "age" type="int";
+  field "name" type="String" { defaults-to "hello"; }
+  field "age" type="int" { defaults-to 123; always-required; }
   field "bar" type="Bar";
 }
 

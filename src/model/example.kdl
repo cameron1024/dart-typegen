@@ -10,23 +10,18 @@ class "Foo" {
 }
 
 union "Animal" {
-  docs r"
-    Some docs
-  ";
-
   class "Dog" {
     field "breed" type="String" {
-      always-required;
       defaults-to "hello";
-      docs r"
-        Some more docs
-      ";
     }
-
-
   }
 
   class "Cat" {
-    field "color" type="String"
+    field "color" type="String" {
+      defaults-to null;
+      always-required;
+      docs "some docs";
+
+    }
   }
 }

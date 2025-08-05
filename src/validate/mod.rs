@@ -4,10 +4,7 @@ use convert_case::{Case, Casing};
 use miette::{Diagnostic, NamedSource, Result, SourceSpan};
 use thiserror::Error;
 
-use crate::{
-    context::{Context, ResolvePathError},
-    model::StringOrPath,
-};
+use crate::context::Context;
 
 #[cfg(test)]
 mod tests;
@@ -22,7 +19,7 @@ impl Context {
         }
     }
 
-    fn collect_errors(&self) -> Vec<miette::Report>{
+    fn collect_errors(&self) -> Vec<miette::Report> {
         let mut errors = vec![];
         let source =
             NamedSource::new(self.path.to_string_lossy(), self.text.clone()).with_language("kdl");
@@ -30,7 +27,6 @@ impl Context {
         incorrect_type_name_case(self, &mut errors, &source);
         duplicate_type_names(self, &mut errors, &source);
         duplicate_field_names(self, &mut errors, &source);
-        broken_paths(self, &mut errors, &source);
         empty_union(self, &mut errors, &source);
 
         errors
@@ -145,47 +141,6 @@ fn duplicate_field_names(
                 );
             }
         }
-    }
-}
-
-// === Broken paths ===
-
-#[derive(Debug, Error, Diagnostic)]
-#[error("Path could not be resolved")]
-#[help = "Paths are resolved relative to the directory containing the `.kdl` file"]
-struct BrokenPath {
-    #[source_code]
-    src: NamedSource<String>,
-    #[label]
-    source_span: SourceSpan,
-
-    #[source]
-    #[diagnostic_source]
-    resolve_error: ResolvePathError,
-}
-
-fn broken_paths(context: &Context, errors: &mut Vec<miette::Report>, source: &NamedSource<String>) {
-    for class in &context.library.classes {
-        let Some(string_or_path) = &class.docs else {
-            continue;
-        };
-
-        let StringOrPath::Path(path) = &string_or_path.value else {
-            continue;
-        };
-
-        let Err(resolve_error) = context.resolve_path(path) else {
-            continue;
-        };
-
-        errors.push(
-            BrokenPath {
-                src: source.to_owned(),
-                source_span: string_or_path.span,
-                resolve_error,
-            }
-            .into(),
-        );
     }
 }
 

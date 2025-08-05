@@ -10,7 +10,7 @@ final class Foo with EquatableMixin {
   final int age;
   final Bar bar;
 
-  const Foo({required this.name, required this.age, required this.bar});
+  const Foo({this.name = "hello", required this.age = 123, required this.bar});
 
   @override
   List<Object?> get props => [name, age, bar];
