@@ -9,22 +9,31 @@ use crate::{
     model::StringOrPath,
 };
 
+#[cfg(test)]
+mod tests;
+
 impl Context {
     pub fn validate(&self) -> Result<()> {
-        let mut errors = vec![];
-        let source =
-            NamedSource::new(self.path.to_string_lossy(), self.text.clone()).with_language("kdl");
-
-        incorrect_class_name_case(self, &mut errors, &source);
-        duplicate_class_names(self, &mut errors, &source);
-        duplicate_field_names(self, &mut errors, &source);
-        broken_paths(self, &mut errors, &source);
-
+        let errors = self.collect_errors();
         if errors.is_empty() {
             Ok(())
         } else {
             miette::bail!(MultiError { errors })
         }
+    }
+
+    fn collect_errors(&self) -> Vec<miette::Report>{
+        let mut errors = vec![];
+        let source =
+            NamedSource::new(self.path.to_string_lossy(), self.text.clone()).with_language("kdl");
+
+        incorrect_type_name_case(self, &mut errors, &source);
+        duplicate_type_names(self, &mut errors, &source);
+        duplicate_field_names(self, &mut errors, &source);
+        broken_paths(self, &mut errors, &source);
+        empty_union(self, &mut errors, &source);
+
+        errors
     }
 }
 
@@ -49,54 +58,50 @@ struct IncorrectClassNameCase {
     correct_name: String,
 }
 
-fn incorrect_class_name_case(
+fn incorrect_type_name_case(
     context: &Context,
     errors: &mut Vec<miette::Report>,
     source: &NamedSource<String>,
 ) {
     let incorrect_class_name_case = context
         .library
-        .classes
-        .iter()
-        .filter(|class| !class.name.is_case(Case::Pascal))
-        .map(|class| {
-            IncorrectClassNameCase {
-                src: source.clone(),
-                source_span: class.name.span,
-                correct_name: class.name.to_case(Case::Pascal),
-            }
-            .into()
+        .type_names()
+        .filter(|name| !name.is_case(Case::Pascal))
+        .map(|name| IncorrectClassNameCase {
+            src: source.clone(),
+            source_span: name.span,
+            correct_name: name.to_case(Case::Pascal),
         });
 
-    errors.extend(incorrect_class_name_case);
+    errors.extend(incorrect_class_name_case.map(Into::into));
 }
 
 // === Duplicate class names ===
 
 #[derive(Debug, Error, Diagnostic)]
-#[error("Duplicate class name")]
+#[error("Duplicate type name")]
 #[help = "Try giving it a different name"]
-struct DuplicateClassName {
+struct DuplicateTypeName {
     #[source_code]
     src: NamedSource<String>,
     #[label]
     source_span: SourceSpan,
 }
 
-fn duplicate_class_names(
+fn duplicate_type_names(
     context: &Context,
     errors: &mut Vec<miette::Report>,
     source: &NamedSource<String>,
 ) {
     let mut name_counts = HashMap::<_, usize>::new();
-    for class in &context.library.classes {
-        *name_counts.entry(class.name.value.as_str()).or_default() += 1usize;
+    for name in context.library.type_names() {
+        *name_counts.entry(name.value.as_str()).or_default() += 1usize;
     }
 
     for class in &context.library.classes {
         if name_counts[class.name.as_str()] > 1 {
             errors.push(
-                DuplicateClassName {
+                DuplicateTypeName {
                     src: source.to_owned(),
                     source_span: class.name.span,
                 }
@@ -144,7 +149,7 @@ fn duplicate_field_names(
 }
 
 // === Broken paths ===
-//
+
 #[derive(Debug, Error, Diagnostic)]
 #[error("Path could not be resolved")]
 #[help = "Paths are resolved relative to the directory containing the `.kdl` file"]
@@ -182,4 +187,30 @@ fn broken_paths(context: &Context, errors: &mut Vec<miette::Report>, source: &Na
             .into(),
         );
     }
+}
+
+// === Empty union ===
+
+#[derive(Debug, Error, Diagnostic)]
+#[error("Union was empty")]
+#[help = "Unions must contain at least one `class`"]
+struct EmptyUnion {
+    #[source_code]
+    src: NamedSource<String>,
+    #[label]
+    source_span: SourceSpan,
+}
+
+fn empty_union(context: &Context, errors: &mut Vec<miette::Report>, source: &NamedSource<String>) {
+    let errs = context
+        .library
+        .unions
+        .iter()
+        .filter(|union| union.classes.is_empty())
+        .map(|union| EmptyUnion {
+            src: source.clone(),
+            source_span: union.span.into(),
+        });
+
+    errors.extend(errs.map(Into::into));
 }

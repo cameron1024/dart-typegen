@@ -6,7 +6,11 @@ impl Context {
         buf: &mut String,
         library: &Library,
         class: &Class,
+        superclass: Option<&Union>,
     ) -> std::fmt::Result {
+        if superclass.is_some() {
+            writeln!(buf, "@override")?;
+        }
         writeln!(buf, "Map<String, dynamic> toJson() => {{")?;
 
         for field in &class.fields {
@@ -22,6 +26,16 @@ impl Context {
             let field_name = &field.name;
 
             writeln!(buf, "\"{field_name}\": {field_name}{to_json},")?;
+        }
+
+        if let Some(union) = superclass {
+            let discrimminant = union
+                .json_discrimminant
+                .as_ref()
+                .map(|spanned| spanned.value.as_str())
+                .unwrap_or("type");
+
+            writeln!(buf, "\"{discrimminant}\": \"{}\"", class.name)?;
         }
 
         writeln!(buf, "}};")?;

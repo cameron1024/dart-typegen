@@ -75,4 +75,105 @@ Library {
             docs: None,
         },
     ],
+    unions: [
+        Union {
+            span: Span(
+                0,
+                0,
+            ),
+            name: SpannedScalar {
+                value: "Animal",
+                span: SourceSpan {
+                    offset: SourceOffset(
+                        162,
+                    ),
+                    length: 8,
+                },
+            },
+            sealed: None,
+            json_discrimminant: None,
+            classes: [
+                Class {
+                    span: Span(
+                        0,
+                        0,
+                    ),
+                    name: SpannedScalar {
+                        value: "Dog",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                181,
+                            ),
+                            length: 5,
+                        },
+                    },
+                    fields: [
+                        Field {
+                            name: SpannedScalar {
+                                value: "breed",
+                                span: SourceSpan {
+                                    offset: SourceOffset(
+                                        199,
+                                    ),
+                                    length: 7,
+                                },
+                            },
+                            ty: SpannedScalar {
+                                value: "String",
+                                span: SourceSpan {
+                                    offset: SourceOffset(
+                                        212,
+                                    ),
+                                    length: 8,
+                                },
+                            },
+                            docs: None,
+                        },
+                    ],
+                    extra_dart: [],
+                    docs: None,
+                },
+                Class {
+                    span: Span(
+                        0,
+                        0,
+                    ),
+                    name: SpannedScalar {
+                        value: "Cat",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                234,
+                            ),
+                            length: 5,
+                        },
+                    },
+                    fields: [
+                        Field {
+                            name: SpannedScalar {
+                                value: "color",
+                                span: SourceSpan {
+                                    offset: SourceOffset(
+                                        252,
+                                    ),
+                                    length: 7,
+                                },
+                            },
+                            ty: SpannedScalar {
+                                value: "String",
+                                span: SourceSpan {
+                                    offset: SourceOffset(
+                                        265,
+                                    ),
+                                    length: 8,
+                                },
+                            },
+                            docs: None,
+                        },
+                    ],
+                    extra_dart: [],
+                    docs: None,
+                },
+            ],
+        },
+    ],
 }

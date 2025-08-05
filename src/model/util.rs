@@ -7,6 +7,8 @@ use std::{
 use knus::{Decode, DecodeScalar, errors::DecodeError, traits::ErrorSpan};
 use miette::SourceSpan;
 
+use crate::model::{Item, Library};
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct SpannedScalar<T> {
     pub value: T,
@@ -89,5 +91,18 @@ where
         };
 
         Ok(result)
+    }
+}
+
+impl Library {
+    pub fn type_names(&self) -> impl Iterator<Item = &SpannedScalar<String>> {
+        let class_names = self.classes.iter().map(|class| &class.name);
+        let union_names = self.unions.iter().map(|union| &union.name);
+        let union_class_names = self
+            .unions
+            .iter()
+            .flat_map(|union| union.classes.iter().map(|class| &class.name));
+
+        class_names.chain(union_names).chain(union_class_names)
     }
 }

@@ -6,3 +6,13 @@ class "Foo" {
 
   extra_dart "void printMe() => print((name, age));"
 }
+
+union "Animal" {
+  class "Dog" {
+    field "breed" type="String"
+  }
+
+  class "Cat" {
+    field "color" type="String"
+  }
+}

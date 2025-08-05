@@ -70,6 +70,8 @@ final class FooBuilder {
 }
 ```
 
+### Unions ()
+
 
 ## Why builders?
 
@@ -155,9 +157,9 @@ We're giving up a lot of ergonomics in exchange for immutability.
 
 With builders, this gets reduced to:
 ```dart
-final newFoo = foo.builder()
-  ..bar.baz.qux = "new value"
-  .build();
+final builder = foo.builder()
+  ..bar.baz.qux = "new value";
+final newFoo = builder.build();
 ```
 Not perfect, but it's much better.
 

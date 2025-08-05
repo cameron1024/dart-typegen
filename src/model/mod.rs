@@ -20,6 +20,10 @@ pub struct Library {
     /// A list of class definitions to be generated
     #[knus(children(name = "class"))]
     pub classes: Vec<Class>,
+
+    /// A list of union definitions to be generated
+    #[knus(children(name = "union"))]
+    pub unions: Vec<Union>,
 }
 
 impl Library {
@@ -65,7 +69,20 @@ pub struct Field {
     pub name: SpannedScalar<String>,
     #[knus(property(name = "type"))]
     pub ty: SpannedScalar<String>,
-
     #[knus(unwrap(child))]
     pub docs: Option<SpannedScalar<StringOrPath>>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Decode)]
+pub struct Union {
+    #[knus(unwrap(span))]
+    pub span: Span,
+    #[knus(argument)]
+    pub name: SpannedScalar<String>,
+    #[knus(property)]
+    pub sealed: Option<SpannedScalar<bool>>,
+    #[knus(child, unwrap(argument))]
+    pub json_discrimminant: Option<SpannedScalar<String>>, 
+    #[knus(children(name = "class"))]
+    pub classes: Vec<Class>,
 }

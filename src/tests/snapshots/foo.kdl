@@ -10,3 +10,13 @@ class "Bar" {
   field "x" type="String";
   field "y" type="String";
 }
+
+union "Animal" {
+  class "Dog" {
+    field "name" type="String"
+  }
+
+  class "Cat" {
+    field "age" type="int"
+  }
+}

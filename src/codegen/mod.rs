@@ -12,17 +12,75 @@ mod json;
 mod util;
 
 impl Context {
+    fn codegen_union_class(
+        &self,
+        buf: &mut String,
+        library: &Library,
+        union: &Union,
+    ) -> std::fmt::Result {
+        let discrimminant = union
+            .json_discrimminant
+            .as_ref()
+            .map(|spanned| spanned.value.as_str())
+            .unwrap_or("type");
+
+        let modifiers = match union.sealed {
+            None => "abstract final",
+            Some(_) => "sealed",
+        };
+
+        write!(buf, "{modifiers} class {} ", union.name)?;
+
+        braced(buf, |out| {
+            writeln!(out, "const {}();", union.name)?;
+
+            writeln!(out)?;
+
+            writeln!(out, "Map<String, dynamic> toJson(); ")?;
+            writeln!(
+                out,
+                r#"factory {}.fromJson(Map<String, dynamic> json) => switch (json["{discrimminant}"]) {{"#,
+                union.name,
+            )?;
+
+            for class in &union.classes {
+                let name = &class.name;
+                writeln!(out, r#""{name}" => {name}.fromJson(json),"#)?;
+            }
+            writeln!(
+                out,
+                r#"final other => throw ArgumentError("unknown discrimminant: $other"),"#
+            )?;
+
+            writeln!(out, "}};")?;
+
+            Ok(())
+        })?;
+
+        for class in &union.classes {
+            self.codegen_immutable_class(buf, library, class, Some(union))?;
+            self.codegen_mutable_class(buf, library, class)?;
+        }
+
+        Ok(())
+    }
+
     fn codegen_immutable_class(
         &self,
         buf: &mut String,
         library: &Library,
         class: &Class,
+        superclass: Option<&Union>,
     ) -> std::fmt::Result {
         if let Some(source) = &class.docs {
             self.write_doc_comment(buf, source)?;
         }
 
-        write!(buf, "final class {} with EquatableMixin", class.name)?;
+        write!(buf, "final class {} ", class.name)?;
+        if let Some(superclass) = &superclass {
+            write!(buf, "extends {} ", superclass.name)?;
+        }
+        write!(buf, "with EquatableMixin ")?;
 
         braced(buf, |out| {
             for field in &class.fields {
@@ -42,7 +100,10 @@ impl Context {
             for field in &class.fields {
                 writeln!(out, "required this.{},", field.name)?;
             }
-            writeln!(out, "}});")?;
+            match superclass {
+                Some(_) => writeln!(out, "}}) : super();")?,
+                None => writeln!(out, "}});")?,
+            }
 
             writeln!(out)?;
 
@@ -77,7 +138,7 @@ impl Context {
 
             writeln!(out)?;
 
-            self.generate_to_json(out, library, class)?;
+            self.generate_to_json(out, library, class, superclass)?;
             self.generate_from_json(out, library, class)?;
 
             writeln!(out)?;
@@ -185,9 +246,14 @@ pub fn codegen(ctx: Context, out: &mut impl std::io::Write) -> Result<()> {
     writeln!(buf, "import \"package:equatable/equatable.dart\";").into_diagnostic()?;
 
     for class in &ctx.library.classes {
-        ctx.codegen_immutable_class(&mut buf, &ctx.library, class)
+        ctx.codegen_immutable_class(&mut buf, &ctx.library, class, None)
             .into_diagnostic()?;
         ctx.codegen_mutable_class(&mut buf, &ctx.library, class)
+            .into_diagnostic()?;
+    }
+
+    for union in &ctx.library.unions {
+        ctx.codegen_union_class(&mut buf, &ctx.library, union)
             .into_diagnostic()?;
     }
 
