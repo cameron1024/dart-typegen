@@ -79,7 +79,7 @@ impl Context {
 
             self.generate_to_json(out, library, class)?;
             self.generate_from_json(out, library, class)?;
-            
+
             writeln!(out)?;
 
             for extra in &class.extra_dart {
@@ -176,6 +176,11 @@ impl Context {
 
 pub fn codegen(ctx: Context, out: &mut impl std::io::Write) -> Result<()> {
     let mut buf = String::new();
+
+    if let Some(preamble) = &ctx.library.preamble {
+        let text = ctx.read_path_or_string(preamble)?;
+        writeln!(buf, "{text}").into_diagnostic()?;
+    }
 
     writeln!(buf, "import \"package:equatable/equatable.dart\";").into_diagnostic()?;
 

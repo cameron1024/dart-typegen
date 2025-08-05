@@ -2,6 +2,7 @@
 source: src/tests/snapshots/mod.rs
 expression: generated
 ---
+// some comment
 import "package:equatable/equatable.dart";
 
 final class Foo with EquatableMixin {
