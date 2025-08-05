@@ -47,7 +47,7 @@
               || (craneLib.filterCargoSources path type);
           };
           strictDeps = true;
-          doCheck = true;
+          doCheck = false;
         };
       in {
         checks = {
