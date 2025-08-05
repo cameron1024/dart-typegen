@@ -3,6 +3,29 @@
 This program allows generating "plain-old-data" (POD) types in Dart based on a
 config file. 
 
+## Installation
+
+Install Rust if you need to at <https://rust-lang.org/tools/install>. Then:
+
+```shell
+cargo install dart-typegen
+```
+
+### Nix
+
+This repository is packaged as a Nix flake.
+
+To use it, add it to your flake inputs:
+```nix
+{
+  inputs = {
+    # ...
+    dart-typegen.url = "github:cameron1024/dart-typegen";
+  };
+}
+```
+Then, later in your config, use `inputs.dart-typegen.packages.${pkgs.system}.default`.
+
 ## Motivation
 
 I created it out of frustration with the existing `build_runner`-based
@@ -183,7 +206,6 @@ class "Foo" {
 It is an error to have both `defaults-to` and `defaults-to-dart` on the same
 field.
 
-
 ### Docs
 
 Most entities have a `docs` property. This will be converted to a standard Dart
@@ -297,6 +319,23 @@ have chosen are oriented towards library development, rather than application
 development. For example, I cannot require users of my code to be familiar with
 `freezed`, `built_value`, or any other library. Keep this in mind when
 evaluating this tool.
+
+## License
+
+Licensed under either of
+
+ * Apache License, Version 2.0
+   ([LICENSE-APACHE](LICENSE-APACHE) or <http://www.apache.org/licenses/LICENSE-2.0>)
+ * MIT license
+   ([LICENSE-MIT](LICENSE-MIT) or <http://opensource.org/licenses/MIT>)
+
+at your option.
+
+## Contribution
+
+Unless you explicitly state otherwise, any contribution intentionally submitted
+for inclusion in the work by you, as defined in the Apache-2.0 license, shall be
+dual licensed as above, without any additional terms or conditions.
 
 [kdl]: https://kdl.dev
 [json sealed]: https://github.com/google/json_serializable.dart/issues/1342

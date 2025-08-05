@@ -1,11 +1,18 @@
 [package]
 name = "dart-typegen"
+description = "CLI tool for generating Dart POD-type boilerplate"
 version = "0.1.0"
 edition = "2024"
+repository = "https://github.com/cameron1024/dart-typegen"
+license = "MIT OR Apache-2.0"
+authors = ["Cameron Mclouglin"]
+keywords = ["dart", "codegen"]
+categories = ["command-line-utilities"]
 
 [dependencies]
 clap = { version = "4.5.40", features = ["derive", "string"] }
 convert_case = "0.8.0"
+human-panic = "2.0.3"
 insta = "1.43.1"
 knus = "3.3.1"
 miette = { version = "7.6.0", features = ["fancy", "syntect-highlighter"] }

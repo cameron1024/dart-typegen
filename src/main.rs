@@ -12,5 +12,6 @@ mod validate;
 mod tests;
 
 fn main() -> miette::Result<()> {
+    human_panic::setup_panic!();
     run(&Args::parse())
 }
