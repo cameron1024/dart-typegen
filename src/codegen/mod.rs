@@ -103,7 +103,8 @@ impl Context {
 
             writeln!(out, "const {}({{", class.name)?;
             for field in &class.fields {
-                let required_kw = if field.defaults_to.is_none() {
+                let required_kw = if field.defaults_to.is_none() && field.defaults_to_dart.is_none()
+                {
                     "required"
                 } else {
                     ""
