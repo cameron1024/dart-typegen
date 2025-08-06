@@ -11,6 +11,24 @@ Install Rust if you need to at <https://rust-lang.org/tools/install>. Then:
 cargo install dart-typegen
 ```
 
+### Building from source on MacOS
+
+Recent versions of Xcode ship with a broken `ld` which will fail to link this
+binary. You can work around this by:
+- installing `lld` (for example, via `nix shell nixpkgs#lld`)
+- editing `.cargo/config.toml` and adding the following:
+```toml
+[target.aarch64-apple-darwin]
+rustflags = [
+  "-C", "link-arg=-fuse-ld=lld"
+]
+```
+- running `cargo install dart-typegen` again
+
+Once you have installed it, you can uninstall `lld` and remove the change to
+`.cargo/config.toml`. But you don't have to, and you may enjoy having a faster
+and less broken linker 🤷‍♂️.
+
 ### Nix
 
 This repository is packaged as a Nix flake.
