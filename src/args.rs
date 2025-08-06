@@ -10,6 +10,7 @@ use miette::IntoDiagnostic;
 use crate::{codegen, context::Context};
 
 #[derive(Debug, Parser)]
+#[command(version, about)]
 pub struct Args {
     #[clap(subcommand)]
     pub cmd: Cmd,
