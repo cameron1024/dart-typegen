@@ -10,6 +10,8 @@ class "Foo" {
 }
 
 union "Animal" {
+  json-discrimminant "__type"
+
   class "Dog" {
     field "breed" type="String" {
       defaults-to "hello";
