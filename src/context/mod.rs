@@ -1,7 +1,6 @@
 use std::path::{Path, PathBuf};
 
-use miette::{Diagnostic, IntoDiagnostic, Result};
-use thiserror::Error;
+use miette::{ IntoDiagnostic, Result};
 
 use crate::model::Library;
 

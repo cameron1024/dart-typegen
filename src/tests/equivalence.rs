@@ -89,3 +89,27 @@ fn default_json_discriminant() {
         "#,
     );
 }
+
+#[test]
+fn enum_json_value() {
+    assert_equivalent(
+        /* kdl */
+        r#"
+            enum "Color" {
+                variant "red"
+                variant "green"
+            }
+        "#,
+        /* kdl */
+        r#"
+            enum "Color" {
+                variant "red" { 
+                   json-value "red" 
+                }
+                variant "green" {
+                   json-value "green" 
+                }
+            }
+        "#,
+    );
+}

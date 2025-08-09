@@ -29,7 +29,7 @@ impl Context {
                     let value = variant
                         .json_value
                         .as_ref()
-                        .map(|value| format_dart_literal_const(value))
+                        .map(format_dart_literal_const)
                         .unwrap_or_else(|| format!("\"{}\"", variant.name));
 
                     let variant = &variant.name;
@@ -53,7 +53,7 @@ impl Context {
                     let value = variant
                         .json_value
                         .as_ref()
-                        .map(|value| format_dart_literal_const(value))
+                        .map(format_dart_literal_const)
                         .unwrap_or_else(|| format!("\"{}\"", variant.name));
 
                     write!(out, "{name}.{variant_name} => {value},")?;

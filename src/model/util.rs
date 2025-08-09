@@ -1,11 +1,9 @@
 use std::{
     fmt::{Debug, Display},
     ops::Deref,
-    path::PathBuf,
 };
 
-use knus::{Decode, DecodeScalar, ast::Value, errors::DecodeError, span::Span, traits::ErrorSpan};
-use miette::SourceSpan;
+use knus::{ DecodeScalar, ast::Value,  span::Span, traits::ErrorSpan};
 
 use crate::model::{Class, Field, Library};
 
@@ -51,48 +49,6 @@ where
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub enum StringOrPath {
-    String(String),
-    Path(PathBuf),
-}
-
-impl<S> Decode<S> for StringOrPath
-where
-    S: Debug + Clone + Send + Sync + 'static + Into<SourceSpan>,
-{
-    fn decode_node(
-        node: &knus::ast::SpannedNode<S>,
-        ctx: &mut knus::decode::Context<S>,
-    ) -> Result<Self, knus::errors::DecodeError<S>> {
-        #[derive(Decode)]
-        struct _StringOrPath {
-            #[knus(argument)]
-            text: Option<String>,
-            #[knus(property)]
-            path: Option<PathBuf>,
-        }
-
-        let result = match _StringOrPath::decode_node(node, ctx)? {
-            _StringOrPath {
-                text: Some(text),
-                path: None,
-            } => StringOrPath::String(text),
-            _StringOrPath {
-                text: None,
-                path: Some(path),
-            } => StringOrPath::Path(path),
-            _ => {
-                return Err(DecodeError::Custom(
-                    "You must provide either String argument or a `path=\"...\" property but not both "
-                        .into(),
-                ));
-            }
-        };
-
-        Ok(result)
-    }
-}
 
 impl Library {
     pub fn all_classes(&self) -> impl Iterator<Item = &Class> {
