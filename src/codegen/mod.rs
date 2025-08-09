@@ -16,14 +16,51 @@ mod json;
 mod util;
 
 impl Context {
+    #[cfg(test)]
+    pub fn codegen_to_string(&self) -> Result<String> {
+        let mut buf = Vec::new();
+        self.codegen(&mut buf)?;
+        Ok(String::from_utf8(buf).unwrap())
+    }
+
+    pub fn codegen(&self, out: &mut impl std::io::Write) -> Result<()> {
+        let mut buf = String::new();
+
+        if let Some(preamble) = &self.library.preamble {
+            writeln!(buf, "{preamble}").into_diagnostic()?;
+        }
+
+        writeln!(buf, "import \"package:equatable/equatable.dart\";").into_diagnostic()?;
+
+        for class in &self.library.classes {
+            self.codegen_immutable_class(&mut buf, &self.library, class, None)
+                .into_diagnostic()?;
+            self.codegen_mutable_class(&mut buf, &self.library, class)
+                .into_diagnostic()?;
+        }
+
+        for union in &self.library.unions {
+            self.codegen_union_class(&mut buf, &self.library, union)
+                .into_diagnostic()?;
+        }
+
+        if let Some(postamble) = &self.library.postamble {
+            writeln!(buf, "{postamble}").into_diagnostic()?;
+        }
+
+        let formatted = dart_format(buf)?;
+        out.write_all(formatted.as_bytes()).into_diagnostic()?;
+
+        Ok(())
+    }
     fn codegen_union_class(
         &self,
         buf: &mut String,
         library: &Library,
         union: &Union,
     ) -> std::fmt::Result {
-        let discrimminant = union
-            .json_discrimminant
+        let discriminant = union
+            .json_discriminant
             .as_ref()
             .map(|spanned| spanned.value.as_str())
             .unwrap_or("type");
@@ -32,9 +69,18 @@ impl Context {
             self.write_doc_comment(buf, docs)?;
         }
 
-        let modifiers = match union.sealed {
-            None => "abstract final",
-            Some(_) => "sealed",
+        let is_sealed = library
+            .defaults
+            .as_ref()
+            .and_then(|d| d.union.as_ref())
+            .and_then(|u| u.sealed.as_ref())
+            .or(union.sealed.as_ref())
+            .map(|spanned| spanned.value)
+            .unwrap_or(false);
+
+        let modifiers = match is_sealed {
+            false => "abstract final",
+            true => "sealed",
         };
 
         write!(buf, "{modifiers} class {} with EquatableMixin ", union.name)?;
@@ -47,7 +93,7 @@ impl Context {
             writeln!(out, "Map<String, dynamic> toJson(); ")?;
             writeln!(
                 out,
-                r#"factory {}.fromJson(Map<String, dynamic> json) => switch (json["{discrimminant}"]) {{"#,
+                r#"factory {}.fromJson(Map<String, dynamic> json) => switch (json["{discriminant}"]) {{"#,
                 union.name,
             )?;
 
@@ -57,7 +103,7 @@ impl Context {
             }
             writeln!(
                 out,
-                r#"final other => throw ArgumentError("unknown discrimminant: $other"),"#
+                r#"final other => throw ArgumentError("unknown discriminant: $other"),"#
             )?;
 
             writeln!(out, "}};")?;
@@ -101,36 +147,42 @@ impl Context {
 
             writeln!(out)?;
 
-            writeln!(out, "const {}({{", class.name)?;
-            for field in &class.fields {
-                let required_kw = if field.defaults_to.is_none() && field.defaults_to_dart.is_none()
-                {
-                    "required"
-                } else {
-                    ""
-                };
+            if class.fields.is_empty() {
+                writeln!(out, "const {}()", class.name)?;
+            } else {
+                writeln!(out, "const {}({{", class.name)?;
+                for field in &class.fields {
+                    let required_kw =
+                        if field.defaults_to.is_none() && field.defaults_to_dart.is_none() {
+                            "required"
+                        } else {
+                            ""
+                        };
 
-                write!(out, "{required_kw} this.{}", field.name)?;
-                match (&field.defaults_to, &field.defaults_to_dart) {
-                    (Some(_), Some(_)) => unreachable!("checked in validation"),
-                    (None, None) => {}
-                    (Some(defaults_to), None) => {
-                        let dart = format_dart_literal_const(defaults_to);
-                        if dart != "null" {
-                            writeln!(out, "= {dart}")?;
+                    write!(out, "{required_kw} this.{}", field.name)?;
+                    match (&field.defaults_to, &field.defaults_to_dart) {
+                        (Some(_), Some(_)) => unreachable!("checked in validation"),
+                        (None, None) => {}
+                        (Some(defaults_to), None) => {
+                            let dart = format_dart_literal_const(defaults_to);
+                            if dart != "null" {
+                                writeln!(out, "= {dart}")?;
+                            }
+                        }
+                        (None, Some(defaults_to_dart)) => {
+                            if &**defaults_to_dart != "null" {
+                                writeln!(out, "= {defaults_to_dart}")?;
+                            }
                         }
                     }
-                    (None, Some(defaults_to_dart)) => {
-                        if &**defaults_to_dart != "null" {
-                            writeln!(out, "= {defaults_to_dart}")?;
-                        }
-                    }
+                    writeln!(out, ",")?;
                 }
-                writeln!(out, ",")?;
+                writeln!(out, "}})")?;
             }
+
             match superclass {
-                Some(_) => writeln!(out, "}}) : super();")?,
-                None => writeln!(out, "}});")?,
+                Some(_) => writeln!(out, " : super();")?,
+                None => writeln!(out, ";")?,
             }
 
             writeln!(out)?;
@@ -172,9 +224,8 @@ impl Context {
             writeln!(out)?;
 
             for extra in &class.extra_dart {
-                // TODO(cameron): proper error handling
-                let text = self.read_path_or_string(extra).unwrap();
-                writeln!(out, "{text}")?;
+                writeln!(out, "{extra}")?;
+                writeln!(out)?;
             }
 
             Ok(())
@@ -214,11 +265,15 @@ impl Context {
 
             writeln!(out)?;
 
-            writeln!(out, "{builder_name}({{")?;
-            for field in &class.fields {
-                writeln!(out, "required this.{},", field.name)?;
+            if class.fields.is_empty() {
+                writeln!(out, "{builder_name}();")?;
+            } else {
+                writeln!(out, "{builder_name}({{")?;
+                for field in &class.fields {
+                    writeln!(out, "required this.{},", field.name)?;
+                }
+                writeln!(out, "}});")?;
             }
-            writeln!(out, "}});")?;
 
             writeln!(out)?;
 
@@ -281,32 +336,4 @@ fn format_dart_literal_const(defaults_to: &Value<Span>) -> String {
         // TODO: deal with escaping
         Literal::String(str) => format!("\"{str}\""),
     }
-}
-
-pub fn codegen(ctx: Context, out: &mut impl std::io::Write) -> Result<()> {
-    let mut buf = String::new();
-
-    if let Some(preamble) = &ctx.library.preamble {
-        let text = ctx.read_path_or_string(preamble)?;
-        writeln!(buf, "{text}").into_diagnostic()?;
-    }
-
-    writeln!(buf, "import \"package:equatable/equatable.dart\";").into_diagnostic()?;
-
-    for class in &ctx.library.classes {
-        ctx.codegen_immutable_class(&mut buf, &ctx.library, class, None)
-            .into_diagnostic()?;
-        ctx.codegen_mutable_class(&mut buf, &ctx.library, class)
-            .into_diagnostic()?;
-    }
-
-    for union in &ctx.library.unions {
-        ctx.codegen_union_class(&mut buf, &ctx.library, union)
-            .into_diagnostic()?;
-    }
-
-    let formatted = dart_format(buf)?;
-    out.write_all(formatted.as_bytes()).into_diagnostic()?;
-
-    Ok(())
 }

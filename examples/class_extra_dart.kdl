@@ -1,0 +1,13 @@
+// A class with multiple extra-dart directives
+
+class "Foo" {
+  field "x" type="String"
+
+  extra-dart "void foo() {}"
+  extra-dart "void bar() {}"
+  extra-dart r#"
+    void baz() {
+      print(x);
+    }
+  "#
+}

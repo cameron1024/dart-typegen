@@ -1,0 +1,70 @@
+---
+source: src/model/tests.rs
+expression: config
+---
+Library {
+    preamble: None,
+    postamble: None,
+    defaults: None,
+    enums: [
+        Enum {
+            span: Span(
+                0,
+                0,
+            ),
+            name: SpannedScalar {
+                value: "Color",
+                span: SourceSpan {
+                    offset: SourceOffset(
+                        24,
+                    ),
+                    length: 7,
+                },
+            },
+            docs: None,
+            variants: [
+                EnumVariant {
+                    name: SpannedScalar {
+                        value: "red",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                44,
+                            ),
+                            length: 5,
+                        },
+                    },
+                    docs: None,
+                    json_value: None,
+                },
+                EnumVariant {
+                    name: SpannedScalar {
+                        value: "green",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                60,
+                            ),
+                            length: 7,
+                        },
+                    },
+                    docs: None,
+                    json_value: None,
+                },
+                EnumVariant {
+                    name: SpannedScalar {
+                        value: "blue",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                78,
+                            ),
+                            length: 6,
+                        },
+                    },
+                    docs: None,
+                    json_value: None,
+                },
+            ],
+        },
+    ],
+    classes: [],
+    unions: [],
+}

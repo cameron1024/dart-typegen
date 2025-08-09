@@ -1,0 +1,14 @@
+---
+source: src/model/tests.rs
+expression: config
+---
+Library {
+    preamble: None,
+    postamble: Some(
+        "\n  void someCode() {}\n",
+    ),
+    defaults: None,
+    enums: [],
+    classes: [],
+    unions: [],
+}

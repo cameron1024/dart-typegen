@@ -1,0 +1,83 @@
+---
+source: src/model/tests.rs
+expression: config
+---
+Library {
+    preamble: None,
+    postamble: None,
+    defaults: None,
+    enums: [],
+    classes: [
+        Class {
+            span: Span(
+                0,
+                0,
+            ),
+            name: SpannedScalar {
+                value: "Foo",
+                span: SourceSpan {
+                    offset: SourceOffset(
+                        54,
+                    ),
+                    length: 5,
+                },
+            },
+            fields: [
+                Field {
+                    name: SpannedScalar {
+                        value: "x",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                70,
+                            ),
+                            length: 3,
+                        },
+                    },
+                    ty: SpannedScalar {
+                        value: "String",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                79,
+                            ),
+                            length: 8,
+                        },
+                    },
+                    defaults_to: None,
+                    defaults_to_dart: None,
+                    docs: None,
+                },
+            ],
+            docs: None,
+            extra_dart: [
+                SpannedScalar {
+                    value: "void foo() {}",
+                    span: SourceSpan {
+                        offset: SourceOffset(
+                            102,
+                        ),
+                        length: 15,
+                    },
+                },
+                SpannedScalar {
+                    value: "void bar() {}",
+                    span: SourceSpan {
+                        offset: SourceOffset(
+                            131,
+                        ),
+                        length: 15,
+                    },
+                },
+                SpannedScalar {
+                    value: "\n    void baz() {\n      print(x);\n    }\n  ",
+                    span: SourceSpan {
+                        offset: SourceOffset(
+                            160,
+                        ),
+                        length: 47,
+                    },
+                },
+            ],
+        },
+    ],
+    unions: [],
+}

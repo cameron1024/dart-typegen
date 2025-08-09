@@ -1,0 +1,15 @@
+// A class with fields that have docs
+
+class "Foo" {
+  field "x" type="String" {
+    docs "single line doc"
+  }
+
+  field "y" type="String" {
+    docs r#"
+A multi-line doc
+
+Some more stuff
+    "#
+  }
+}

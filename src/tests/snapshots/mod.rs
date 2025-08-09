@@ -1,14 +1,15 @@
-use std::path::Path;
+use crate::context::Context;
 
-use crate::{codegen, context::Context};
+macro_rules! output_snapshot {
+    ($name:ident) => {
+        #[test]
+        fn $name() {
+            let context = Context::from_str(include_str!(crate::test_file!($name))).unwrap();
+            let output = context.codegen_to_string().unwrap();
 
-#[test]
-fn test_foo() {
-    let context = Context::from_path(Path::new("src/tests/snapshots/foo.kdl")).unwrap();
-
-    let mut generated = Vec::new();
-    codegen::codegen(context, &mut generated).unwrap();
-    let generated = String::from_utf8(generated).unwrap();
-
-    insta::assert_snapshot!(generated);
+            insta::assert_snapshot!(output);
+        }
+    };
 }
+
+crate::all_test_files!(output_snapshot);

@@ -1,0 +1,45 @@
+---
+source: src/tests/snapshots/mod.rs
+expression: output
+---
+import "package:equatable/equatable.dart";
+
+final class Foo with EquatableMixin {
+  final String multipleWords;
+  final String evenMoreMultipleWords;
+
+  const Foo({required this.multipleWords, required this.evenMoreMultipleWords});
+
+  @override
+  List<Object?> get props => [multipleWords, evenMoreMultipleWords];
+
+  FooBuilder toBuilder() => FooBuilder(
+    multipleWords: multipleWords,
+    evenMoreMultipleWords: evenMoreMultipleWords,
+  );
+
+  Map<String, dynamic> toJson() => {
+    "multipleWords": multipleWords,
+    "evenMoreMultipleWords": evenMoreMultipleWords,
+  };
+  factory Foo.fromJson(Map<String, dynamic> json) => Foo(
+    multipleWords: json["multipleWords"] as String,
+    evenMoreMultipleWords: json["evenMoreMultipleWords"] as String,
+  );
+}
+
+/// Builder class for [Foo]
+final class FooBuilder {
+  String multipleWords;
+  String evenMoreMultipleWords;
+
+  FooBuilder({
+    required this.multipleWords,
+    required this.evenMoreMultipleWords,
+  });
+
+  Foo build() => Foo(
+    multipleWords: multipleWords,
+    evenMoreMultipleWords: evenMoreMultipleWords,
+  );
+}

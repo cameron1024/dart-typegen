@@ -1,0 +1,79 @@
+---
+source: src/model/tests.rs
+expression: config
+---
+Library {
+    preamble: None,
+    postamble: None,
+    defaults: None,
+    enums: [],
+    classes: [],
+    unions: [
+        Union {
+            span: Span(
+                0,
+                0,
+            ),
+            name: SpannedScalar {
+                value: "Animal",
+                span: SourceSpan {
+                    offset: SourceOffset(
+                        53,
+                    ),
+                    length: 8,
+                },
+            },
+            sealed: None,
+            json_discriminant: Some(
+                SpannedScalar {
+                    value: "__type",
+                    span: SourceSpan {
+                        offset: SourceOffset(
+                            84,
+                        ),
+                        length: 8,
+                    },
+                },
+            ),
+            docs: None,
+            classes: [
+                Class {
+                    span: Span(
+                        0,
+                        0,
+                    ),
+                    name: SpannedScalar {
+                        value: "Dog",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                102,
+                            ),
+                            length: 5,
+                        },
+                    },
+                    fields: [],
+                    docs: None,
+                    extra_dart: [],
+                },
+                Class {
+                    span: Span(
+                        0,
+                        0,
+                    ),
+                    name: SpannedScalar {
+                        value: "Cat",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                116,
+                            ),
+                            length: 5,
+                        },
+                    },
+                    fields: [],
+                    docs: None,
+                    extra_dart: [],
+                },
+            ],
+        },
+    ],
+}

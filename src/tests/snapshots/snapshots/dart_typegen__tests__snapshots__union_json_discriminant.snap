@@ -1,0 +1,57 @@
+---
+source: src/tests/snapshots/mod.rs
+expression: output
+---
+import "package:equatable/equatable.dart";
+
+abstract final class Animal with EquatableMixin {
+  const Animal();
+
+  Map<String, dynamic> toJson();
+  factory Animal.fromJson(Map<String, dynamic> json) =>
+      switch (json["__type"]) {
+        "Dog" => Dog.fromJson(json),
+        "Cat" => Cat.fromJson(json),
+        final other => throw ArgumentError("unknown discriminant: $other"),
+      };
+}
+
+final class Dog extends Animal with EquatableMixin {
+  const Dog() : super();
+
+  @override
+  List<Object?> get props => [];
+
+  DogBuilder toBuilder() => DogBuilder();
+
+  @override
+  Map<String, dynamic> toJson() => {"__type": "Dog"};
+  factory Dog.fromJson(Map<String, dynamic> json) => Dog();
+}
+
+/// Builder class for [Dog]
+final class DogBuilder {
+  DogBuilder();
+
+  Dog build() => Dog();
+}
+
+final class Cat extends Animal with EquatableMixin {
+  const Cat() : super();
+
+  @override
+  List<Object?> get props => [];
+
+  CatBuilder toBuilder() => CatBuilder();
+
+  @override
+  Map<String, dynamic> toJson() => {"__type": "Cat"};
+  factory Cat.fromJson(Map<String, dynamic> json) => Cat();
+}
+
+/// Builder class for [Cat]
+final class CatBuilder {
+  CatBuilder();
+
+  Cat build() => Cat();
+}

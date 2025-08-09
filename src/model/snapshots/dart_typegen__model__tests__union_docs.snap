@@ -1,0 +1,127 @@
+---
+source: src/model/tests.rs
+expression: config
+---
+Library {
+    preamble: None,
+    postamble: None,
+    defaults: None,
+    enums: [],
+    classes: [],
+    unions: [
+        Union {
+            span: Span(
+                0,
+                0,
+            ),
+            name: SpannedScalar {
+                value: "Animal",
+                span: SourceSpan {
+                    offset: SourceOffset(
+                        48,
+                    ),
+                    length: 8,
+                },
+            },
+            sealed: None,
+            json_discriminant: None,
+            docs: Some(
+                SpannedScalar {
+                    value: "\nSome docs \n\nSome more lines\n  ",
+                    span: SourceSpan {
+                        offset: SourceOffset(
+                            66,
+                        ),
+                        length: 36,
+                    },
+                },
+            ),
+            classes: [
+                Class {
+                    span: Span(
+                        0,
+                        0,
+                    ),
+                    name: SpannedScalar {
+                        value: "Dog",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                111,
+                            ),
+                            length: 5,
+                        },
+                    },
+                    fields: [
+                        Field {
+                            name: SpannedScalar {
+                                value: "name",
+                                span: SourceSpan {
+                                    offset: SourceOffset(
+                                        129,
+                                    ),
+                                    length: 6,
+                                },
+                            },
+                            ty: SpannedScalar {
+                                value: "String",
+                                span: SourceSpan {
+                                    offset: SourceOffset(
+                                        141,
+                                    ),
+                                    length: 8,
+                                },
+                            },
+                            defaults_to: None,
+                            defaults_to_dart: None,
+                            docs: None,
+                        },
+                    ],
+                    docs: None,
+                    extra_dart: [],
+                },
+                Class {
+                    span: Span(
+                        0,
+                        0,
+                    ),
+                    name: SpannedScalar {
+                        value: "Cat",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                163,
+                            ),
+                            length: 5,
+                        },
+                    },
+                    fields: [
+                        Field {
+                            name: SpannedScalar {
+                                value: "age",
+                                span: SourceSpan {
+                                    offset: SourceOffset(
+                                        181,
+                                    ),
+                                    length: 5,
+                                },
+                            },
+                            ty: SpannedScalar {
+                                value: "int",
+                                span: SourceSpan {
+                                    offset: SourceOffset(
+                                        192,
+                                    ),
+                                    length: 5,
+                                },
+                            },
+                            defaults_to: None,
+                            defaults_to_dart: None,
+                            docs: None,
+                        },
+                    ],
+                    docs: None,
+                    extra_dart: [],
+                },
+            ],
+        },
+    ],
+}

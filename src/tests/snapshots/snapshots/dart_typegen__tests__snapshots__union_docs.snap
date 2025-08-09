@@ -1,0 +1,69 @@
+---
+source: src/tests/snapshots/mod.rs
+expression: output
+---
+import "package:equatable/equatable.dart";
+
+/// Some docs
+///
+/// Some more lines
+abstract final class Animal with EquatableMixin {
+  const Animal();
+
+  Map<String, dynamic> toJson();
+  factory Animal.fromJson(Map<String, dynamic> json) => switch (json["type"]) {
+    "Dog" => Dog.fromJson(json),
+    "Cat" => Cat.fromJson(json),
+    final other => throw ArgumentError("unknown discriminant: $other"),
+  };
+}
+
+final class Dog extends Animal with EquatableMixin {
+  final String name;
+
+  const Dog({required this.name}) : super();
+
+  @override
+  List<Object?> get props => [name];
+
+  DogBuilder toBuilder() => DogBuilder(name: name);
+
+  @override
+  Map<String, dynamic> toJson() => {"name": name, "type": "Dog"};
+  factory Dog.fromJson(Map<String, dynamic> json) =>
+      Dog(name: json["name"] as String);
+}
+
+/// Builder class for [Dog]
+final class DogBuilder {
+  String name;
+
+  DogBuilder({required this.name});
+
+  Dog build() => Dog(name: name);
+}
+
+final class Cat extends Animal with EquatableMixin {
+  final int age;
+
+  const Cat({required this.age}) : super();
+
+  @override
+  List<Object?> get props => [age];
+
+  CatBuilder toBuilder() => CatBuilder(age: age);
+
+  @override
+  Map<String, dynamic> toJson() => {"age": age, "type": "Cat"};
+  factory Cat.fromJson(Map<String, dynamic> json) =>
+      Cat(age: json["age"] as int);
+}
+
+/// Builder class for [Cat]
+final class CatBuilder {
+  int age;
+
+  CatBuilder({required this.age});
+
+  Cat build() => Cat(age: age);
+}

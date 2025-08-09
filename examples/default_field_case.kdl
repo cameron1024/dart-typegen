@@ -1,0 +1,12 @@
+// Overrides the case-renaming of json object keys
+
+defaults {
+  field {
+    json-key-case "camel"
+  }
+}
+
+class "Foo" {
+  field "multipleWords" type="String"
+  field "evenMoreMultipleWords" type="String"
+}

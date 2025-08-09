@@ -1,0 +1,57 @@
+---
+source: src/tests/snapshots/mod.rs
+expression: output
+---
+import "package:equatable/equatable.dart";
+
+/// Single line docs
+final class Foo with EquatableMixin {
+  final String x;
+
+  const Foo({required this.x});
+
+  @override
+  List<Object?> get props => [x];
+
+  FooBuilder toBuilder() => FooBuilder(x: x);
+
+  Map<String, dynamic> toJson() => {"x": x};
+  factory Foo.fromJson(Map<String, dynamic> json) =>
+      Foo(x: json["x"] as String);
+}
+
+/// Builder class for [Foo]
+final class FooBuilder {
+  String x;
+
+  FooBuilder({required this.x});
+
+  Foo build() => Foo(x: x);
+}
+
+/// Multi line docs
+///
+/// More stuff
+final class Bar with EquatableMixin {
+  final String x;
+
+  const Bar({required this.x});
+
+  @override
+  List<Object?> get props => [x];
+
+  BarBuilder toBuilder() => BarBuilder(x: x);
+
+  Map<String, dynamic> toJson() => {"x": x};
+  factory Bar.fromJson(Map<String, dynamic> json) =>
+      Bar(x: json["x"] as String);
+}
+
+/// Builder class for [Bar]
+final class BarBuilder {
+  String x;
+
+  BarBuilder({required this.x});
+
+  Bar build() => Bar(x: x);
+}

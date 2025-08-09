@@ -7,7 +7,7 @@ use std::{
 use clap::{Parser, Subcommand};
 use miette::IntoDiagnostic;
 
-use crate::{codegen, context::Context};
+use crate::{context::Context};
 
 #[derive(Debug, Parser)]
 #[command(version, about)]
@@ -48,11 +48,11 @@ pub fn run(args: &Args) -> miette::Result<()> {
                     let output = File::create(output).into_diagnostic()?;
                     let mut output = BufWriter::new(output);
 
-                    codegen::codegen(context, &mut output)?;
+                    context.codegen(&mut output)?;
                 }
                 None => {
                     let mut output = BufWriter::new(stdout().lock());
-                    codegen::codegen(context, &mut output)?;
+                    context.codegen(&mut output)?;
                 }
             }
         }

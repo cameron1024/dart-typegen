@@ -1,0 +1,11 @@
+// A simple class with fields with default values
+
+class "Foo" {
+  field "x" type="String" {
+    defaults-to "hello"
+  }
+
+  field "y" type="int" {
+    defaults-to-dart "123 + 234"
+  }
+}

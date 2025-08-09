@@ -1,0 +1,55 @@
+---
+source: src/model/tests.rs
+expression: config
+---
+Library {
+    preamble: None,
+    postamble: None,
+    defaults: None,
+    enums: [],
+    classes: [
+        Class {
+            span: Span(
+                0,
+                0,
+            ),
+            name: SpannedScalar {
+                value: "Foo",
+                span: SourceSpan {
+                    offset: SourceOffset(
+                        26,
+                    ),
+                    length: 5,
+                },
+            },
+            fields: [
+                Field {
+                    name: SpannedScalar {
+                        value: "x",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                42,
+                            ),
+                            length: 3,
+                        },
+                    },
+                    ty: SpannedScalar {
+                        value: "String",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                51,
+                            ),
+                            length: 8,
+                        },
+                    },
+                    defaults_to: None,
+                    defaults_to_dart: None,
+                    docs: None,
+                },
+            ],
+            docs: None,
+            extra_dart: [],
+        },
+    ],
+    unions: [],
+}

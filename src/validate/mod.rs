@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{borrow::Cow, collections::HashMap};
 
 use convert_case::{Case, Casing};
 use knus::ast::{Integer, Literal, Radix};
@@ -22,8 +22,11 @@ impl Context {
 
     fn collect_errors(&self) -> Vec<miette::Report> {
         let mut errors = vec![];
-        let source =
-            NamedSource::new(self.path.to_string_lossy(), self.text.clone()).with_language("kdl");
+        let source_name = match &self.path {
+            Some(path) => path.to_string_lossy(),
+            None => Cow::Borrowed("<memory>"),
+        };
+        let source = NamedSource::new(source_name, self.text.clone()).with_language("kdl");
 
         incorrect_type_name_case(self, &mut errors, &source);
         duplicate_type_names(self, &mut errors, &source);

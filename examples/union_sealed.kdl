@@ -1,0 +1,11 @@
+// A sealed union
+
+union "Animal" sealed=true {
+  class "Dog" {
+    field "name" type="String"
+  }
+
+  class "Cat" {
+    field "age" type="int"
+  }
+}

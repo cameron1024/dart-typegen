@@ -1,0 +1,98 @@
+---
+source: src/model/tests.rs
+expression: config
+---
+Library {
+    preamble: None,
+    postamble: None,
+    defaults: None,
+    enums: [],
+    classes: [
+        Class {
+            span: Span(
+                0,
+                0,
+            ),
+            name: SpannedScalar {
+                value: "Foo",
+                span: SourceSpan {
+                    offset: SourceOffset(
+                        45,
+                    ),
+                    length: 5,
+                },
+            },
+            fields: [
+                Field {
+                    name: SpannedScalar {
+                        value: "x",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                61,
+                            ),
+                            length: 3,
+                        },
+                    },
+                    ty: SpannedScalar {
+                        value: "String",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                70,
+                            ),
+                            length: 8,
+                        },
+                    },
+                    defaults_to: None,
+                    defaults_to_dart: None,
+                    docs: Some(
+                        SpannedScalar {
+                            value: "single line doc",
+                            span: SourceSpan {
+                                offset: SourceOffset(
+                                    90,
+                                ),
+                                length: 17,
+                            },
+                        },
+                    ),
+                },
+                Field {
+                    name: SpannedScalar {
+                        value: "y",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                121,
+                            ),
+                            length: 3,
+                        },
+                    },
+                    ty: SpannedScalar {
+                        value: "String",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                130,
+                            ),
+                            length: 8,
+                        },
+                    },
+                    defaults_to: None,
+                    defaults_to_dart: None,
+                    docs: Some(
+                        SpannedScalar {
+                            value: "\nA multi-line doc\n\nSome more stuff\n    ",
+                            span: SourceSpan {
+                                offset: SourceOffset(
+                                    150,
+                                ),
+                                length: 44,
+                            },
+                        },
+                    ),
+                },
+            ],
+            docs: None,
+            extra_dart: [],
+        },
+    ],
+    unions: [],
+}

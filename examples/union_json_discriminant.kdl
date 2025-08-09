@@ -1,0 +1,8 @@
+// A union with an explicit JSON discriminant
+
+union "Animal" {
+  json-discriminant "__type"
+
+  class "Dog"
+  class "Cat"
+}

@@ -1,0 +1,14 @@
+---
+source: src/model/tests.rs
+expression: config
+---
+Library {
+    preamble: Some(
+        "\n// a comment \n",
+    ),
+    postamble: None,
+    defaults: None,
+    enums: [],
+    classes: [],
+    unions: [],
+}

@@ -1,0 +1,5 @@
+// A trivial class
+
+class "Foo" {
+  field "x" type="String"
+}

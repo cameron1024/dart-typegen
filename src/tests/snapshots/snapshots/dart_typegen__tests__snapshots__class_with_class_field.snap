@@ -1,0 +1,61 @@
+---
+source: src/tests/snapshots/mod.rs
+expression: output
+---
+import "package:equatable/equatable.dart";
+
+final class Foo with EquatableMixin {
+  final String x;
+  final Bar bar;
+
+  const Foo({required this.x, required this.bar});
+
+  @override
+  List<Object?> get props => [x, bar];
+
+  FooBuilder toBuilder() => FooBuilder(x: x, bar: bar.toBuilder());
+
+  Map<String, dynamic> toJson() => {"x": x, "bar": bar.toJson()};
+  factory Foo.fromJson(Map<String, dynamic> json) => Foo(
+    x: json["x"] as String,
+    bar: Bar.fromJson(json["bar"] as Map<String, dynamic>),
+  );
+}
+
+/// Builder class for [Foo]
+final class FooBuilder {
+  String x;
+  BarBuilder bar;
+
+  FooBuilder({required this.x, required this.bar});
+
+  Foo build() => Foo(x: x, bar: bar.build());
+}
+
+final class Bar with EquatableMixin {
+  final String x;
+  final Bar bar;
+
+  const Bar({required this.x, required this.bar});
+
+  @override
+  List<Object?> get props => [x, bar];
+
+  BarBuilder toBuilder() => BarBuilder(x: x, bar: bar.toBuilder());
+
+  Map<String, dynamic> toJson() => {"x": x, "bar": bar.toJson()};
+  factory Bar.fromJson(Map<String, dynamic> json) => Bar(
+    x: json["x"] as String,
+    bar: Bar.fromJson(json["bar"] as Map<String, dynamic>),
+  );
+}
+
+/// Builder class for [Bar]
+final class BarBuilder {
+  String x;
+  BarBuilder bar;
+
+  BarBuilder({required this.x, required this.bar});
+
+  Bar build() => Bar(x: x, bar: bar.build());
+}

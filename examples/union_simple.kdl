@@ -1,0 +1,11 @@
+// A trivial union
+
+union "Animal" {
+  class "Dog" {
+    field "name" type="String"
+  }
+
+  class "Cat" {
+    field "age" type="int"
+  }
+}

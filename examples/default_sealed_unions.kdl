@@ -1,0 +1,12 @@
+// Setting unions to be sealed by default
+
+defaults {
+  union {
+    sealed true
+  }
+}
+
+union "Foo" {
+  class "X"
+  class "Y"
+}

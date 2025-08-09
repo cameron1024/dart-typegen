@@ -1,0 +1,15 @@
+// Classes with docs on the class itself
+
+class "Foo" {
+  docs "Single line docs"
+  field "x" type="String"
+}
+
+class "Bar" {
+  docs r#"
+Multi line docs
+
+More stuff
+  "#
+  field "x" type="String"
+}

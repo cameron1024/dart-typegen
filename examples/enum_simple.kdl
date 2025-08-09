@@ -1,0 +1,7 @@
+// A trivial enum
+
+enum "Color" {
+  variant "red"
+  variant "green"
+  variant "blue"
+}

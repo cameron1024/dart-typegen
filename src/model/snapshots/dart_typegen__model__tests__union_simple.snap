@@ -1,0 +1,117 @@
+---
+source: src/model/tests.rs
+expression: config
+---
+Library {
+    preamble: None,
+    postamble: None,
+    defaults: None,
+    enums: [],
+    classes: [],
+    unions: [
+        Union {
+            span: Span(
+                0,
+                0,
+            ),
+            name: SpannedScalar {
+                value: "Animal",
+                span: SourceSpan {
+                    offset: SourceOffset(
+                        26,
+                    ),
+                    length: 8,
+                },
+            },
+            sealed: None,
+            json_discriminant: None,
+            docs: None,
+            classes: [
+                Class {
+                    span: Span(
+                        0,
+                        0,
+                    ),
+                    name: SpannedScalar {
+                        value: "Dog",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                45,
+                            ),
+                            length: 5,
+                        },
+                    },
+                    fields: [
+                        Field {
+                            name: SpannedScalar {
+                                value: "name",
+                                span: SourceSpan {
+                                    offset: SourceOffset(
+                                        63,
+                                    ),
+                                    length: 6,
+                                },
+                            },
+                            ty: SpannedScalar {
+                                value: "String",
+                                span: SourceSpan {
+                                    offset: SourceOffset(
+                                        75,
+                                    ),
+                                    length: 8,
+                                },
+                            },
+                            defaults_to: None,
+                            defaults_to_dart: None,
+                            docs: None,
+                        },
+                    ],
+                    docs: None,
+                    extra_dart: [],
+                },
+                Class {
+                    span: Span(
+                        0,
+                        0,
+                    ),
+                    name: SpannedScalar {
+                        value: "Cat",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                97,
+                            ),
+                            length: 5,
+                        },
+                    },
+                    fields: [
+                        Field {
+                            name: SpannedScalar {
+                                value: "age",
+                                span: SourceSpan {
+                                    offset: SourceOffset(
+                                        115,
+                                    ),
+                                    length: 5,
+                                },
+                            },
+                            ty: SpannedScalar {
+                                value: "int",
+                                span: SourceSpan {
+                                    offset: SourceOffset(
+                                        126,
+                                    ),
+                                    length: 5,
+                                },
+                            },
+                            defaults_to: None,
+                            defaults_to_dart: None,
+                            docs: None,
+                        },
+                    ],
+                    docs: None,
+                    extra_dart: [],
+                },
+            ],
+        },
+    ],
+}

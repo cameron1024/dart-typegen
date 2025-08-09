@@ -3,8 +3,9 @@ use std::{
     process::{Command, Stdio},
 };
 
-use miette::IntoDiagnostic;
+use miette::{bail, IntoDiagnostic};
 
+/// Run `dart format` on a string
 pub fn dart_format(dart: String) -> miette::Result<String> {
     use std::io::Write;
     let mut process = Command::new("dart")
@@ -18,7 +19,14 @@ pub fn dart_format(dart: String) -> miette::Result<String> {
     stdin.write_all(dart.as_bytes()).into_diagnostic()?;
 
     let output = process.wait_with_output().into_diagnostic()?;
+    if !output.status.success() {
+        eprintln!("invalid source:");
+        eprintln!("{dart}");
+        bail!("dart format failed");
+    }
     let output = String::from_utf8(output.stdout).into_diagnostic()?;
+
+
 
     Ok(output)
 }

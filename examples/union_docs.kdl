@@ -1,0 +1,16 @@
+// A union with docs on the union itself
+
+union "Animal" {
+  docs r#"
+Some docs 
+
+Some more lines
+  "#
+  class "Dog" {
+    field "name" type="String"
+  }
+
+  class "Cat" {
+    field "age" type="int"
+  }
+}

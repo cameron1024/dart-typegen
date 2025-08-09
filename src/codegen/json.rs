@@ -29,13 +29,13 @@ impl Context {
         }
 
         if let Some(union) = superclass {
-            let discrimminant = union
-                .json_discrimminant
+            let discriminant = union
+                .json_discriminant
                 .as_ref()
                 .map(|spanned| spanned.value.as_str())
                 .unwrap_or("type");
 
-            writeln!(buf, "\"{discrimminant}\": \"{}\"", class.name)?;
+            writeln!(buf, "\"{discriminant}\": \"{}\"", class.name)?;
         }
 
         writeln!(buf, "}};")?;
