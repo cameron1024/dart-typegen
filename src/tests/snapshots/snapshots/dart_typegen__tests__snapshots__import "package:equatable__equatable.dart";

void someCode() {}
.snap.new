@@ -1,6 +1,0 @@
----
-source: src/tests/snapshots/mod.rs
-assertion_line: 15
-expression: dart
----
-postamble
