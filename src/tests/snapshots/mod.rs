@@ -7,7 +7,7 @@ macro_rules! output_snapshot {
             let context = Context::from_str(include_str!(crate::test_file!($name))).unwrap();
             let output = context.codegen_to_string().unwrap();
 
-            insta::assert_snapshot!(output);
+            insta::assert_snapshot!(stringify!($name), output, "dart");
         }
     };
 }

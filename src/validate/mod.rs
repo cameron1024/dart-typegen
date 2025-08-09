@@ -34,7 +34,7 @@ impl Context {
         empty_union(self, &mut errors, &source);
         field_with_both_defaults(self, &mut errors, &source);
         invalid_int_literal(self, &mut errors, &source);
-        empty_union(self, &mut errors, &source);
+        empty_enum(self, &mut errors, &source);
 
         errors
     }

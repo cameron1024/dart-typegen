@@ -1,6 +1,6 @@
 ---
 source: src/tests/snapshots/mod.rs
-expression: output
+expression: dart
 ---
 // a comment
 

@@ -1,5 +1,6 @@
 ---
 source: src/tests/snapshots/mod.rs
+assertion_line: 15
 expression: dart
 ---
-import "package:equatable/equatable.dart";
+postamble

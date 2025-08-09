@@ -1,0 +1,26 @@
+---
+source: src/tests/snapshots/mod.rs
+expression: dart
+---
+import "package:equatable/equatable.dart";
+
+/// Multi line comment
+///
+/// More stuff
+enum Foo {
+  /// Multi line comment
+  ///
+  /// More stuff
+  a,
+
+  /// Multi line comment
+  ///
+  /// More stuff
+  b;
+
+  factory Foo.fromJson(dynamic json) => switch (json) {
+    "a" => Foo.a,
+    "b" => Foo.b,
+    final other => throw ArgumentError("Unknown variant: $other"),
+  };
+}

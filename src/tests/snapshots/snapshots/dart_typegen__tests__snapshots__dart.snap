@@ -1,6 +1,6 @@
 ---
 source: src/tests/snapshots/mod.rs
-expression: dart
+expression: output
 ---
 import "package:equatable/equatable.dart";
 

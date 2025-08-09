@@ -14,14 +14,15 @@ use crate::{
 
 mod enumeration;
 mod json;
+mod mutable;
+mod union;
 mod util;
 
 impl Context {
     #[cfg(test)]
     pub fn codegen_to_string(&self) -> Result<String> {
         let mut buf = Vec::new();
-        self.codegen(&mut buf)?;
-        Ok(String::from_utf8(buf).unwrap())
+        self.codegen(&mut buf)?; Ok(String::from_utf8(buf).unwrap())
     }
 
     pub fn codegen(&self, out: &mut impl std::io::Write) -> Result<()> {
@@ -59,53 +60,7 @@ impl Context {
         Ok(())
     }
 
-    fn codegen_union_class(&self, buf: &mut String, union: &Union) -> std::fmt::Result {
-        let discriminant = self.library.discriminant_for(union);
-
-        if let Some(docs) = &union.docs {
-            self.write_doc_comment(buf, docs)?;
-        }
-
-        let modifiers = match self.library.is_sealed(union) {
-            false => "abstract final",
-            true => "sealed",
-        };
-
-        write!(buf, "{modifiers} class {} with EquatableMixin ", union.name)?;
-
-        braced(buf, |out| {
-            writeln!(out, "const {}();", union.name)?;
-
-            writeln!(out)?;
-
-            writeln!(out, "Map<String, dynamic> toJson(); ")?;
-            writeln!(
-                out,
-                r#"factory {}.fromJson(Map<String, dynamic> json) => switch (json["{discriminant}"]) {{"#,
-                union.name,
-            )?;
-
-            for class in &union.classes {
-                let name = &class.name;
-                writeln!(out, r#""{name}" => {name}.fromJson(json),"#)?;
-            }
-            writeln!(
-                out,
-                r#"final other => throw ArgumentError("unknown discriminant: $other"),"#
-            )?;
-
-            writeln!(out, "}};")?;
-
-            Ok(())
-        })?;
-
-        for class in &union.classes {
-            self.codegen_immutable_class(buf, class, Some(union))?;
-            self.codegen_mutable_class(buf, class)?;
-        }
-
-        Ok(())
-    }
+    
 
     fn codegen_immutable_class(
         &self,
@@ -222,65 +177,6 @@ impl Context {
         Ok(())
     }
 
-    fn codegen_mutable_class(&self, buf: &mut String, class: &Class) -> std::fmt::Result {
-        // TODO: allow configuring
-        let builder_name = format!("{}Builder", class.name);
-
-        self.write_doc_comment(buf, &format!("Builder class for [{}]", class.name))?;
-        write!(buf, "final class {builder_name}",)?;
-
-        braced(buf, |out| {
-            for field in &class.fields {
-                // TODO: more robust handling of types
-                let field_needs_build = self
-                    .library
-                    .classes
-                    .iter()
-                    .any(|c| c.name.as_str() == field.ty.as_str());
-
-                let ty_name = if field_needs_build {
-                    format!("{}Builder", field.ty)
-                } else {
-                    field.ty.to_string()
-                };
-
-                writeln!(out, "{ty_name} {};", field.name)?;
-            }
-
-            writeln!(out)?;
-
-            if class.fields.is_empty() {
-                writeln!(out, "{builder_name}();")?;
-            } else {
-                writeln!(out, "{builder_name}({{")?;
-                for field in &class.fields {
-                    writeln!(out, "required this.{},", field.name)?;
-                }
-                writeln!(out, "}});")?;
-            }
-
-            writeln!(out)?;
-
-            writeln!(out, "{0} build() => {0}(", class.name)?;
-            for field in &class.fields {
-                // TODO: more robust handling of types
-                let field_needs_build = self
-                    .library
-                    .classes
-                    .iter()
-                    .any(|c| c.name.as_str() == field.ty.as_str());
-
-                let name = field.name.as_str();
-                let build = if field_needs_build { ".build()" } else { "" };
-                writeln!(out, "{name}: {name}{build},")?;
-            }
-            writeln!(out, ");")?;
-
-            Ok(())
-        })?;
-
-        Ok(())
-    }
 
     fn write_doc_comment(&self, buf: &mut String, source: &str) -> std::fmt::Result {
         let mut lines: VecDeque<_> = source.lines().collect();

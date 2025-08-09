@@ -1,0 +1,15 @@
+// An enum with docs
+
+enum "Foo" {
+  docs r#"
+Multi line comment
+
+More stuff
+  "#
+
+  variant "a" {
+    docs "single line comment"
+  }
+
+  variant "b"
+}

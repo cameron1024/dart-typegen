@@ -10,7 +10,7 @@ fn assert_error_count(count: usize, source: &str) {
     let ctx = Context::from_path(&config_path).unwrap();
     let errors = ctx.collect_errors();
 
-    assert_eq!(errors.len(), count);
+    assert_eq!(errors.len(), count, "{errors:#?}");
 }
 
 #[test]
