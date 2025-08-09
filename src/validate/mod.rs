@@ -34,6 +34,7 @@ impl Context {
         empty_union(self, &mut errors, &source);
         field_with_both_defaults(self, &mut errors, &source);
         invalid_int_literal(self, &mut errors, &source);
+        empty_union(self, &mut errors, &source);
 
         errors
     }
@@ -244,6 +245,33 @@ fn invalid_int_literal(
             span: (*value.literal.span()).into(),
         })
     });
+
+    errors.extend(errs.map(Into::into));
+}
+
+// === Invalid Int Literals ===
+
+#[derive(Debug, Error, Diagnostic)]
+#[error("Enum has no variants")]
+#[help = r#"Add at least one variant with `variant "myVariant"`"#]
+struct EmptyEnum {
+    #[source_code]
+    src: NamedSource<String>,
+
+    #[label]
+    span: SourceSpan,
+}
+
+fn empty_enum(context: &Context, errors: &mut Vec<miette::Report>, source: &NamedSource<String>) {
+    let errs = context
+        .library
+        .enums
+        .iter()
+        .filter(|e| e.variants.is_empty())
+        .map(|e| EmptyEnum {
+            src: source.clone(),
+            span: e.span.into(),
+        });
 
     errors.extend(errs.map(Into::into));
 }

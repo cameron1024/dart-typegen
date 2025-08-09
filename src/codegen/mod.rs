@@ -12,6 +12,7 @@ use crate::{
     model::*,
 };
 
+mod enumeration;
 mod json;
 mod util;
 
@@ -33,15 +34,19 @@ impl Context {
         writeln!(buf, "import \"package:equatable/equatable.dart\";").into_diagnostic()?;
 
         for class in &self.library.classes {
-            self.codegen_immutable_class(&mut buf, &self.library, class, None)
+            self.codegen_immutable_class(&mut buf, class, None)
                 .into_diagnostic()?;
-            self.codegen_mutable_class(&mut buf, &self.library, class)
+            self.codegen_mutable_class(&mut buf, class)
                 .into_diagnostic()?;
         }
 
         for union in &self.library.unions {
-            self.codegen_union_class(&mut buf, &self.library, union)
+            self.codegen_union_class(&mut buf, union)
                 .into_diagnostic()?;
+        }
+
+        for e in &self.library.enums {
+            self.codegen_enum(&mut buf, e).into_diagnostic()?;
         }
 
         if let Some(postamble) = &self.library.postamble {
@@ -53,32 +58,15 @@ impl Context {
 
         Ok(())
     }
-    fn codegen_union_class(
-        &self,
-        buf: &mut String,
-        library: &Library,
-        union: &Union,
-    ) -> std::fmt::Result {
-        let discriminant = union
-            .json_discriminant
-            .as_ref()
-            .map(|spanned| spanned.value.as_str())
-            .unwrap_or("type");
+
+    fn codegen_union_class(&self, buf: &mut String, union: &Union) -> std::fmt::Result {
+        let discriminant = self.library.discriminant_for(union);
 
         if let Some(docs) = &union.docs {
             self.write_doc_comment(buf, docs)?;
         }
 
-        let is_sealed = library
-            .defaults
-            .as_ref()
-            .and_then(|d| d.union.as_ref())
-            .and_then(|u| u.sealed.as_ref())
-            .or(union.sealed.as_ref())
-            .map(|spanned| spanned.value)
-            .unwrap_or(false);
-
-        let modifiers = match is_sealed {
+        let modifiers = match self.library.is_sealed(union) {
             false => "abstract final",
             true => "sealed",
         };
@@ -112,8 +100,8 @@ impl Context {
         })?;
 
         for class in &union.classes {
-            self.codegen_immutable_class(buf, library, class, Some(union))?;
-            self.codegen_mutable_class(buf, library, class)?;
+            self.codegen_immutable_class(buf, class, Some(union))?;
+            self.codegen_mutable_class(buf, class)?;
         }
 
         Ok(())
@@ -122,7 +110,6 @@ impl Context {
     fn codegen_immutable_class(
         &self,
         buf: &mut String,
-        library: &Library,
         class: &Class,
         superclass: Option<&Union>,
     ) -> std::fmt::Result {
@@ -201,7 +188,8 @@ impl Context {
             writeln!(out, "{builder_name} toBuilder() => {builder_name}(")?;
             for field in &class.fields {
                 // TODO: more robust handling of types
-                let field_needs_to_builder = library
+                let field_needs_to_builder = self
+                    .library
                     .classes
                     .iter()
                     .any(|c| c.name.as_str() == field.ty.as_str());
@@ -218,8 +206,8 @@ impl Context {
 
             writeln!(out)?;
 
-            self.generate_to_json(out, library, class, superclass)?;
-            self.generate_from_json(out, library, class)?;
+            self.generate_to_json(out, class, superclass)?;
+            self.generate_from_json(out, class)?;
 
             writeln!(out)?;
 
@@ -234,12 +222,7 @@ impl Context {
         Ok(())
     }
 
-    fn codegen_mutable_class(
-        &self,
-        buf: &mut String,
-        library: &Library,
-        class: &Class,
-    ) -> std::fmt::Result {
+    fn codegen_mutable_class(&self, buf: &mut String, class: &Class) -> std::fmt::Result {
         // TODO: allow configuring
         let builder_name = format!("{}Builder", class.name);
 
@@ -249,7 +232,8 @@ impl Context {
         braced(buf, |out| {
             for field in &class.fields {
                 // TODO: more robust handling of types
-                let field_needs_build = library
+                let field_needs_build = self
+                    .library
                     .classes
                     .iter()
                     .any(|c| c.name.as_str() == field.ty.as_str());
@@ -280,7 +264,8 @@ impl Context {
             writeln!(out, "{0} build() => {0}(", class.name)?;
             for field in &class.fields {
                 // TODO: more robust handling of types
-                let field_needs_build = library
+                let field_needs_build = self
+                    .library
                     .classes
                     .iter()
                     .any(|c| c.name.as_str() == field.ty.as_str());

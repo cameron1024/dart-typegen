@@ -39,3 +39,53 @@ fn default_sealed() {
         "#,
     );
 }
+#[test]
+fn default_sealed_overridden_by_specific() {
+    assert_equivalent(
+        /* kdl */
+        r#"
+            union "Foo" sealed=false {
+                class "X"
+                class "Y"
+            }
+        "#,
+        /* kdl */
+        r#"
+            defaults {
+                union {
+                    sealed true
+                } 
+            }
+            union "Foo" sealed=false {
+                class "X"
+                class "Y"
+            }
+        "#,
+    );
+}
+
+#[test]
+fn default_json_discriminant() {
+    assert_equivalent(
+        /* kdl */
+        r#"
+            union "Foo" {
+                json-discriminant "__type"
+                class "X"
+                class "Y"
+            }
+        "#,
+        /* kdl */
+        r#"
+            defaults {
+                union {
+                    json-discriminant "__type"
+                } 
+            }
+            union "Foo" {
+                class "X"
+                class "Y"
+            }
+        "#,
+    );
+}

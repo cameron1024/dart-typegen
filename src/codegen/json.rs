@@ -4,7 +4,6 @@ impl Context {
     pub(super) fn generate_to_json(
         &self,
         buf: &mut String,
-        library: &Library,
         class: &Class,
         superclass: Option<&Union>,
     ) -> std::fmt::Result {
@@ -14,7 +13,7 @@ impl Context {
         writeln!(buf, "Map<String, dynamic> toJson() => {{")?;
 
         for field in &class.fields {
-            let needs_to_json = library
+            let needs_to_json = self.library
                 .classes
                 .iter()
                 .any(|c| c.name.as_str() == field.ty.as_str());
@@ -29,12 +28,7 @@ impl Context {
         }
 
         if let Some(union) = superclass {
-            let discriminant = union
-                .json_discriminant
-                .as_ref()
-                .map(|spanned| spanned.value.as_str())
-                .unwrap_or("type");
-
+            let discriminant = self.library.discriminant_for(union);
             writeln!(buf, "\"{discriminant}\": \"{}\"", class.name)?;
         }
 
@@ -46,7 +40,6 @@ impl Context {
     pub(super) fn generate_from_json(
         &self,
         buf: &mut String,
-        library: &Library,
         class: &Class,
     ) -> std::fmt::Result {
         writeln!(
@@ -56,7 +49,7 @@ impl Context {
         )?;
 
         for field in &class.fields {
-            let needs_from_json = library
+            let needs_from_json = self.library
                 .classes
                 .iter()
                 .any(|c| c.name.as_str() == field.ty.as_str());

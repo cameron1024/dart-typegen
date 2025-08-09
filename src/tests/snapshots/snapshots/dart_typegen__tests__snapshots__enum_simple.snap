@@ -3,3 +3,16 @@ source: src/tests/snapshots/mod.rs
 expression: output
 ---
 import "package:equatable/equatable.dart";
+
+enum Color {
+  red,
+  green,
+  blue;
+
+  factory Color.fromJson(dynamic json) => switch (json) {
+    "red" => Color.red,
+    "green" => Color.green,
+    "blue" => Color.blue,
+    final other => throw ArgumentError("Unknown variant: $other"),
+  };
+}
