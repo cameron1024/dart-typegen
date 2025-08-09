@@ -103,8 +103,9 @@ impl Library {
     pub fn type_names(&self) -> impl Iterator<Item = &SpannedScalar<String>> {
         let class_names = self.all_classes().map(|class| &class.name);
         let union_names = self.unions.iter().map(|union| &union.name);
+        let enum_names = self.enums.iter().map(|enums| &enums.name);
 
-        class_names.chain(union_names)
+        class_names.chain(union_names).chain(enum_names)
     }
 
     pub fn all_fields(&self) -> impl Iterator<Item = &Field> {

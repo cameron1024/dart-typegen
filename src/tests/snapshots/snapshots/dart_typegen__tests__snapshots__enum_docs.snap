@@ -23,4 +23,9 @@ enum Foo {
     "b" => Foo.b,
     final other => throw ArgumentError("Unknown variant: $other"),
   };
+
+  dynamic toJson() => switch (self) {
+    Foo.a => "a",
+    Foo.b => "b",
+  };
 }

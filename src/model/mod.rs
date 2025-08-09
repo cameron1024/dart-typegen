@@ -135,5 +135,5 @@ pub struct EnumVariant {
     pub docs: Option<SpannedScalar<String>>,
 
     #[knus(child, unwrap(argument))]
-    pub json_value: Option<SpannedScalar<String>>,
+    pub json_value: Option<Value<Span>>,
 }

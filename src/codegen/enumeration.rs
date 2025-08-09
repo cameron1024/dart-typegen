@@ -26,8 +26,14 @@ impl Context {
 
             braced(out, |out| {
                 for variant in &enumeration.variants {
+                    let value = variant
+                        .json_value
+                        .as_ref()
+                        .map(|value| format_dart_literal_const(value))
+                        .unwrap_or_else(|| format!("\"{}\"", variant.name));
+
                     let variant = &variant.name;
-                    writeln!(out, "\"{variant}\" => {name}.{variant},")?;
+                    writeln!(out, "{value} => {name}.{variant},")?;
                 }
 
                 writeln!(
@@ -38,6 +44,25 @@ impl Context {
                 Ok(())
             })?;
             writeln!(out, ";")?;
+            writeln!(out)?;
+
+            write!(out, "dynamic toJson() => switch (self)")?;
+            braced(out, |out| {
+                for variant in &enumeration.variants {
+                    let variant_name = &variant.name;
+                    let value = variant
+                        .json_value
+                        .as_ref()
+                        .map(|value| format_dart_literal_const(value))
+                        .unwrap_or_else(|| format!("\"{}\"", variant.name));
+
+                    write!(out, "{name}.{variant_name} => {value},")?;
+                }
+
+                Ok(())
+            })?;
+            write!(out, ";")?;
+            writeln!(out)?;
 
             Ok(())
         })?;

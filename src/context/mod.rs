@@ -33,23 +33,3 @@ impl Context {
         })
     }
 }
-
-#[derive(Debug, Error, Diagnostic)]
-pub enum ReadPathError {
-    #[error(transparent)]
-    #[diagnostic(transparent)]
-    ResolvePath(#[from] ResolvePathError),
-
-    #[error("IO error: {0}")]
-    IO(#[from] std::io::Error),
-}
-
-#[derive(Debug, Error, Diagnostic)]
-#[error("Failed to resolve the path `{path}` relative to `{dir}`")]
-pub struct ResolvePathError {
-    path: PathBuf,
-    dir: PathBuf,
-
-    #[source]
-    io: std::io::Error,
-}
