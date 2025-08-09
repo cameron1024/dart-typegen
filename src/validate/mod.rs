@@ -253,7 +253,7 @@ fn invalid_int_literal(
 
 #[derive(Debug, Error, Diagnostic)]
 #[error("Enum has no variants")]
-#[help = r#"Add at least one variant with `variant "myVariant"`"#]
+#[help = r#"Add at least one variant, e.g. `variant "myVariant"`"#]
 struct EmptyEnum {
     #[source_code]
     src: NamedSource<String>,

@@ -5,7 +5,27 @@ expression: ron
 Library {
     preamble: None,
     postamble: None,
-    defaults: None,
+    defaults: Some(
+        Defaults {
+            union: Some(
+                UnionOptions {
+                    sealed: Some(
+                        SpannedScalar {
+                            value: true,
+                            span: SourceSpan {
+                                offset: SourceOffset(
+                                    75,
+                                ),
+                                length: 4,
+                            },
+                        },
+                    ),
+                    json_discriminant: None,
+                },
+            ),
+            field: None,
+        },
+    ),
     enums: [],
     classes: [],
     unions: [
@@ -15,26 +35,16 @@ Library {
                 0,
             ),
             name: SpannedScalar {
-                value: "Animal",
+                value: "Foo",
                 span: SourceSpan {
                     offset: SourceOffset(
-                        53,
+                        93,
                     ),
-                    length: 8,
+                    length: 5,
                 },
             },
             sealed: None,
-            json_discriminant: Some(
-                SpannedScalar {
-                    value: "__type",
-                    span: SourceSpan {
-                        offset: SourceOffset(
-                            84,
-                        ),
-                        length: 8,
-                    },
-                },
-            ),
+            json_discriminant: None,
             docs: None,
             classes: [
                 Class {
@@ -43,12 +53,12 @@ Library {
                         0,
                     ),
                     name: SpannedScalar {
-                        value: "Dog",
+                        value: "X",
                         span: SourceSpan {
                             offset: SourceOffset(
-                                102,
+                                109,
                             ),
-                            length: 5,
+                            length: 3,
                         },
                     },
                     fields: [],
@@ -61,12 +71,12 @@ Library {
                         0,
                     ),
                     name: SpannedScalar {
-                        value: "Cat",
+                        value: "Y",
                         span: SourceSpan {
                             offset: SourceOffset(
-                                116,
+                                121,
                             ),
-                            length: 5,
+                            length: 3,
                         },
                     },
                     fields: [],

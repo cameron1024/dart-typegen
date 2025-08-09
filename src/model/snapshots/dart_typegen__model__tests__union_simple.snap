@@ -1,6 +1,6 @@
 ---
 source: src/model/tests.rs
-expression: config
+expression: ron
 ---
 Library {
     preamble: None,

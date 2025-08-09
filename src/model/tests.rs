@@ -7,7 +7,7 @@ macro_rules! parse_snapshot {
             let text = include_str!(crate::test_file!($name));
             let config = Library::parse_impl(None, text).unwrap();
 
-            insta::assert_debug_snapshot!(config);
+            insta::assert_debug_snapshot!(stringify!($name), config, "ron");
         }
     };
 }

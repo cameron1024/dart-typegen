@@ -32,6 +32,7 @@ macro_rules! all_test_files {
         $macro_name!(class_simple);
         $macro_name!(class_with_class_field);
         $macro_name!(default_field_case);
+        $macro_name!(default_sealed_unions);
         $macro_name!(empty);
         $macro_name!(enum_docs);
         $macro_name!(enum_simple);
@@ -46,8 +47,7 @@ macro_rules! all_test_files {
 
 #[macro_export]
 macro_rules! all_failing_test_files {
-    ($macro_name:ident) => {
-    };
+    ($macro_name:ident) => {};
 }
 
 mod equivalence;

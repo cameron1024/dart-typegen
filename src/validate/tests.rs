@@ -15,9 +15,9 @@ fn assert_error_count(count: usize, source: &str) {
 
 #[test]
 fn validate_tests() {
-    #[rustfmt::skip]
-    assert_error_count(1, /* kdl */ r#"
-        // empty union
-        union "Foo" {}
+    assert_error_count(1, 
+    /* kdl */ r#"
+    // empty union
+    union "Foo" {}
     "#);
 }
