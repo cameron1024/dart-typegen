@@ -70,7 +70,7 @@ final class Cat extends Animal with EquatableMixin {
   @override
   String toString() =>
       "Cat("
-      "age: $name"
+      "age: $age"
       ")";
 }
 

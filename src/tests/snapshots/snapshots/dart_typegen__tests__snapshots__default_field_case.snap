@@ -30,8 +30,8 @@ final class Foo with EquatableMixin {
   @override
   String toString() =>
       "Foo("
-      "multipleWords: $name"
-      "evenMoreMultipleWords: $name"
+      "multipleWords: $multipleWords,"
+      "evenMoreMultipleWords: $evenMoreMultipleWords"
       ")";
 }
 

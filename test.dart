@@ -1,7 +1,3 @@
----
-source: src/tests/snapshots/mod.rs
-expression: dart
----
 import "package:equatable/equatable.dart";
 
 final class TopLevel with EquatableMixin {
@@ -54,11 +50,11 @@ final class TopLevel with EquatableMixin {
   @override
   String toString() =>
       "TopLevel("
-      "name: $name,"
-      "age: $age,"
-      "color: $color,"
-      "pet: $pet,"
-      "secondPet: $secondPet"
+      "name: $name"
+      "age: $name"
+      "color: $name"
+      "pet: $name"
+      "secondPet: $name"
       ")";
 }
 
@@ -201,8 +197,8 @@ final class Dog extends Animal with EquatableMixin {
   @override
   String toString() =>
       "Dog("
-      "name: $name,"
-      "color: $color"
+      "name: $name"
+      "color: $name"
       ")";
 }
 
@@ -243,8 +239,8 @@ final class Cat extends Animal with EquatableMixin {
   @override
   String toString() =>
       "Cat("
-      "name: $name,"
-      "satanicPower: $satanicPower"
+      "name: $name"
+      "satanicPower: $name"
       ")";
 }
 

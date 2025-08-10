@@ -27,8 +27,8 @@ final class Foo with EquatableMixin {
   @override
   String toString() =>
       "Foo("
-      "x: $name"
-      "y: $name"
+      "x: $x,"
+      "y: $y"
       ")";
 }
 

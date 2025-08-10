@@ -119,9 +119,14 @@ impl Context {
 
     fn generate_to_string_enum(&self, buf: &mut String, class: &Class) -> std::fmt::Result {
         writeln!(buf, "@override\nString toString() => \"{}(\"", class.name)?;
-        for field in &class.fields {
+        for (index, field) in class.fields.iter().enumerate() {
             let name = &field.name;
-            writeln!(buf, "\"{name}: $name\"")?;
+            let trailing_comma = if index == class.fields.len() - 1 {
+                ""
+            } else {
+                ","
+            };
+            writeln!(buf, "\"{name}: ${name}{trailing_comma}\"")?;
         }
         writeln!(buf, "\")\";")?;
         Ok(())

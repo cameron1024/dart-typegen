@@ -22,7 +22,7 @@ final class Foo with EquatableMixin {
   @override
   String toString() =>
       "Foo("
-      "x: $name"
+      "x: $x"
       ")";
 }
 
@@ -55,7 +55,7 @@ final class Bar with EquatableMixin {
   @override
   String toString() =>
       "Bar("
-      "x: $name"
+      "x: $x"
       ")";
 }
 
