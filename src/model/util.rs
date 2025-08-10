@@ -3,7 +3,7 @@ use std::{
     ops::Deref,
 };
 
-use knus::{ DecodeScalar, ast::Value,  span::Span, traits::ErrorSpan};
+use knus::{DecodeScalar, ast::Value, span::Span, traits::ErrorSpan};
 
 use crate::model::{Class, Field, Library};
 
@@ -49,19 +49,24 @@ where
     }
 }
 
-
 impl Library {
     pub fn all_classes(&self) -> impl Iterator<Item = &Class> {
         self.classes
             .iter()
             .chain(self.unions.iter().flat_map(|union| &union.classes))
     }
-    pub fn type_names(&self) -> impl Iterator<Item = &SpannedScalar<String>> {
+
+    pub fn class_and_union_names(&self) -> impl Iterator<Item = &SpannedScalar<String>> {
         let class_names = self.all_classes().map(|class| &class.name);
         let union_names = self.unions.iter().map(|union| &union.name);
+
+        class_names.chain(union_names)
+    }
+
+    pub fn type_names(&self) -> impl Iterator<Item = &SpannedScalar<String>> {
         let enum_names = self.enums.iter().map(|enums| &enums.name);
 
-        class_names.chain(union_names).chain(enum_names)
+        self.class_and_union_names().chain(enum_names)
     }
 
     pub fn all_fields(&self) -> impl Iterator<Item = &Field> {
@@ -70,5 +75,10 @@ impl Library {
 
     pub fn all_raw_values(&self) -> impl Iterator<Item = &Value<Span>> {
         self.all_fields().flat_map(|field| &field.defaults_to)
+    }
+
+    pub fn type_has_builder(&self, type_name: &str) -> bool {
+        self.class_and_union_names()
+            .any(|name| name.as_str() == type_name)
     }
 }

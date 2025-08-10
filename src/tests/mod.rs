@@ -38,6 +38,7 @@ macro_rules! all_test_files {
         $macro_name!(enum_extra_dart);
         $macro_name!(enum_json_value);
         $macro_name!(enum_simple);
+        $macro_name!(kitchen_sink);
         $macro_name!(postamble);
         $macro_name!(preamble);
         $macro_name!(union_docs);
@@ -54,4 +55,5 @@ macro_rules! all_failing_test_files {
 }
 
 mod equivalence;
+mod integration;
 mod snapshots;

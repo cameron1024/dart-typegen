@@ -1,0 +1,89 @@
+// The kitchen sink - all the syntax/features/etc. that is supported. Intended
+// as a "stress test"
+
+defaults {
+  union {
+    sealed true
+    json-discriminant "custom-discriminant"
+  }
+  field {
+    json-key-case "snake"
+  }
+}
+
+class "TopLevel" {
+  field "name" type="String"
+  field "age" type="int" {
+    docs "the age of this toplevel thing"
+    defaults-to 123
+  }
+
+  field "color" type="Color" {
+    defaults-to-dart "Color.green"
+    docs r#"
+The color of the thing
+
+Defaults to [Color.green] because it's the best color
+    "#
+  }
+
+  field "pet" type="Animal" 
+  field "secondPet" type="Animal?" { defaults-to null; }
+}
+
+enum "Color" {
+  variant "red" {
+    docs "a bad color"
+
+    json-value "ew, gross"
+  }
+  variant "green" {
+    docs r#"
+The best color
+
+Truly, there has never been a greater color
+    "#
+
+    json-value 123
+  }
+
+  variant "blue"
+
+  extra-dart "void hello() {}"
+  extra-dart r#"
+    void goodbye() => print("cya");
+  "#
+}
+
+// An unused union to check discriminant generation
+union "Unused" sealed=false {
+  json-discriminant "something-custom-for-unused"
+   
+  class "X"
+  class "Y"
+}
+union "Animal" {
+  docs r#"
+Some docs for animal
+
+It's either a dog or a cat
+  "#
+  class "Dog" {
+    docs "Fun-loving buddy"
+    field "name" type="String" {
+      defaults-to "Dog"
+      docs "the name"
+    }
+    field "color" type="Color"
+  }
+
+  class "Cat" {
+    docs "Evil hellspawn"
+    field "name" type="String" {
+      defaults-to "Destroyer of Worlds"
+    }
+    field "satanicPower" type="int" {
+      defaults-to-dart "9001"
+    }
+  }
+}

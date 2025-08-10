@@ -17,7 +17,7 @@ impl Context {
 
         for class in &union.classes {
             self.codegen_immutable_class(buf, class, Some(union))?;
-            self.codegen_mutable_class(buf, class)?;
+            self.codegen_mutable_class(buf, class, Some(union))?;
         }
 
         Ok(())
@@ -28,7 +28,9 @@ impl Context {
 
         braced(buf, |out| {
             writeln!(out, "const {}();", union.name)?;
+            writeln!(out)?;
 
+            writeln!(out, "{}Builder toBuilder();", union.name)?;
             writeln!(out)?;
 
             writeln!(out, "Map<String, dynamic> toJson(); ")?;
@@ -54,6 +56,16 @@ impl Context {
             }
 
             Ok(())
-        })
+        })?;
+
+        let modifiers = match self.library.is_sealed(union) {
+            false => "abstract final",
+            true => "sealed",
+        };
+
+        writeln!(buf, "{modifiers} class {}Builder ", union.name)?;
+        braced(buf, |out| writeln!(out, "{} build();", union.name))?;
+
+        Ok(())
     }
 }

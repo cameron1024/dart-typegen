@@ -16,7 +16,7 @@ enum Color {
     final other => throw ArgumentError("Unknown variant: $other"),
   };
 
-  dynamic toJson() => switch (self) {
+  dynamic toJson() => switch (this) {
     Color.red => "something-else",
     Color.green => 123,
     Color.blue => true,

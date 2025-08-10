@@ -113,3 +113,43 @@ fn enum_json_value() {
         "#,
     );
 }
+
+#[test]
+#[ignore]
+fn default_json_case() {
+    assert_equivalent(
+        /* kdl */
+        r#"
+            enum "Color" {
+                variant "red"
+                variant "green"
+            }
+
+            union "Animal" {
+                class "Dog" {
+                    field "name" type="String"
+                }
+
+                class "Cat" {
+                    field "age" type="int"
+                }
+            }
+
+            class "Person" {
+                field "pet" type="Animal"
+                field "name"
+            }
+        "#,
+        /* kdl */
+        r#"
+            enum "Color" {
+                variant "red" { 
+                   json-value "red" 
+                }
+                variant "green" {
+                   json-value "green" 
+                }
+            }
+        "#,
+    );
+}

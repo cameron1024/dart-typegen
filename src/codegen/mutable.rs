@@ -5,22 +5,20 @@ impl Context {
         &self,
         buf: &mut String,
         class: &Class,
+        superclass: Option<&Union>,
     ) -> std::fmt::Result {
-        // TODO: allow configuring
         let builder_name = format!("{}Builder", class.name);
 
         self.write_doc_comment(buf, &format!("Builder class for [{}]", class.name))?;
-        write!(buf, "final class {builder_name}",)?;
+        write!(buf, "final class {builder_name} ",)?;
+        if let Some(superclass) = &superclass {
+            
+            write!(buf, "extends {}Builder ", superclass.name)?;
+        }
 
         braced(buf, |out| {
             for field in &class.fields {
-                // TODO: more robust handling of types
-                let field_needs_build = self
-                    .library
-                    .classes
-                    .iter()
-                    .any(|c| c.name.as_str() == field.ty.as_str());
-
+                let field_needs_build = self.library.type_has_builder(&field.ty);
                 let ty_name = if field_needs_build {
                     format!("{}Builder", field.ty)
                 } else {
@@ -33,26 +31,25 @@ impl Context {
             writeln!(out)?;
 
             if class.fields.is_empty() {
-                writeln!(out, "{builder_name}();")?;
+                writeln!(out, "{builder_name}()")?;
             } else {
                 writeln!(out, "{builder_name}({{")?;
                 for field in &class.fields {
                     writeln!(out, "required this.{},", field.name)?;
                 }
-                writeln!(out, "}});")?;
+                write!(out, "}})")?;
+            }
+
+            match superclass {
+                Some(_) => writeln!(out, " : super();")?,
+                None => writeln!(out, ";")?,
             }
 
             writeln!(out)?;
 
             writeln!(out, "{0} build() => {0}(", class.name)?;
             for field in &class.fields {
-                // TODO: more robust handling of types
-                let field_needs_build = self
-                    .library
-                    .classes
-                    .iter()
-                    .any(|c| c.name.as_str() == field.ty.as_str());
-
+                let field_needs_build = self.library.type_has_builder(&field.ty);
                 let name = field.name.as_str();
                 let build = if field_needs_build { ".build()" } else { "" };
                 writeln!(out, "{name}: {name}{build},")?;

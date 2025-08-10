@@ -7,12 +7,18 @@ import "package:equatable/equatable.dart";
 sealed class Animal with EquatableMixin {
   const Animal();
 
+  AnimalBuilder toBuilder();
+
   Map<String, dynamic> toJson();
   factory Animal.fromJson(Map<String, dynamic> json) => switch (json["type"]) {
     "Dog" => Dog.fromJson(json),
     "Cat" => Cat.fromJson(json),
     final other => throw ArgumentError("unknown discriminant: $other"),
   };
+}
+
+sealed class AnimalBuilder {
+  Animal build();
 }
 
 final class Dog extends Animal with EquatableMixin {
@@ -32,10 +38,10 @@ final class Dog extends Animal with EquatableMixin {
 }
 
 /// Builder class for [Dog]
-final class DogBuilder {
+final class DogBuilder extends AnimalBuilder {
   String name;
 
-  DogBuilder({required this.name});
+  DogBuilder({required this.name}) : super();
 
   Dog build() => Dog(name: name);
 }
@@ -57,10 +63,10 @@ final class Cat extends Animal with EquatableMixin {
 }
 
 /// Builder class for [Cat]
-final class CatBuilder {
+final class CatBuilder extends AnimalBuilder {
   int age;
 
-  CatBuilder({required this.age});
+  CatBuilder({required this.age}) : super();
 
   Cat build() => Cat(age: age);
 }

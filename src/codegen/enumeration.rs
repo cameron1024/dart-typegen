@@ -46,7 +46,7 @@ impl Context {
             writeln!(out, ";")?;
             writeln!(out)?;
 
-            write!(out, "dynamic toJson() => switch (self)")?;
+            write!(out, "dynamic toJson() => switch (this)")?;
             braced(out, |out| {
                 for variant in &enumeration.variants {
                     let variant_name = &variant.name;

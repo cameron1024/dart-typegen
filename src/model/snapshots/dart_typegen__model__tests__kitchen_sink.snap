@@ -1,0 +1,680 @@
+---
+source: src/model/tests.rs
+expression: ron
+---
+Library {
+    preamble: None,
+    postamble: None,
+    defaults: Some(
+        Defaults {
+            union: Some(
+                UnionOptions {
+                    sealed: Some(
+                        SpannedScalar {
+                            value: true,
+                            span: SourceSpan {
+                                offset: SourceOffset(
+                                    134,
+                                ),
+                                length: 4,
+                            },
+                        },
+                    ),
+                    json_discriminant: Some(
+                        SpannedScalar {
+                            value: "custom-discriminant",
+                            span: SourceSpan {
+                                offset: SourceOffset(
+                                    161,
+                                ),
+                                length: 21,
+                            },
+                        },
+                    ),
+                },
+            ),
+            field: Some(
+                FieldOptions {
+                    json_key_case: Some(
+                        SpannedScalar {
+                            value: Snake,
+                            span: SourceSpan {
+                                offset: SourceOffset(
+                                    215,
+                                ),
+                                length: 7,
+                            },
+                        },
+                    ),
+                },
+            ),
+        },
+    ),
+    enums: [
+        Enum {
+            span: Span(
+                0,
+                0,
+            ),
+            name: SpannedScalar {
+                value: "Color",
+                span: SourceSpan {
+                    offset: SourceOffset(
+                        635,
+                    ),
+                    length: 7,
+                },
+            },
+            docs: None,
+            variants: [
+                EnumVariant {
+                    name: SpannedScalar {
+                        value: "red",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                655,
+                            ),
+                            length: 5,
+                        },
+                    },
+                    docs: Some(
+                        SpannedScalar {
+                            value: "a bad color",
+                            span: SourceSpan {
+                                offset: SourceOffset(
+                                    672,
+                                ),
+                                length: 13,
+                            },
+                        },
+                    ),
+                    json_value: Some(
+                        Value {
+                            type_name: None,
+                            literal: Spanned {
+                                span: Span(
+                                    702,
+                                    713,
+                                ),
+                                value: String(
+                                    "ew, gross",
+                                ),
+                            },
+                        },
+                    ),
+                },
+                EnumVariant {
+                    name: SpannedScalar {
+                        value: "green",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                728,
+                            ),
+                            length: 7,
+                        },
+                    },
+                    docs: Some(
+                        SpannedScalar {
+                            value: "\nThe best color\n\nTruly, there has never been a greater color\n    ",
+                            span: SourceSpan {
+                                offset: SourceOffset(
+                                    747,
+                                ),
+                                length: 70,
+                            },
+                        },
+                    ),
+                    json_value: Some(
+                        Value {
+                            type_name: None,
+                            literal: Spanned {
+                                span: Span(
+                                    834,
+                                    837,
+                                ),
+                                value: Int(
+                                    Integer(
+                                        Dec,
+                                        "123",
+                                    ),
+                                ),
+                            },
+                        },
+                    ),
+                },
+                EnumVariant {
+                    name: SpannedScalar {
+                        value: "blue",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                853,
+                            ),
+                            length: 6,
+                        },
+                    },
+                    docs: None,
+                    json_value: None,
+                },
+            ],
+            extra_dart: [
+                SpannedScalar {
+                    value: "void hello() {}",
+                    span: SourceSpan {
+                        offset: SourceOffset(
+                            874,
+                        ),
+                        length: 17,
+                    },
+                },
+                SpannedScalar {
+                    value: "\n    void goodbye() => print(\"cya\");\n  ",
+                    span: SourceSpan {
+                        offset: SourceOffset(
+                            905,
+                        ),
+                        length: 44,
+                    },
+                },
+            ],
+        },
+    ],
+    classes: [
+        Class {
+            span: Span(
+                0,
+                0,
+            ),
+            name: SpannedScalar {
+                value: "TopLevel",
+                span: SourceSpan {
+                    offset: SourceOffset(
+                        236,
+                    ),
+                    length: 10,
+                },
+            },
+            fields: [
+                Field {
+                    name: SpannedScalar {
+                        value: "name",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                257,
+                            ),
+                            length: 6,
+                        },
+                    },
+                    ty: SpannedScalar {
+                        value: "String",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                269,
+                            ),
+                            length: 8,
+                        },
+                    },
+                    defaults_to: None,
+                    defaults_to_dart: None,
+                    docs: None,
+                },
+                Field {
+                    name: SpannedScalar {
+                        value: "age",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                286,
+                            ),
+                            length: 5,
+                        },
+                    },
+                    ty: SpannedScalar {
+                        value: "int",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                297,
+                            ),
+                            length: 5,
+                        },
+                    },
+                    defaults_to: Some(
+                        Value {
+                            type_name: None,
+                            literal: Spanned {
+                                span: Span(
+                                    363,
+                                    366,
+                                ),
+                                value: Int(
+                                    Integer(
+                                        Dec,
+                                        "123",
+                                    ),
+                                ),
+                            },
+                        },
+                    ),
+                    defaults_to_dart: None,
+                    docs: Some(
+                        SpannedScalar {
+                            value: "the age of this toplevel thing",
+                            span: SourceSpan {
+                                offset: SourceOffset(
+                                    314,
+                                ),
+                                length: 32,
+                            },
+                        },
+                    ),
+                },
+                Field {
+                    name: SpannedScalar {
+                        value: "color",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                380,
+                            ),
+                            length: 7,
+                        },
+                    },
+                    ty: SpannedScalar {
+                        value: "Color",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                393,
+                            ),
+                            length: 7,
+                        },
+                    },
+                    defaults_to: None,
+                    defaults_to_dart: Some(
+                        SpannedScalar {
+                            value: "Color.green",
+                            span: SourceSpan {
+                                offset: SourceOffset(
+                                    424,
+                                ),
+                                length: 13,
+                            },
+                        },
+                    ),
+                    docs: Some(
+                        SpannedScalar {
+                            value: "\nThe color of the thing\n\nDefaults to [Color.green] because it's the best color\n    ",
+                            span: SourceSpan {
+                                offset: SourceOffset(
+                                    447,
+                                ),
+                                length: 88,
+                            },
+                        },
+                    ),
+                },
+                Field {
+                    name: SpannedScalar {
+                        value: "pet",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                549,
+                            ),
+                            length: 5,
+                        },
+                    },
+                    ty: SpannedScalar {
+                        value: "Animal",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                560,
+                            ),
+                            length: 8,
+                        },
+                    },
+                    defaults_to: None,
+                    defaults_to_dart: None,
+                    docs: None,
+                },
+                Field {
+                    name: SpannedScalar {
+                        value: "secondPet",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                578,
+                            ),
+                            length: 11,
+                        },
+                    },
+                    ty: SpannedScalar {
+                        value: "Animal?",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                595,
+                            ),
+                            length: 9,
+                        },
+                    },
+                    defaults_to: Some(
+                        Value {
+                            type_name: None,
+                            literal: Spanned {
+                                span: Span(
+                                    619,
+                                    623,
+                                ),
+                                value: Null,
+                            },
+                        },
+                    ),
+                    defaults_to_dart: None,
+                    docs: None,
+                },
+            ],
+            docs: None,
+            extra_dart: [],
+        },
+    ],
+    unions: [
+        Union {
+            span: Span(
+                0,
+                0,
+            ),
+            name: SpannedScalar {
+                value: "Unused",
+                span: SourceSpan {
+                    offset: SourceOffset(
+                        1011,
+                    ),
+                    length: 8,
+                },
+            },
+            sealed: Some(
+                SpannedScalar {
+                    value: false,
+                    span: SourceSpan {
+                        offset: SourceOffset(
+                            1027,
+                        ),
+                        length: 5,
+                    },
+                },
+            ),
+            json_discriminant: Some(
+                SpannedScalar {
+                    value: "something-custom-for-unused",
+                    span: SourceSpan {
+                        offset: SourceOffset(
+                            1055,
+                        ),
+                        length: 29,
+                    },
+                },
+            ),
+            docs: None,
+            classes: [
+                Class {
+                    span: Span(
+                        0,
+                        0,
+                    ),
+                    name: SpannedScalar {
+                        value: "X",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                1097,
+                            ),
+                            length: 3,
+                        },
+                    },
+                    fields: [],
+                    docs: None,
+                    extra_dart: [],
+                },
+                Class {
+                    span: Span(
+                        0,
+                        0,
+                    ),
+                    name: SpannedScalar {
+                        value: "Y",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                1109,
+                            ),
+                            length: 3,
+                        },
+                    },
+                    fields: [],
+                    docs: None,
+                    extra_dart: [],
+                },
+            ],
+            extra_dart: [],
+        },
+        Union {
+            span: Span(
+                0,
+                0,
+            ),
+            name: SpannedScalar {
+                value: "Animal",
+                span: SourceSpan {
+                    offset: SourceOffset(
+                        1121,
+                    ),
+                    length: 8,
+                },
+            },
+            sealed: None,
+            json_discriminant: None,
+            docs: Some(
+                SpannedScalar {
+                    value: "\nSome docs for animal\n\nIt's either a dog or a cat\n  ",
+                    span: SourceSpan {
+                        offset: SourceOffset(
+                            1139,
+                        ),
+                        length: 57,
+                    },
+                },
+            ),
+            classes: [
+                Class {
+                    span: Span(
+                        0,
+                        0,
+                    ),
+                    name: SpannedScalar {
+                        value: "Dog",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                1205,
+                            ),
+                            length: 5,
+                        },
+                    },
+                    fields: [
+                        Field {
+                            name: SpannedScalar {
+                                value: "name",
+                                span: SourceSpan {
+                                    offset: SourceOffset(
+                                        1251,
+                                    ),
+                                    length: 6,
+                                },
+                            },
+                            ty: SpannedScalar {
+                                value: "String",
+                                span: SourceSpan {
+                                    offset: SourceOffset(
+                                        1263,
+                                    ),
+                                    length: 8,
+                                },
+                            },
+                            defaults_to: Some(
+                                Value {
+                                    type_name: None,
+                                    literal: Spanned {
+                                        span: Span(
+                                            1292,
+                                            1297,
+                                        ),
+                                        value: String(
+                                            "Dog",
+                                        ),
+                                    },
+                                },
+                            ),
+                            defaults_to_dart: None,
+                            docs: Some(
+                                SpannedScalar {
+                                    value: "the name",
+                                    span: SourceSpan {
+                                        offset: SourceOffset(
+                                            1309,
+                                        ),
+                                        length: 10,
+                                    },
+                                },
+                            ),
+                        },
+                        Field {
+                            name: SpannedScalar {
+                                value: "color",
+                                span: SourceSpan {
+                                    offset: SourceOffset(
+                                        1336,
+                                    ),
+                                    length: 7,
+                                },
+                            },
+                            ty: SpannedScalar {
+                                value: "Color",
+                                span: SourceSpan {
+                                    offset: SourceOffset(
+                                        1349,
+                                    ),
+                                    length: 7,
+                                },
+                            },
+                            defaults_to: None,
+                            defaults_to_dart: None,
+                            docs: None,
+                        },
+                    ],
+                    docs: Some(
+                        SpannedScalar {
+                            value: "Fun-loving buddy",
+                            span: SourceSpan {
+                                offset: SourceOffset(
+                                    1222,
+                                ),
+                                length: 18,
+                            },
+                        },
+                    ),
+                    extra_dart: [],
+                },
+                Class {
+                    span: Span(
+                        0,
+                        0,
+                    ),
+                    name: SpannedScalar {
+                        value: "Cat",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                1370,
+                            ),
+                            length: 5,
+                        },
+                    },
+                    fields: [
+                        Field {
+                            name: SpannedScalar {
+                                value: "name",
+                                span: SourceSpan {
+                                    offset: SourceOffset(
+                                        1414,
+                                    ),
+                                    length: 6,
+                                },
+                            },
+                            ty: SpannedScalar {
+                                value: "String",
+                                span: SourceSpan {
+                                    offset: SourceOffset(
+                                        1426,
+                                    ),
+                                    length: 8,
+                                },
+                            },
+                            defaults_to: Some(
+                                Value {
+                                    type_name: None,
+                                    literal: Spanned {
+                                        span: Span(
+                                            1455,
+                                            1476,
+                                        ),
+                                        value: String(
+                                            "Destroyer of Worlds",
+                                        ),
+                                    },
+                                },
+                            ),
+                            defaults_to_dart: None,
+                            docs: None,
+                        },
+                        Field {
+                            name: SpannedScalar {
+                                value: "satanicPower",
+                                span: SourceSpan {
+                                    offset: SourceOffset(
+                                        1493,
+                                    ),
+                                    length: 14,
+                                },
+                            },
+                            ty: SpannedScalar {
+                                value: "int",
+                                span: SourceSpan {
+                                    offset: SourceOffset(
+                                        1513,
+                                    ),
+                                    length: 5,
+                                },
+                            },
+                            defaults_to: None,
+                            defaults_to_dart: Some(
+                                SpannedScalar {
+                                    value: "9001",
+                                    span: SourceSpan {
+                                        offset: SourceOffset(
+                                            1544,
+                                        ),
+                                        length: 6,
+                                    },
+                                },
+                            ),
+                            docs: None,
+                        },
+                    ],
+                    docs: Some(
+                        SpannedScalar {
+                            value: "Evil hellspawn",
+                            span: SourceSpan {
+                                offset: SourceOffset(
+                                    1387,
+                                ),
+                                length: 16,
+                            },
+                        },
+                    ),
+                    extra_dart: [],
+                },
+            ],
+            extra_dart: [],
+        },
+    ],
+}
