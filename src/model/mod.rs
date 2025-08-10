@@ -26,11 +26,9 @@ pub struct Library {
     #[knus(child)]
     pub defaults: Option<Defaults>,
 
-    /// A list of class definitions to be generated
     #[knus(children(name = "enum"))]
     pub enums: Vec<Enum>,
 
-    /// A list of class definitions to be generated
     #[knus(children(name = "class"))]
     pub classes: Vec<Class>,
 
@@ -71,9 +69,13 @@ pub struct Class {
     pub fields: Vec<Field>,
     #[knus(child, unwrap(argument))]
     pub docs: Option<SpannedScalar<String>>,
+    #[knus(child, unwrap(argument))]
+    pub json_key_case: Option<SpannedScalar<RenameCase>>,
+
     /// Extra text to include into the class body
     #[knus(children, unwrap(argument))]
     pub extra_dart: Vec<SpannedScalar<String>>,
+
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Decode)]
@@ -92,6 +94,9 @@ pub struct Field {
 
     #[knus(child, unwrap(argument))]
     pub docs: Option<SpannedScalar<String>>,
+
+    #[knus(child, unwrap(argument))]
+    pub json_key: Option<SpannedScalar<String>>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Decode)]

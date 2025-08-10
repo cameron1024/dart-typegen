@@ -1,11 +1,13 @@
 use std::{
+    borrow::Cow,
     fmt::{Debug, Display},
     ops::Deref,
 };
 
+use convert_case::Casing;
 use knus::{DecodeScalar, ast::Value, span::Span, traits::ErrorSpan};
 
-use crate::model::{Class, Field, Library};
+use crate::model::{Class, Field, Library, RenameCase};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct SpannedScalar<T> {
@@ -80,5 +82,27 @@ impl Library {
     pub fn type_has_builder(&self, type_name: &str) -> bool {
         self.class_and_union_names()
             .any(|name| name.as_str() == type_name)
+    }
+
+    pub fn json_key_for<'lib>(&self, class: &'lib Class, field: &'lib Field) -> Cow<'lib, str> {
+        if let Some(key) = &field.json_key {
+            return Cow::Borrowed(key);
+        }
+
+        let key = &field.name;
+
+        let rename_case = class.json_key_case.as_ref().or(self
+            .defaults
+            .as_ref()
+            .and_then(|d| d.field.as_ref().and_then(|f| f.json_key_case.as_ref())));
+
+        match rename_case {
+            None => Cow::Borrowed(key),
+            Some(case) => {
+                let renamed  = key.to_case(match case {
+                    RenameCase::Camel  => convert_case::Case::Kebab
+                }),
+            }
+        }
     }
 }
