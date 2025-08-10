@@ -18,7 +18,7 @@ Library {
                 value: "Animal",
                 span: SourceSpan {
                     offset: SourceOffset(
-                        53,
+                        47,
                     ),
                     length: 8,
                 },
@@ -29,7 +29,7 @@ Library {
                     value: "__type",
                     span: SourceSpan {
                         offset: SourceOffset(
-                            84,
+                            78,
                         ),
                         length: 8,
                     },
@@ -46,7 +46,7 @@ Library {
                         value: "Dog",
                         span: SourceSpan {
                             offset: SourceOffset(
-                                102,
+                                96,
                             ),
                             length: 5,
                         },
@@ -64,17 +64,37 @@ Library {
                         value: "Cat",
                         span: SourceSpan {
                             offset: SourceOffset(
-                                116,
+                                110,
                             ),
                             length: 5,
                         },
                     },
                     fields: [],
                     docs: None,
-                    extra_dart: [],
+                    extra_dart: [
+                        SpannedScalar {
+                            value: "\n      void printCat() => print(this);\n    ",
+                            span: SourceSpan {
+                                offset: SourceOffset(
+                                    133,
+                                ),
+                                length: 48,
+                            },
+                        },
+                    ],
                 },
             ],
-            extra_dart: [],
+            extra_dart: [
+                SpannedScalar {
+                    value: "\n    void printAnimal() => print(this);\n  ",
+                    span: SourceSpan {
+                        offset: SourceOffset(
+                            200,
+                        ),
+                        length: 47,
+                    },
+                },
+            ],
         },
     ],
 }

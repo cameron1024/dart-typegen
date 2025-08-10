@@ -35,11 +35,13 @@ macro_rules! all_test_files {
         $macro_name!(default_sealed_unions);
         $macro_name!(empty);
         $macro_name!(enum_docs);
+        $macro_name!(enum_extra_dart);
         $macro_name!(enum_json_value);
         $macro_name!(enum_simple);
         $macro_name!(postamble);
         $macro_name!(preamble);
         $macro_name!(union_docs);
+        $macro_name!(union_extra_dart);
         $macro_name!(union_json_discriminant);
         $macro_name!(union_sealed);
         $macro_name!(union_simple);

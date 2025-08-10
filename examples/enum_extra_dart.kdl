@@ -1,0 +1,10 @@
+// An enum with extra dart
+
+enum "Foo" {
+  variant "a"
+  variant "b"
+
+  extra-dart r#"
+    void foo() => print(this);
+  "#
+}

@@ -64,6 +64,10 @@ impl Context {
             write!(out, ";")?;
             writeln!(out)?;
 
+            for extra_dart in &enumeration.extra_dart {
+                writeln!(out, "{extra_dart}")?;
+            }
+
             Ok(())
         })?;
 

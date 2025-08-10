@@ -105,6 +105,7 @@ Library {
                     ),
                 },
             ],
+            extra_dart: [],
         },
     ],
     classes: [],

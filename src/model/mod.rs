@@ -17,7 +17,7 @@ mod tests;
 #[knus(span_type = Span)]
 pub struct Library {
     /// Text to append before the start of the generated file (for example, linter directives,
-    /// imports, etx.)
+    /// imports, etc.)
     #[knus(child, unwrap(argument))]
     pub preamble: Option<String>,
     #[knus(child, unwrap(argument))]
@@ -40,7 +40,6 @@ pub struct Library {
 }
 
 impl Library {
-
     #[cfg(test)]
     pub fn parse_memory(s: &str) -> miette::Result<Self> {
         Self::parse_impl(None, s)
@@ -110,6 +109,8 @@ pub struct Union {
     pub docs: Option<SpannedScalar<String>>,
     #[knus(children(name = "class"))]
     pub classes: Vec<Class>,
+    #[knus(children, unwrap(argument))]
+    pub extra_dart: Vec<SpannedScalar<String>>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Decode)]
@@ -123,6 +124,8 @@ pub struct Enum {
     pub docs: Option<SpannedScalar<String>>,
     #[knus(children(name = "variant"))]
     pub variants: Vec<EnumVariant>,
+    #[knus(children, unwrap(argument))]
+    pub extra_dart: Vec<SpannedScalar<String>>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Decode)]

@@ -63,6 +63,7 @@ Library {
                     json_value: None,
                 },
             ],
+            extra_dart: [],
         },
     ],
     classes: [],

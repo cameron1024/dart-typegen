@@ -122,6 +122,7 @@ Library {
                     extra_dart: [],
                 },
             ],
+            extra_dart: [],
         },
     ],
 }

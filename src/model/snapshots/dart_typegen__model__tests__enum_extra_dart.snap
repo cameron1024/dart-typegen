@@ -16,44 +16,24 @@ Library {
                 value: "Foo",
                 span: SourceSpan {
                     offset: SourceOffset(
-                        27,
+                        33,
                     ),
                     length: 5,
                 },
             },
-            docs: Some(
-                SpannedScalar {
-                    value: "\nMulti line comment\n\nMore stuff\n  ",
-                    span: SourceSpan {
-                        offset: SourceOffset(
-                            42,
-                        ),
-                        length: 39,
-                    },
-                },
-            ),
+            docs: None,
             variants: [
                 EnumVariant {
                     name: SpannedScalar {
                         value: "a",
                         span: SourceSpan {
                             offset: SourceOffset(
-                                93,
+                                51,
                             ),
                             length: 3,
                         },
                     },
-                    docs: Some(
-                        SpannedScalar {
-                            value: "single line comment",
-                            span: SourceSpan {
-                                offset: SourceOffset(
-                                    108,
-                                ),
-                                length: 21,
-                            },
-                        },
-                    ),
+                    docs: None,
                     json_value: None,
                 },
                 EnumVariant {
@@ -61,7 +41,7 @@ Library {
                         value: "b",
                         span: SourceSpan {
                             offset: SourceOffset(
-                                145,
+                                65,
                             ),
                             length: 3,
                         },
@@ -70,7 +50,17 @@ Library {
                     json_value: None,
                 },
             ],
-            extra_dart: [],
+            extra_dart: [
+                SpannedScalar {
+                    value: "\n    void foo() => print(this);\n  ",
+                    span: SourceSpan {
+                        offset: SourceOffset(
+                            83,
+                        ),
+                        length: 39,
+                    },
+                },
+            ],
         },
     ],
     classes: [],

@@ -1,0 +1,16 @@
+// A union with an extra-dart directive
+
+union "Animal" {
+  json-discriminant "__type"
+
+  class "Dog"
+  class "Cat" {
+    extra-dart r#"
+      void printCat() => print(this);
+    "#
+  }
+
+  extra-dart r#"
+    void printAnimal() => print(this);
+  "#
+}

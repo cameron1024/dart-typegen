@@ -49,6 +49,10 @@ impl Context {
 
             writeln!(out, "}};")?;
 
+            for extra_dart in &union.extra_dart {
+                writeln!(out, "{extra_dart}")?;
+            }
+
             Ok(())
         })
     }

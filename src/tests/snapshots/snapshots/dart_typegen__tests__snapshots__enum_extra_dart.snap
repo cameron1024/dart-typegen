@@ -1,0 +1,23 @@
+---
+source: src/tests/snapshots/mod.rs
+expression: dart
+---
+import "package:equatable/equatable.dart";
+
+enum Foo {
+  a,
+  b;
+
+  factory Foo.fromJson(dynamic json) => switch (json) {
+    "a" => Foo.a,
+    "b" => Foo.b,
+    final other => throw ArgumentError("Unknown variant: $other"),
+  };
+
+  dynamic toJson() => switch (self) {
+    Foo.a => "a",
+    Foo.b => "b",
+  };
+
+  void foo() => print(this);
+}
