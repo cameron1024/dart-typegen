@@ -1,0 +1,13 @@
+// An enum with explicit json values
+
+enum "Color" {
+  variant "red"  {
+    json-value "something-else"
+  }
+  variant "green" {
+    json-value 123
+  }
+  variant "blue" {
+    json-value true
+  }
+}

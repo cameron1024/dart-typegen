@@ -35,6 +35,7 @@ macro_rules! all_test_files {
         $macro_name!(default_sealed_unions);
         $macro_name!(empty);
         $macro_name!(enum_docs);
+        $macro_name!(enum_json_value);
         $macro_name!(enum_simple);
         $macro_name!(postamble);
         $macro_name!(preamble);

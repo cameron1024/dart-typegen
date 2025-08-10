@@ -1,0 +1,112 @@
+---
+source: src/model/tests.rs
+expression: ron
+---
+Library {
+    preamble: None,
+    postamble: None,
+    defaults: None,
+    enums: [
+        Enum {
+            span: Span(
+                0,
+                0,
+            ),
+            name: SpannedScalar {
+                value: "Color",
+                span: SourceSpan {
+                    offset: SourceOffset(
+                        43,
+                    ),
+                    length: 7,
+                },
+            },
+            docs: None,
+            variants: [
+                EnumVariant {
+                    name: SpannedScalar {
+                        value: "red",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                63,
+                            ),
+                            length: 5,
+                        },
+                    },
+                    docs: None,
+                    json_value: Some(
+                        Value {
+                            type_name: None,
+                            literal: Spanned {
+                                span: Span(
+                                    87,
+                                    103,
+                                ),
+                                value: String(
+                                    "something-else",
+                                ),
+                            },
+                        },
+                    ),
+                },
+                EnumVariant {
+                    name: SpannedScalar {
+                        value: "green",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                118,
+                            ),
+                            length: 7,
+                        },
+                    },
+                    docs: None,
+                    json_value: Some(
+                        Value {
+                            type_name: None,
+                            literal: Spanned {
+                                span: Span(
+                                    143,
+                                    146,
+                                ),
+                                value: Int(
+                                    Integer(
+                                        Dec,
+                                        "123",
+                                    ),
+                                ),
+                            },
+                        },
+                    ),
+                },
+                EnumVariant {
+                    name: SpannedScalar {
+                        value: "blue",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                161,
+                            ),
+                            length: 6,
+                        },
+                    },
+                    docs: None,
+                    json_value: Some(
+                        Value {
+                            type_name: None,
+                            literal: Spanned {
+                                span: Span(
+                                    185,
+                                    189,
+                                ),
+                                value: Bool(
+                                    true,
+                                ),
+                            },
+                        },
+                    ),
+                },
+            ],
+        },
+    ],
+    classes: [],
+    unions: [],
+}
