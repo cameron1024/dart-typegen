@@ -18,6 +18,11 @@ enum Foo {
     Foo.a => "a",
     Foo.b => "b",
   };
+  @override
+  String toString() => switch (this) {
+    Foo.a => "a",
+    Foo.b => "b",
+  };
 
   void foo() => print(this);
 }

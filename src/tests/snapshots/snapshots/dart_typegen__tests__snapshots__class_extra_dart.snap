@@ -18,6 +18,11 @@ final class Foo with EquatableMixin {
   factory Foo.fromJson(Map<String, dynamic> json) =>
       Foo(x: json["x"] as String);
 
+  @override
+  String toString() =>
+      "Foo("
+      "x: $name"
+      ")";
   void foo() {}
 
   void bar() {}

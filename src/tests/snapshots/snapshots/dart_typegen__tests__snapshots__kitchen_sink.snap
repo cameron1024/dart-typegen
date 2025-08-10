@@ -50,6 +50,16 @@ final class TopLevel with EquatableMixin {
     pet: json["pet"] as Animal,
     secondPet: json["secondPet"] as Animal?,
   );
+
+  @override
+  String toString() =>
+      "TopLevel("
+      "name: $name"
+      "age: $name"
+      "color: $name"
+      "pet: $name"
+      "secondPet: $name"
+      ")";
 }
 
 /// Builder class for [TopLevel]
@@ -106,6 +116,11 @@ final class X extends Unused with EquatableMixin {
   @override
   Map<String, dynamic> toJson() => {"something-custom-for-unused": "X"};
   factory X.fromJson(Map<String, dynamic> json) => X();
+
+  @override
+  String toString() =>
+      "X("
+      ")";
 }
 
 /// Builder class for [X]
@@ -126,6 +141,11 @@ final class Y extends Unused with EquatableMixin {
   @override
   Map<String, dynamic> toJson() => {"something-custom-for-unused": "Y"};
   factory Y.fromJson(Map<String, dynamic> json) => Y();
+
+  @override
+  String toString() =>
+      "Y("
+      ")";
 }
 
 /// Builder class for [Y]
@@ -177,6 +197,13 @@ final class Dog extends Animal with EquatableMixin {
   };
   factory Dog.fromJson(Map<String, dynamic> json) =>
       Dog(name: json["name"] as String, color: json["color"] as Color);
+
+  @override
+  String toString() =>
+      "Dog("
+      "name: $name"
+      "color: $name"
+      ")";
 }
 
 /// Builder class for [Dog]
@@ -212,6 +239,13 @@ final class Cat extends Animal with EquatableMixin {
     name: json["name"] as String,
     satanicPower: json["satanicPower"] as int,
   );
+
+  @override
+  String toString() =>
+      "Cat("
+      "name: $name"
+      "satanicPower: $name"
+      ")";
 }
 
 /// Builder class for [Cat]
@@ -239,6 +273,12 @@ enum Color {
   dynamic toJson() => switch (this) {
     Color.red => "ew, gross",
     Color.green => 123,
+    Color.blue => "blue",
+  };
+  @override
+  String toString() => switch (this) {
+    Color.red => "red",
+    Color.green => "green",
     Color.blue => "blue",
   };
   void hello() {}

@@ -94,6 +94,18 @@ impl Context {
 
             writeln!(out)?;
 
+            let generate_to_string = self
+                .library
+                .defaults
+                .as_ref()
+                .and_then(|d| d.generate_to_string.as_ref())
+                .map(|g| g.value)
+                .unwrap_or(true);
+
+            if generate_to_string {
+                self.generate_to_string_enum(out, class)?;
+            }
+
             for extra in &class.extra_dart {
                 writeln!(out, "{extra}")?;
                 writeln!(out)?;
@@ -102,6 +114,16 @@ impl Context {
             Ok(())
         })?;
 
+        Ok(())
+    }
+
+    fn generate_to_string_enum(&self, buf: &mut String, class: &Class) -> std::fmt::Result {
+        writeln!(buf, "@override\nString toString() => \"{}(\"", class.name)?;
+        for field in &class.fields {
+            let name = &field.name;
+            writeln!(buf, "\"{name}: $name\"")?;
+        }
+        writeln!(buf, "\")\";")?;
         Ok(())
     }
 }

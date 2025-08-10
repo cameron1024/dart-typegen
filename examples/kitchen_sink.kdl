@@ -2,6 +2,8 @@
 // as a "stress test"
 
 defaults {
+  generate-to-string true
+
   union {
     sealed true
     json-discriminant "custom-discriminant"

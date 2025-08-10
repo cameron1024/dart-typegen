@@ -2,6 +2,9 @@ use super::*;
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Decode)]
 pub struct Defaults {
+    #[knus(child, unwrap(argument))]
+    pub generate_to_string: Option<SpannedScalar<bool>>,
+
     #[knus(child)]
     pub union: Option<UnionOptions>,
 

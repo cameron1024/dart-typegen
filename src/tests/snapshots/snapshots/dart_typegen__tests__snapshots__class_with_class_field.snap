@@ -20,6 +20,13 @@ final class Foo with EquatableMixin {
     x: json["x"] as String,
     bar: Bar.fromJson(json["bar"] as Map<String, dynamic>),
   );
+
+  @override
+  String toString() =>
+      "Foo("
+      "x: $name"
+      "bar: $name"
+      ")";
 }
 
 /// Builder class for [Foo]
@@ -48,6 +55,13 @@ final class Bar with EquatableMixin {
     x: json["x"] as String,
     bar: Bar.fromJson(json["bar"] as Map<String, dynamic>),
   );
+
+  @override
+  String toString() =>
+      "Bar("
+      "x: $name"
+      "bar: $name"
+      ")";
 }
 
 /// Builder class for [Bar]

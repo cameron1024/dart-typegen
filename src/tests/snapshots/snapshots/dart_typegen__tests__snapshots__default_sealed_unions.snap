@@ -32,6 +32,11 @@ final class X extends Foo with EquatableMixin {
   @override
   Map<String, dynamic> toJson() => {"type": "X"};
   factory X.fromJson(Map<String, dynamic> json) => X();
+
+  @override
+  String toString() =>
+      "X("
+      ")";
 }
 
 /// Builder class for [X]
@@ -52,6 +57,11 @@ final class Y extends Foo with EquatableMixin {
   @override
   Map<String, dynamic> toJson() => {"type": "Y"};
   factory Y.fromJson(Map<String, dynamic> json) => Y();
+
+  @override
+  String toString() =>
+      "Y("
+      ")";
 }
 
 /// Builder class for [Y]

@@ -35,6 +35,11 @@ final class Dog extends Animal with EquatableMixin {
   @override
   Map<String, dynamic> toJson() => {"__type": "Dog"};
   factory Dog.fromJson(Map<String, dynamic> json) => Dog();
+
+  @override
+  String toString() =>
+      "Dog("
+      ")";
 }
 
 /// Builder class for [Dog]
@@ -55,6 +60,11 @@ final class Cat extends Animal with EquatableMixin {
   @override
   Map<String, dynamic> toJson() => {"__type": "Cat"};
   factory Cat.fromJson(Map<String, dynamic> json) => Cat();
+
+  @override
+  String toString() =>
+      "Cat("
+      ")";
 
   void printCat() => print(this);
 }

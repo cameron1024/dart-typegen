@@ -21,4 +21,10 @@ enum Color {
     Color.green => 123,
     Color.blue => true,
   };
+  @override
+  String toString() => switch (this) {
+    Color.red => "red",
+    Color.green => "green",
+    Color.blue => "blue",
+  };
 }

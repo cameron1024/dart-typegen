@@ -26,6 +26,13 @@ final class Foo with EquatableMixin {
     multipleWords: json["multipleWords"] as String,
     evenMoreMultipleWords: json["evenMoreMultipleWords"] as String,
   );
+
+  @override
+  String toString() =>
+      "Foo("
+      "multipleWords: $name"
+      "evenMoreMultipleWords: $name"
+      ")";
 }
 
 /// Builder class for [Foo]

@@ -7,6 +7,7 @@ Library {
     postamble: None,
     defaults: Some(
         Defaults {
+            generate_to_string: None,
             union: Some(
                 UnionOptions {
                     sealed: Some(

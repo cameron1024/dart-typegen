@@ -64,6 +64,18 @@ impl Context {
             write!(out, ";")?;
             writeln!(out)?;
 
+            let generate_to_string = self
+                .library
+                .defaults
+                .as_ref()
+                .and_then(|d| d.generate_to_string.as_ref())
+                .map(|g| g.value)
+                .unwrap_or(true);
+
+            if generate_to_string {
+                self.generate_to_string_class(out, enumeration)?;
+            }
+
             for extra_dart in &enumeration.extra_dart {
                 writeln!(out, "{extra_dart}")?;
             }
@@ -72,5 +84,21 @@ impl Context {
         })?;
 
         Ok(())
+    }
+
+    fn generate_to_string_class(&self, buf: &mut String, enumeration: &Enum) -> std::fmt::Result {
+        writeln!(buf, "@override\nString toString() => switch (this)")?;
+        braced(buf, |out| {
+            for variant in &enumeration.variants {
+                let enum_name = &enumeration.name;
+                let variant_name = &variant.name;
+
+                writeln!(out, "{enum_name}.{variant_name} => \"{variant_name}\",")?;
+            }
+
+            Ok(())
+        })?;
+
+        writeln!(buf, ";")
     }
 }
