@@ -1,3 +1,16 @@
+## [0.1.3] - 2025-08-11
+
+### 🚀 Features
+
+- Generate enums
+- Add `extra-dart` fields to enums and unions
+- Generate toString() method for classes and enums
+- Improved control over json discriminant values
+- Generate `operator==` and `hashCode` implementations
+
+### 🐛 Bug Fixes
+
+- Lots of bugs, too many to count
 ## [0.1.2] - 2025-08-06
 
 ### 🐛 Bug Fixes
