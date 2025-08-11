@@ -11,10 +11,19 @@ pub struct Defaults {
     pub generate_equals: Option<SpannedScalar<bool>>,
 
     #[knus(child)]
+    pub class: Option<ClassOptions>,
+
+    #[knus(child)]
     pub union: Option<UnionOptions>,
 
     #[knus(child)]
     pub field: Option<FieldOptions>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Decode)]
+pub struct ClassOptions {
+    #[knus(child, unwrap(argument))]
+    pub annotations: Option<SpannedScalar<String>>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Decode)]

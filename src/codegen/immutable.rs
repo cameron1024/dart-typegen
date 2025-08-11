@@ -13,6 +13,15 @@ impl Context {
         if let Some(annotations) = &class.annotations {
             writeln!(buf, "{annotations}")?;
         }
+        if let Some(annotations) = &self
+            .library
+            .defaults
+            .as_ref()
+            .and_then(|d| d.class.as_ref())
+            .and_then(|c| c.annotations.as_ref())
+        {
+            writeln!(buf, "{annotations}")?;
+        }
         write!(buf, "final class {} ", class.name)?;
         if let Some(superclass) = &superclass {
             write!(buf, "extends {} ", superclass.name)?;
