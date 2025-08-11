@@ -95,8 +95,8 @@ abstract final class Unused with EquatableMixin {
   Map<String, dynamic> toJson();
   factory Unused.fromJson(Map<String, dynamic> json) =>
       switch (json["something-custom-for-unused"]) {
-        "X" => X.fromJson(json),
-        "Y" => Y.fromJson(json),
+        "unused_x" => X.fromJson(json),
+        "y" => Y.fromJson(json),
         final other => throw ArgumentError("unknown discriminant: $other"),
       };
 }
@@ -114,7 +114,7 @@ final class X extends Unused with EquatableMixin {
   XBuilder toBuilder() => XBuilder();
 
   @override
-  Map<String, dynamic> toJson() => {"something-custom-for-unused": "X"};
+  Map<String, dynamic> toJson() => {"something-custom-for-unused": "unused_x"};
   factory X.fromJson(Map<String, dynamic> json) => X();
 
   @override
@@ -139,7 +139,7 @@ final class Y extends Unused with EquatableMixin {
   YBuilder toBuilder() => YBuilder();
 
   @override
-  Map<String, dynamic> toJson() => {"something-custom-for-unused": "Y"};
+  Map<String, dynamic> toJson() => {"something-custom-for-unused": "y"};
   factory Y.fromJson(Map<String, dynamic> json) => Y();
 
   @override

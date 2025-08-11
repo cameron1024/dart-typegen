@@ -25,6 +25,7 @@ Library {
             },
             sealed: None,
             json_discriminant: None,
+            json_discriminant_value_case: None,
             docs: Some(
                 SpannedScalar {
                     value: "\nSome docs \n\nSome more lines\n  ",
@@ -79,6 +80,7 @@ Library {
                     ],
                     docs: None,
                     json_key_case: None,
+                    json_discriminant_value: None,
                     extra_dart: [],
                 },
                 Class {
@@ -123,6 +125,7 @@ Library {
                     ],
                     docs: None,
                     json_key_case: None,
+                    json_discriminant_value: None,
                     extra_dart: [],
                 },
             ],

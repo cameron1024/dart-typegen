@@ -60,8 +60,11 @@ Truly, there has never been a greater color
 // An unused union to check discriminant generation
 union "Unused" sealed=false {
   json-discriminant "something-custom-for-unused"
+  json-discriminant-value-case "screaming-snake"
    
-  class "X"
+  class "X" {
+    json-discriminant-value "unused_x"
+  }
   class "Y"
 }
 union "Animal" {

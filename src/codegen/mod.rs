@@ -81,7 +81,7 @@ impl Context {
     }
 }
 
-fn format_dart_literal_const(defaults_to: &Value<Span>) -> String {
+pub fn format_dart_literal_const(defaults_to: &Value<Span>) -> String {
     match &*defaults_to.literal {
         Literal::Null => "null".into(),
         Literal::Bool(true) => "true".into(),

@@ -71,6 +71,8 @@ pub struct Class {
     pub docs: Option<SpannedScalar<String>>,
     #[knus(child, unwrap(argument))]
     pub json_key_case: Option<SpannedScalar<RenameCase>>,
+    #[knus(child, unwrap(argument))]
+    pub json_discriminant_value: Option<Value<Span>>,
 
     /// Extra text to include into the class body
     #[knus(children, unwrap(argument))]
@@ -110,6 +112,8 @@ pub struct Union {
     pub sealed: Option<SpannedScalar<bool>>,
     #[knus(child, unwrap(argument))]
     pub json_discriminant: Option<SpannedScalar<String>>,
+    #[knus(child, unwrap(argument))]
+    pub json_discriminant_value_case: Option<SpannedScalar<RenameCase>>,
     #[knus(child, unwrap(argument))]
     pub docs: Option<SpannedScalar<String>>,
     #[knus(children(name = "class"))]

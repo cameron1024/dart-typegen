@@ -46,6 +46,7 @@ Library {
             },
             sealed: None,
             json_discriminant: None,
+            json_discriminant_value_case: None,
             docs: None,
             classes: [
                 Class {
@@ -65,6 +66,7 @@ Library {
                     fields: [],
                     docs: None,
                     json_key_case: None,
+                    json_discriminant_value: None,
                     extra_dart: [],
                 },
                 Class {
@@ -84,6 +86,7 @@ Library {
                     fields: [],
                     docs: None,
                     json_key_case: None,
+                    json_discriminant_value: None,
                     extra_dart: [],
                 },
             ],

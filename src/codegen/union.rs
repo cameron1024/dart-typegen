@@ -24,7 +24,7 @@ impl Context {
     }
 
     fn codegen_body(&self, buf: &mut String, union: &Union) -> std::fmt::Result {
-        let discriminant = self.library.discriminant_for(union);
+        let discriminant_key = self.library.discriminant_key_for(union);
 
         braced(buf, |out| {
             writeln!(out, "const {}();", union.name)?;
@@ -36,13 +36,15 @@ impl Context {
             writeln!(out, "Map<String, dynamic> toJson(); ")?;
             writeln!(
                 out,
-                r#"factory {}.fromJson(Map<String, dynamic> json) => switch (json["{discriminant}"]) {{"#,
+                r#"factory {}.fromJson(Map<String, dynamic> json) => switch (json["{discriminant_key}"]) {{"#,
                 union.name,
             )?;
 
             for class in &union.classes {
                 let name = &class.name;
-                writeln!(out, r#""{name}" => {name}.fromJson(json),"#)?;
+                let discriminant_value = self.library.discriminant_value_for(union, class);
+
+                writeln!(out, "{discriminant_value} => {name}.fromJson(json),")?;
             }
             writeln!(
                 out,

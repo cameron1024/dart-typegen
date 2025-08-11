@@ -50,6 +50,7 @@ Library {
             ],
             docs: None,
             json_key_case: None,
+            json_discriminant_value: None,
             extra_dart: [
                 SpannedScalar {
                     value: "void foo() {}",

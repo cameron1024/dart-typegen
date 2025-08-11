@@ -1,283 +1,101 @@
 import "package:equatable/equatable.dart";
+abstract final class Animal with EquatableMixin {
+const Animal();
 
-final class TopLevel with EquatableMixin {
-  final String name;
+AnimalBuilder toBuilder();
 
-  /// the age of this toplevel thing
-  final int age;
-
-  /// The color of the thing
-  ///
-  /// Defaults to [Color.green] because it's the best color
-  final Color color;
-  final Animal pet;
-  final Animal? secondPet;
-
-  const TopLevel({
-    required this.name,
-    this.age = 123,
-    this.color = Color.green,
-    required this.pet,
-    this.secondPet,
-  });
-
-  @override
-  List<Object?> get props => [name, age, color, pet, secondPet];
-
-  TopLevelBuilder toBuilder() => TopLevelBuilder(
-    name: name,
-    age: age,
-    color: color,
-    pet: pet.toBuilder(),
-    secondPet: secondPet,
-  );
-
-  Map<String, dynamic> toJson() => {
-    "name": name,
-    "age": age,
-    "color": color,
-    "pet": pet,
-    "secondPet": secondPet,
-  };
-  factory TopLevel.fromJson(Map<String, dynamic> json) => TopLevel(
-    name: json["name"] as String,
-    age: json["age"] as int,
-    color: json["color"] as Color,
-    pet: json["pet"] as Animal,
-    secondPet: json["secondPet"] as Animal?,
-  );
-
-  @override
-  String toString() =>
-      "TopLevel("
-      "name: $name"
-      "age: $name"
-      "color: $name"
-      "pet: $name"
-      "secondPet: $name"
-      ")";
+Map<String, dynamic> toJson();
+factory Animal.fromJson(Map<String, dynamic> json) => switch (json["type"]) {
+""Dog"" => Dog.fromJson(json),
+""Cat"" => Cat.fromJson(json),
+final other => throw ArgumentError("unknown discriminant: $other"),
+};
 }
-
-/// Builder class for [TopLevel]
-final class TopLevelBuilder {
-  String name;
-  int age;
-  Color color;
-  AnimalBuilder pet;
-  Animal? secondPet;
-
-  TopLevelBuilder({
-    required this.name,
-    required this.age,
-    required this.color,
-    required this.pet,
-    required this.secondPet,
-  });
-
-  TopLevel build() => TopLevel(
-    name: name,
-    age: age,
-    color: color,
-    pet: pet.build(),
-    secondPet: secondPet,
-  );
+abstract final class AnimalBuilder
+{
+Animal build();
 }
-
-abstract final class Unused with EquatableMixin {
-  const Unused();
-
-  UnusedBuilder toBuilder();
-
-  Map<String, dynamic> toJson();
-  factory Unused.fromJson(Map<String, dynamic> json) =>
-      switch (json["something-custom-for-unused"]) {
-        "X" => X.fromJson(json),
-        "Y" => Y.fromJson(json),
-        final other => throw ArgumentError("unknown discriminant: $other"),
-      };
-}
-
-abstract final class UnusedBuilder {
-  Unused build();
-}
-
-final class X extends Unused with EquatableMixin {
-  const X() : super();
-
-  @override
-  List<Object?> get props => [];
-
-  XBuilder toBuilder() => XBuilder();
-
-  @override
-  Map<String, dynamic> toJson() => {"something-custom-for-unused": "X"};
-  factory X.fromJson(Map<String, dynamic> json) => X();
-
-  @override
-  String toString() =>
-      "X("
-      ")";
-}
-
-/// Builder class for [X]
-final class XBuilder extends UnusedBuilder {
-  XBuilder() : super();
-
-  X build() => X();
-}
-
-final class Y extends Unused with EquatableMixin {
-  const Y() : super();
-
-  @override
-  List<Object?> get props => [];
-
-  YBuilder toBuilder() => YBuilder();
-
-  @override
-  Map<String, dynamic> toJson() => {"something-custom-for-unused": "Y"};
-  factory Y.fromJson(Map<String, dynamic> json) => Y();
-
-  @override
-  String toString() =>
-      "Y("
-      ")";
-}
-
-/// Builder class for [Y]
-final class YBuilder extends UnusedBuilder {
-  YBuilder() : super();
-
-  Y build() => Y();
-}
-
-/// Some docs for animal
-///
-/// It's either a dog or a cat
-sealed class Animal with EquatableMixin {
-  const Animal();
-
-  AnimalBuilder toBuilder();
-
-  Map<String, dynamic> toJson();
-  factory Animal.fromJson(Map<String, dynamic> json) =>
-      switch (json["custom-discriminant"]) {
-        "Dog" => Dog.fromJson(json),
-        "Cat" => Cat.fromJson(json),
-        final other => throw ArgumentError("unknown discriminant: $other"),
-      };
-}
-
-sealed class AnimalBuilder {
-  Animal build();
-}
-
-/// Fun-loving buddy
 final class Dog extends Animal with EquatableMixin {
-  /// the name
-  final String name;
-  final Color color;
+final String name;
 
-  const Dog({this.name = "Dog", required this.color}) : super();
+const Dog({
+required this.name,
+})
+ : super();
 
-  @override
-  List<Object?> get props => [name, color];
+@override List<Object?> get props => [
+name,
+];
 
-  DogBuilder toBuilder() => DogBuilder(name: name, color: color);
+DogBuilder toBuilder() => DogBuilder(
+name: name,
+);
 
-  @override
-  Map<String, dynamic> toJson() => {
-    "name": name,
-    "color": color,
-    "custom-discriminant": "Dog",
-  };
-  factory Dog.fromJson(Map<String, dynamic> json) =>
-      Dog(name: json["name"] as String, color: json["color"] as Color);
+@override
+Map<String, dynamic> toJson() => {
+"name": name,
+"type": "Dog"
+};
+factory Dog.fromJson(Map<String, dynamic> json) => Dog(
+name: json["name"]as String,
+);
 
-  @override
-  String toString() =>
-      "Dog("
-      "name: $name"
-      "color: $name"
-      ")";
+@override
+String toString() => "Dog("
+"name: $name"
+")";
 }
-
 /// Builder class for [Dog]
 final class DogBuilder extends AnimalBuilder {
-  String name;
-  Color color;
+String name;
 
-  DogBuilder({required this.name, required this.color}) : super();
+DogBuilder({
+required this.name,
+}) : super();
 
-  Dog build() => Dog(name: name, color: color);
+Dog build() => Dog(
+name: name,
+);
 }
-
-/// Evil hellspawn
 final class Cat extends Animal with EquatableMixin {
-  final String name;
-  final int satanicPower;
+final int age;
 
-  const Cat({this.name = "Destroyer of Worlds", this.satanicPower = 9001})
-    : super();
+const Cat({
+required this.age,
+})
+ : super();
 
-  @override
-  List<Object?> get props => [name, satanicPower];
+@override List<Object?> get props => [
+age,
+];
 
-  CatBuilder toBuilder() => CatBuilder(name: name, satanicPower: satanicPower);
+CatBuilder toBuilder() => CatBuilder(
+age: age,
+);
 
-  @override
-  Map<String, dynamic> toJson() => {
-    "name": name,
-    "satanicPower": satanicPower,
-    "custom-discriminant": "Cat",
-  };
-  factory Cat.fromJson(Map<String, dynamic> json) => Cat(
-    name: json["name"] as String,
-    satanicPower: json["satanicPower"] as int,
-  );
+@override
+Map<String, dynamic> toJson() => {
+"age": age,
+"type": "Cat"
+};
+factory Cat.fromJson(Map<String, dynamic> json) => Cat(
+age: json["age"]as int,
+);
 
-  @override
-  String toString() =>
-      "Cat("
-      "name: $name"
-      "satanicPower: $name"
-      ")";
+@override
+String toString() => "Cat("
+"age: $age"
+")";
 }
-
 /// Builder class for [Cat]
 final class CatBuilder extends AnimalBuilder {
-  String name;
-  int satanicPower;
+int age;
 
-  CatBuilder({required this.name, required this.satanicPower}) : super();
+CatBuilder({
+required this.age,
+}) : super();
 
-  Cat build() => Cat(name: name, satanicPower: satanicPower);
-}
-
-enum Color {
-  red,
-  green,
-  blue;
-
-  factory Color.fromJson(dynamic json) => switch (json) {
-    "ew, gross" => Color.red,
-    123 => Color.green,
-    "blue" => Color.blue,
-    final other => throw ArgumentError("Unknown variant: $other"),
-  };
-
-  dynamic toJson() => switch (this) {
-    Color.red => "ew, gross",
-    Color.green => 123,
-    Color.blue => "blue",
-  };
-  @override
-  String toString() => switch (this) {
-    Color.red => "red",
-    Color.green => "green",
-    Color.blue => "blue",
-  };
-  void hello() {}
-
-  void goodbye() => print("cya");
+Cat build() => Cat(
+age: age,
+);
 }

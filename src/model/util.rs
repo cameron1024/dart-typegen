@@ -7,7 +7,9 @@ use std::{
 use convert_case::Casing;
 use knus::{DecodeScalar, ast::Value, span::Span, traits::ErrorSpan};
 
-use crate::model::{Class, Field, Library, RenameCase};
+use crate::codegen::format_dart_literal_const;
+
+use super::*;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct SpannedScalar<T> {
@@ -98,17 +100,24 @@ impl Library {
 
         match rename_case {
             None => Cow::Borrowed(key),
-            Some(case) => {
-                let renamed = key.to_case(match case.value {
-                    RenameCase::Camel => convert_case::Case::Camel,
-                    RenameCase::Pascal => convert_case::Case::Camel,
-                    RenameCase::Snake => convert_case::Case::Camel,
-                    RenameCase::Kebab => convert_case::Case::Camel,
-                    RenameCase::ScreamingSnake => convert_case::Case::Camel,
-                });
-
-                Cow::Owned(renamed)
-            }
+            Some(case) => Cow::Owned(key.to_case(case.value.into())),
         }
+    }
+
+    pub fn discriminant_value_for<'lib>(
+        &'lib self,
+        union: &'lib Union,
+        class: &'lib Class,
+    ) -> Cow<'lib, str> {
+        if let Some(value) = &class.json_discriminant_value {
+            return Cow::Owned(format_dart_literal_const(value));
+        }
+
+        let name = match union.json_discriminant_value_case {
+            Some(case) => class.name.to_case(case.value.into()),
+            None => class.name.to_string(),
+        };
+
+        Cow::Owned(format!("\"{name}\""))
     }
 }

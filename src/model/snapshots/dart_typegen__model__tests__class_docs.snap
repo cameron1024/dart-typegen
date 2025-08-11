@@ -60,6 +60,7 @@ Library {
                 },
             ),
             json_key_case: None,
+            json_discriminant_value: None,
             extra_dart: [],
         },
         Class {
@@ -114,6 +115,7 @@ Library {
                 },
             ),
             json_key_case: None,
+            json_discriminant_value: None,
             extra_dart: [],
         },
     ],

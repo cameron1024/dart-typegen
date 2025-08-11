@@ -35,6 +35,7 @@ impl Context {
         field_with_both_defaults(self, &mut errors, &source);
         invalid_int_literal(self, &mut errors, &source);
         empty_enum(self, &mut errors, &source);
+        json_discrimminant_non_union_class(self, &mut errors, &source);
 
         errors
     }
@@ -271,6 +272,40 @@ fn empty_enum(context: &Context, errors: &mut Vec<miette::Report>, source: &Name
         .map(|e| EmptyEnum {
             src: source.clone(),
             span: e.span.into(),
+        });
+
+    errors.extend(errs.map(Into::into));
+}
+
+// === Json Discriminant Non Union Class ===
+
+#[derive(Debug, Error, Diagnostic)]
+#[error("Non-union class has `json-discriminant-value`")]
+#[help = "Only classes that are part of a union have a json discriminant, so this value is meaningless"]
+struct JsonDiscrimimantInNonUnionClass {
+    #[source_code]
+    src: NamedSource<String>,
+
+    #[label(primary, "Remove this")]
+    span: SourceSpan,
+}
+
+fn json_discrimminant_non_union_class(
+    context: &Context,
+    errors: &mut Vec<miette::Report>,
+    source: &NamedSource<String>,
+) {
+    let errs = context
+        .library
+        .classes
+        .iter()
+        .filter_map(|c| {
+            let value = c.json_discriminant_value.as_ref()?;
+
+            Some(JsonDiscrimimantInNonUnionClass {
+                src: source.clone(),
+                span: (*value.literal.span()).into(),
+            })
         });
 
     errors.extend(errs.map(Into::into));

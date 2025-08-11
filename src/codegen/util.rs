@@ -8,7 +8,7 @@ use miette::{IntoDiagnostic, bail};
 use crate::model::{Library, Union};
 
 impl Library {
-    pub(super) fn discriminant_for<'lib>(&'lib self, union: &'lib Union) -> &'lib str {
+    pub(super) fn discriminant_key_for<'lib>(&'lib self, union: &'lib Union) -> &'lib str {
         union
             .json_discriminant
             .as_ref()

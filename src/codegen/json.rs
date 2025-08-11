@@ -29,8 +29,10 @@ impl Context {
         }
 
         if let Some(union) = superclass {
-            let discriminant = self.library.discriminant_for(union);
-            writeln!(buf, "\"{discriminant}\": \"{}\"", class.name)?;
+            let discriminant_key = self.library.discriminant_key_for(union);
+            let discriminant_value = self.library.discriminant_value_for(union, class);
+
+            writeln!(buf, "\"{discriminant_key}\": {discriminant_value}",)?;
         }
 
         writeln!(buf, "}};")?;
