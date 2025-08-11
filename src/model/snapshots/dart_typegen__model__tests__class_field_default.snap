@@ -58,6 +58,8 @@ Library {
                     ),
                     defaults_to_dart: None,
                     docs: None,
+                    to_json: None,
+                    from_json: None,
                     json_key: None,
                 },
                 Field {
@@ -92,6 +94,8 @@ Library {
                         },
                     ),
                     docs: None,
+                    to_json: None,
+                    from_json: None,
                     json_key: None,
                 },
             ],

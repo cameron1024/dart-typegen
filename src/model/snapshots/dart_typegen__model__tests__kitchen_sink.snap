@@ -228,6 +228,8 @@ Library {
                     defaults_to: None,
                     defaults_to_dart: None,
                     docs: None,
+                    to_json: None,
+                    from_json: None,
                     json_key: None,
                 },
                 Field {
@@ -278,6 +280,8 @@ Library {
                             },
                         },
                     ),
+                    to_json: None,
+                    from_json: None,
                     json_key: None,
                 },
                 Field {
@@ -322,6 +326,8 @@ Library {
                             },
                         },
                     ),
+                    to_json: None,
+                    from_json: None,
                     json_key: None,
                 },
                 Field {
@@ -346,6 +352,8 @@ Library {
                     defaults_to: None,
                     defaults_to_dart: None,
                     docs: None,
+                    to_json: None,
+                    from_json: None,
                     json_key: None,
                 },
                 Field {
@@ -381,6 +389,8 @@ Library {
                     ),
                     defaults_to_dart: None,
                     docs: None,
+                    to_json: None,
+                    from_json: None,
                     json_key: None,
                 },
             ],
@@ -585,6 +595,8 @@ Library {
                                     },
                                 },
                             ),
+                            to_json: None,
+                            from_json: None,
                             json_key: None,
                         },
                         Field {
@@ -609,6 +621,8 @@ Library {
                             defaults_to: None,
                             defaults_to_dart: None,
                             docs: None,
+                            to_json: None,
+                            from_json: None,
                             json_key: None,
                         },
                         Field {
@@ -633,6 +647,8 @@ Library {
                             defaults_to: None,
                             defaults_to_dart: None,
                             docs: None,
+                            to_json: None,
+                            from_json: None,
                             json_key: None,
                         },
                     ],
@@ -701,6 +717,8 @@ Library {
                             ),
                             defaults_to_dart: None,
                             docs: None,
+                            to_json: None,
+                            from_json: None,
                             json_key: None,
                         },
                         Field {
@@ -735,6 +753,28 @@ Library {
                                 },
                             ),
                             docs: None,
+                            to_json: Some(
+                                SpannedScalar {
+                                    value: "(i) => i ^ 121",
+                                    span: SourceSpan {
+                                        offset: SourceOffset(
+                                            1726,
+                                        ),
+                                        length: 16,
+                                    },
+                                },
+                            ),
+                            from_json: Some(
+                                SpannedScalar {
+                                    value: "(i) => i ^ 121",
+                                    span: SourceSpan {
+                                        offset: SourceOffset(
+                                            1759,
+                                        ),
+                                        length: 16,
+                                    },
+                                },
+                            ),
                             json_key: None,
                         },
                         Field {
@@ -742,7 +782,7 @@ Library {
                                 value: "data",
                                 span: SourceSpan {
                                     offset: SourceOffset(
-                                        1728,
+                                        1792,
                                     ),
                                     length: 6,
                                 },
@@ -751,7 +791,7 @@ Library {
                                 value: "Map<String, dynamic>",
                                 span: SourceSpan {
                                     offset: SourceOffset(
-                                        1740,
+                                        1804,
                                     ),
                                     length: 22,
                                 },
@@ -759,6 +799,8 @@ Library {
                             defaults_to: None,
                             defaults_to_dart: None,
                             docs: None,
+                            to_json: None,
+                            from_json: None,
                             json_key: None,
                         },
                     ],

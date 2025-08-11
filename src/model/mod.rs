@@ -97,6 +97,11 @@ pub struct Field {
     pub docs: Option<SpannedScalar<String>>,
 
     #[knus(child, unwrap(argument))]
+    pub to_json: Option<SpannedScalar<String>>,
+    #[knus(child, unwrap(argument))]
+    pub from_json: Option<SpannedScalar<String>>,
+
+    #[knus(child, unwrap(argument))]
     pub json_key: Option<SpannedScalar<String>>,
 }
 

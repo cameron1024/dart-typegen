@@ -293,13 +293,13 @@ final class Cat extends Animal {
   @override
   Map<String, dynamic> toJson() => {
     "name": name,
-    "satanicPower": satanicPower,
+    "satanicPower": ((i) => i ^ 121)(satanicPower),
     "data": data,
     "custom-discriminant": "Cat",
   };
   factory Cat.fromJson(Map<String, dynamic> json) => Cat(
     name: json["name"] as String,
-    satanicPower: json["satanicPower"] as int,
+    satanicPower: ((i) => i ^ 121)(json["satanicPower"]),
     data: json["data"] as Map<String, dynamic>,
   );
 

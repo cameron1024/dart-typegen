@@ -90,6 +90,8 @@ It's either a dog or a cat
     }
     field "satanicPower" type="int" {
       defaults-to-dart "9001"
+      to-json "(i) => i ^ 121"
+      from-json "(i) => i ^ 121"
     }
     field "data" type="Map<String, dynamic>"
   }

@@ -55,6 +55,8 @@ Library {
                             },
                         },
                     ),
+                    to_json: None,
+                    from_json: None,
                     json_key: None,
                 },
                 Field {
@@ -89,6 +91,8 @@ Library {
                             },
                         },
                     ),
+                    to_json: None,
+                    from_json: None,
                     json_key: None,
                 },
             ],
