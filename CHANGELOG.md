@@ -1,3 +1,8 @@
+## [0.1.4] - 2025-08-11
+
+### 🚀 Features
+
+- Allow `to-json` and `from-json` on fields
 ## [0.1.3] - 2025-08-11
 
 ### 🚀 Features
