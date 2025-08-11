@@ -5,7 +5,7 @@ use knus::ast::{Integer, Literal, Radix};
 use miette::{Diagnostic, NamedSource, Result, SourceSpan};
 use thiserror::Error;
 
-use crate::context::Context;
+use crate::{context::Context, model::Field};
 
 #[cfg(test)]
 mod tests;
@@ -32,6 +32,7 @@ impl Context {
         invalid_int_literal(self, &mut errors, &source);
         empty_enum(self, &mut errors, &source);
         json_discrimminant_non_union_class(self, &mut errors, &source);
+        duplicate_json_keys(self, &mut errors, &source);
 
         errors
     }
@@ -96,7 +97,7 @@ fn incorrect_type_name_case(
 
 #[derive(Debug, Error, Diagnostic)]
 #[error("Duplicate type name")]
-#[help = "Try giving it a different name"]
+#[diagnostic(help = "Try giving it a different name")]
 struct DuplicateTypeName {
     #[source_code]
     src: NamedSource<String>,
@@ -131,7 +132,7 @@ fn duplicate_type_names(
 
 #[derive(Debug, Error, Diagnostic)]
 #[error("Duplicate field name")]
-#[help = "Try giving it a different name"]
+#[diagnostic(help = "Try giving it a different name")]
 struct DuplicateFieldNames {
     #[source_code]
     src: NamedSource<String>,
@@ -168,7 +169,7 @@ fn duplicate_field_names(
 
 #[derive(Debug, Error, Diagnostic)]
 #[error("Union was empty")]
-#[help = "Unions must contain at least one `class`"]
+#[diagnostic(help = "Unions must contain at least one `class`")]
 struct EmptyUnion {
     #[source_code]
     src: NamedSource<String>,
@@ -194,8 +195,9 @@ fn empty_union(context: &Context, errors: &mut Vec<miette::Report>, source: &Nam
 
 #[derive(Debug, Error, Diagnostic)]
 #[error("Field has a definition for both `defaults-to` and `defaults-to-dart`")]
-#[help = "`defaults-to` allows you to translate native KDL types to Dart. If you need something
-that cannot be expressed in KDL (such as class instances, collection literals)"]
+#[diagnostic(
+    help = "`defaults-to` allows you to translate native KDL types to Dart. If you need something that cannot be expressed in KDL (such as class instances, collection literals)"
+)]
 struct FieldWithBothDefaults {
     #[source_code]
     src: NamedSource<String>,
@@ -230,7 +232,9 @@ fn field_with_both_defaults(
 
 #[derive(Debug, Error, Diagnostic)]
 #[error("Invalid integer literal")]
-#[help = "Integer literals must be either decimal (i.e. `1234`) or hexadecimal (i.e. `0x1234`)"]
+#[diagnostic(
+    help = "Integer literals must be either decimal (i.e. `1234`) or hexadecimal (i.e. `0x1234`)"
+)]
 struct InvalidIntLiteral {
     #[source_code]
     src: NamedSource<String>,
@@ -266,7 +270,7 @@ fn invalid_int_literal(
 
 #[derive(Debug, Error, Diagnostic)]
 #[error("Enum has no variants")]
-#[help = r#"Add at least one variant, e.g. `variant "myVariant"`"#]
+#[diagnostic(help = r#"Add at least one variant, e.g. `variant "myVariant"`"#)]
 struct EmptyEnum {
     #[source_code]
     src: NamedSource<String>,
@@ -317,4 +321,50 @@ fn json_discrimminant_non_union_class(
     });
 
     errors.extend(errs.map(Into::into));
+}
+
+// === Duplicate Json Keys ===
+
+#[derive(Debug, Error, Diagnostic)]
+#[error("Multiple fields have the same json key")]
+struct DuplicateJsonKeys {
+    #[source_code]
+    src: NamedSource<String>,
+
+    key: String,
+
+    #[label("first field")]
+    first: SourceSpan,
+
+    #[label("second field")]
+    second: SourceSpan,
+}
+
+fn duplicate_json_keys(
+    context: &Context,
+    errors: &mut Vec<miette::Report>,
+    source: &NamedSource<String>,
+) {
+    for class in context.library.all_classes() {
+        for (index, first) in class.fields.iter().enumerate() {
+            for second in class.fields.iter().skip(index + 1) {
+                let first_key = context.library.json_key_for(class, first);
+                let second_key = context.library.json_key_for(class, second);
+
+                if first_key == second_key {
+                    let error = DuplicateJsonKeys {
+                        src: source.clone(),
+                        key: first_key.to_string(),
+                        first: json_key_span(first),
+                        second: json_key_span(second),
+                    };
+                    errors.push(error.into());
+                }
+            }
+        }
+    }
+}
+
+fn json_key_span(field: &Field) -> SourceSpan {
+   field.json_key.as_ref().map(|key| key.span).unwrap_or(field.name.span)
 }
