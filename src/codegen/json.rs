@@ -13,7 +13,8 @@ impl Context {
         writeln!(buf, "Map<String, dynamic> toJson() => {{")?;
 
         for field in &class.fields {
-            let needs_to_json = self.library
+            let needs_to_json = self
+                .library
                 .classes
                 .iter()
                 .any(|c| c.name.as_str() == field.ty.as_str());
@@ -22,7 +23,7 @@ impl Context {
                 true => ".toJson()",
             };
 
-            let field_name = &field.name;
+            let field_name = self.library.json_key_for(class, field);
 
             writeln!(buf, "\"{field_name}\": {field_name}{to_json},")?;
         }
@@ -37,11 +38,7 @@ impl Context {
         Ok(())
     }
 
-    pub(super) fn generate_from_json(
-        &self,
-        buf: &mut String,
-        class: &Class,
-    ) -> std::fmt::Result {
+    pub(super) fn generate_from_json(&self, buf: &mut String, class: &Class) -> std::fmt::Result {
         writeln!(
             buf,
             "factory {0}.fromJson(Map<String, dynamic> json) => {0}(",
@@ -49,12 +46,13 @@ impl Context {
         )?;
 
         for field in &class.fields {
-            let needs_from_json = self.library
+            let needs_from_json = self
+                .library
                 .classes
                 .iter()
                 .any(|c| c.name.as_str() == field.ty.as_str());
 
-            let field_name = &field.name;
+            let field_name = self.library.json_key_for(class, field);
             let field_ty = &field.ty;
 
             write!(buf, "{field_name}: ")?;

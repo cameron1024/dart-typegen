@@ -45,6 +45,7 @@ Library {
                     defaults_to: None,
                     defaults_to_dart: None,
                     docs: None,
+                    json_key: None,
                 },
             ],
             docs: Some(
@@ -58,6 +59,7 @@ Library {
                     },
                 },
             ),
+            json_key_case: None,
             extra_dart: [],
         },
         Class {
@@ -97,6 +99,7 @@ Library {
                     defaults_to: None,
                     defaults_to_dart: None,
                     docs: None,
+                    json_key: None,
                 },
             ],
             docs: Some(
@@ -110,6 +113,7 @@ Library {
                     },
                 },
             ),
+            json_key_case: None,
             extra_dart: [],
         },
     ],

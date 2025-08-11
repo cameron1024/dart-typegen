@@ -64,6 +64,7 @@ Library {
                     },
                     fields: [],
                     docs: None,
+                    json_key_case: None,
                     extra_dart: [],
                 },
                 Class {
@@ -82,6 +83,7 @@ Library {
                     },
                     fields: [],
                     docs: None,
+                    json_key_case: None,
                     extra_dart: [],
                 },
             ],

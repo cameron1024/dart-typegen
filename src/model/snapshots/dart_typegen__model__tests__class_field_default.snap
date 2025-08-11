@@ -58,6 +58,7 @@ Library {
                     ),
                     defaults_to_dart: None,
                     docs: None,
+                    json_key: None,
                 },
                 Field {
                     name: SpannedScalar {
@@ -91,9 +92,11 @@ Library {
                         },
                     ),
                     docs: None,
+                    json_key: None,
                 },
             ],
             docs: None,
+            json_key_case: None,
             extra_dart: [],
         },
     ],

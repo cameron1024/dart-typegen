@@ -99,9 +99,15 @@ impl Library {
         match rename_case {
             None => Cow::Borrowed(key),
             Some(case) => {
-                let renamed  = key.to_case(match case {
-                    RenameCase::Camel  => convert_case::Case::Kebab
-                }),
+                let renamed = key.to_case(match case.value {
+                    RenameCase::Camel => convert_case::Case::Camel,
+                    RenameCase::Pascal => convert_case::Case::Camel,
+                    RenameCase::Snake => convert_case::Case::Camel,
+                    RenameCase::Kebab => convert_case::Case::Camel,
+                    RenameCase::ScreamingSnake => convert_case::Case::Camel,
+                });
+
+                Cow::Owned(renamed)
             }
         }
     }
