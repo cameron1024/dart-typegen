@@ -76,6 +76,9 @@ pub struct Class {
     #[knus(child, unwrap(argument))]
     pub json_discriminant_value: Option<Value<Span>>,
 
+    #[knus(child, unwrap(argument))]
+    pub annotations: Option<SpannedScalar<String>>,
+
     /// Extra text to include into the class body
     #[knus(children, unwrap(argument))]
     pub extra_dart: Vec<SpannedScalar<String>>,

@@ -10,7 +10,9 @@ impl Context {
         if let Some(source) = &class.docs {
             self.write_doc_comment(buf, source)?;
         }
-
+        if let Some(annotations) = &class.annotations {
+            writeln!(buf, "{annotations}")?;
+        }
         write!(buf, "final class {} ", class.name)?;
         if let Some(superclass) = &superclass {
             write!(buf, "extends {} ", superclass.name)?;
