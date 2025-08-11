@@ -17,6 +17,7 @@ impl Context {
             let field_name = &field.name;
 
             if let Some(to_json) = &field.to_json {
+                writeln!(buf, "// ignore: unnecessary_parenthesis")?;
                 writeln!(buf, "\"{json_key}\": ({to_json})({field_name}),")?;
             } else {
                 let needs_to_json = self
@@ -57,12 +58,14 @@ impl Context {
             let field_ty = &field.ty;
             let field_name = &field.name;
 
-            write!(buf, "{field_name}: ")?;
 
             // an explicit `from-json` overrides everything
             if let Some(from_json) = &field.from_json {
-                writeln!(buf, "({from_json})(json[\"{json_key}\"])")?;
+                writeln!(buf, "// ignore: unnecessary_parenthesis")?;
+                writeln!(buf, "{field_name}: ({from_json})(json[\"{json_key}\"])")?;
             } else {
+                write!(buf, "{field_name}: ")?;
+
                 let needs_from_json = self
                     .library
                     .classes
