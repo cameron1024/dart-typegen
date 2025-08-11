@@ -53,14 +53,15 @@ impl Context {
         )?;
 
         for field in &class.fields {
-            let field_name = self.library.json_key_for(class, field);
+            let json_key = self.library.json_key_for(class, field);
             let field_ty = &field.ty;
+            let field_name = &field.name;
 
             write!(buf, "{field_name}: ")?;
 
             // an explicit `from-json` overrides everything
             if let Some(from_json) = &field.from_json {
-                writeln!(buf, "({from_json})(json[\"{field_name}\"])")?;
+                writeln!(buf, "({from_json})(json[\"{json_key}\"])")?;
             } else {
                 let needs_from_json = self
                     .library
@@ -71,7 +72,7 @@ impl Context {
                 if needs_from_json {
                     write!(buf, "{field_ty}.fromJson(")?;
                 }
-                write!(buf, "json[\"{field_name}\"]")?;
+                write!(buf, "json[\"{json_key}\"]")?;
 
                 if needs_from_json {
                     write!(buf, " as Map<String, dynamic>)")?;
