@@ -45,10 +45,10 @@ impl From<RenameCase> for Case<'_> {
     fn from(value: RenameCase) -> Self {
         match value {
             RenameCase::Camel => convert_case::Case::Camel,
-            RenameCase::Pascal => convert_case::Case::Camel,
-            RenameCase::Snake => convert_case::Case::Camel,
-            RenameCase::Kebab => convert_case::Case::Camel,
-            RenameCase::ScreamingSnake => convert_case::Case::Camel,
+            RenameCase::Pascal => convert_case::Case::Pascal,
+            RenameCase::Snake => convert_case::Case::Snake,
+            RenameCase::Kebab => convert_case::Case::Kebab,
+            RenameCase::ScreamingSnake => convert_case::Case::Constant,
         }
     }
 }

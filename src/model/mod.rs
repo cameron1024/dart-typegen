@@ -65,6 +65,8 @@ pub struct Class {
     pub span: Span,
     #[knus(argument)]
     pub name: SpannedScalar<String>,
+    #[knus(property)]
+    pub allow_non_pascal_case: Option<SpannedScalar<bool>>,
     #[knus(children(name = "field"))]
     pub fields: Vec<Field>,
     #[knus(child, unwrap(argument))]

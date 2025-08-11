@@ -54,7 +54,7 @@ struct IncorrectClassNameCase {
     #[label]
     source_span: SourceSpan,
 
-    #[help = "Try renaming it to `{correct_name}`"]
+    #[help]
     correct_name: String,
 }
 
@@ -65,12 +65,28 @@ fn incorrect_type_name_case(
 ) {
     let incorrect_class_name_case = context
         .library
-        .type_names()
-        .filter(|name| !name.is_case(Case::Pascal))
-        .map(|name| IncorrectClassNameCase {
-            src: source.clone(),
-            source_span: name.span,
-            correct_name: name.to_case(Case::Pascal),
+        .classes
+        .iter()
+        .filter(|class| {
+            let skip = class
+                .allow_non_pascal_case
+                .as_ref()
+                .map(|b| b.value)
+                .unwrap_or(false);
+
+            if skip {
+                false
+            } else {
+                !class.name.is_case(Case::Pascal)
+            }
+        })
+        .map(|class| {
+            let correct_name = format!("Try renaming it to `{}`", class.name.to_case(Case::Pascal));
+            IncorrectClassNameCase {
+                src: source.clone(),
+                source_span: class.name.span,
+                correct_name,
+            }
         });
 
     errors.extend(incorrect_class_name_case.map(Into::into));
