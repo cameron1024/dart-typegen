@@ -52,9 +52,9 @@ impl Context {
                     buf,
                     "if ({name}.length != other.{name}.length) return false;"
                 )?;
-                writeln!(buf, "for (final elem in this)")?;
+                writeln!(buf, "for (final elem in {name})")?;
                 braced(buf, |out| {
-                    writeln!(out, "if (!other.contains(elem)) return false;")
+                    writeln!(out, "if (!other.{name}.contains(elem)) return false;")
                 })
             }
             Map { .. } => {
