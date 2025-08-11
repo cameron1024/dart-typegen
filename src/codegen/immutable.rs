@@ -127,7 +127,7 @@ impl Context {
             let trailing_comma = if index == class.fields.len() - 1 {
                 ""
             } else {
-                ","
+                ", "
             };
             writeln!(buf, "\"{name}: ${name}{trailing_comma}\"")?;
         }
