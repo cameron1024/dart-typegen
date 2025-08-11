@@ -80,6 +80,7 @@ It's either a dog or a cat
       docs "the name"
     }
     field "color" type="Color"
+    field "aliases" type="List<String>"
   }
 
   class "Cat" {
@@ -90,5 +91,6 @@ It's either a dog or a cat
     field "satanicPower" type="int" {
       defaults-to-dart "9001"
     }
+    field "data" type="Map<String, dynamic>"
   }
 }

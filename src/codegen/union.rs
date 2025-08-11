@@ -11,7 +11,7 @@ impl Context {
             true => "sealed",
         };
 
-        write!(buf, "{modifiers} class {} with EquatableMixin ", union.name)?;
+        write!(buf, "{modifiers} class {} ", union.name)?;
 
         self.codegen_body(buf, union)?;
 

@@ -2,15 +2,10 @@
 source: src/tests/snapshots/mod.rs
 expression: dart
 ---
-import "package:equatable/equatable.dart";
-
-final class Foo with EquatableMixin {
+final class Foo {
   final String x;
 
   const Foo({required this.x});
-
-  @override
-  List<Object?> get props => [x];
 
   FooBuilder toBuilder() => FooBuilder(x: x);
 
@@ -31,7 +26,7 @@ final class Foo with EquatableMixin {
     if (other is! Foo) {
       return false;
     }
-    if (this.x != other.x) return false;
+    if (x != other.x) return false;
     return true;
   }
 

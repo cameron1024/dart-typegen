@@ -1,7 +1,7 @@
 use std::path::Path;
 
-use knus::{Decode, ast::Value, span::Span};
 use knus::DecodeScalar;
+use knus::{Decode, ast::Value, span::Span};
 use miette::IntoDiagnostic;
 
 pub use options::*;
@@ -13,7 +13,7 @@ mod util;
 #[cfg(test)]
 mod tests;
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash, Decode)]
+#[derive(Debug, Clone, PartialEq, Eq, Decode)]
 #[knus(span_type = Span)]
 pub struct Library {
     /// Text to append before the start of the generated file (for example, linter directives,
@@ -58,7 +58,7 @@ impl Library {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash, Decode)]
+#[derive(Debug, Clone, PartialEq, Eq, Decode)]
 #[knus(span_type = Span)]
 pub struct Class {
     #[knus(unwrap(span))]
@@ -77,10 +77,9 @@ pub struct Class {
     /// Extra text to include into the class body
     #[knus(children, unwrap(argument))]
     pub extra_dart: Vec<SpannedScalar<String>>,
-
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash, Decode)]
+#[derive(Debug, Clone, PartialEq, Eq, Decode)]
 #[knus(span_type = Span)]
 pub struct Field {
     #[knus(argument)]
@@ -101,7 +100,7 @@ pub struct Field {
     pub json_key: Option<SpannedScalar<String>>,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash, Decode)]
+#[derive(Debug, Clone, PartialEq, Eq, Decode)]
 #[knus(span_type = Span)]
 pub struct Union {
     #[knus(unwrap(span))]
@@ -122,7 +121,7 @@ pub struct Union {
     pub extra_dart: Vec<SpannedScalar<String>>,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash, Decode)]
+#[derive(Debug, Clone, PartialEq, Eq, Decode)]
 #[knus(span_type = Span)]
 pub struct Enum {
     #[knus(unwrap(span))]
@@ -137,7 +136,7 @@ pub struct Enum {
     pub extra_dart: Vec<SpannedScalar<String>>,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash, Decode)]
+#[derive(Debug, Clone, PartialEq, Eq, Decode)]
 #[knus(span_type = Span)]
 pub struct EnumVariant {
     #[knus(argument)]

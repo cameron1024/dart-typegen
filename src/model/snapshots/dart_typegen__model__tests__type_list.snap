@@ -1,0 +1,82 @@
+---
+source: src/model/tests.rs
+expression: ron
+---
+Library {
+    preamble: None,
+    postamble: None,
+    defaults: None,
+    enums: [],
+    classes: [
+        Class {
+            span: Span(
+                0,
+                0,
+            ),
+            name: SpannedScalar {
+                value: "Foo",
+                span: SourceSpan {
+                    offset: SourceOffset(
+                        46,
+                    ),
+                    length: 5,
+                },
+            },
+            fields: [
+                Field {
+                    name: SpannedScalar {
+                        value: "x",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                62,
+                            ),
+                            length: 3,
+                        },
+                    },
+                    ty: SpannedScalar {
+                        value: "List<String>",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                71,
+                            ),
+                            length: 14,
+                        },
+                    },
+                    defaults_to: None,
+                    defaults_to_dart: None,
+                    docs: None,
+                    json_key: None,
+                },
+                Field {
+                    name: SpannedScalar {
+                        value: "y",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                94,
+                            ),
+                            length: 3,
+                        },
+                    },
+                    ty: SpannedScalar {
+                        value: "List<int>",
+                        span: SourceSpan {
+                            offset: SourceOffset(
+                                103,
+                            ),
+                            length: 11,
+                        },
+                    },
+                    defaults_to: None,
+                    defaults_to_dart: None,
+                    docs: None,
+                    json_key: None,
+                },
+            ],
+            docs: None,
+            json_key_case: None,
+            json_discriminant_value: None,
+            extra_dart: [],
+        },
+    ],
+    unions: [],
+}

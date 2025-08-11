@@ -28,10 +28,12 @@ const DEFAULT_TOPLEVEL: &str = /* dart */
         pet: Dog(
             name: "Alfred",
             color: Color.green,
+            aliases: ["buddy", "megatron"],
         ),
         secondPet: Cat(
             name: "asshole",
             satanicPower: 15,
+            data: {"hello": "world", "foo": 123, },
         ),
     );
 "#;
@@ -41,16 +43,39 @@ const ALT_TOPLEVEL: &str = /* dart */
     r#"
     final topLevelAlt = TopLevel(
         name: "Some name",
-        pet: Cat(),
+        pet: Cat(data: {}),
         
     );
 "#;
+
+fn check_equals_and_hash_code(buf: &mut String, type_name: &str) -> std::fmt::Result {
+    const BODY: &str = /* dart */
+        r#"
+        if (obj != obj) {
+            throw Exception("not equal to self");
+        }
+
+        if (obj.hashCode != obj.hashCode) {
+            throw Exception("hashCode not equal");
+        }
+    "#;
+    writeln!(buf, "void checkEquals{type_name}({type_name} obj) {{")?;
+    writeln!(buf, "{BODY}")?;
+
+    writeln!(buf, "}}")?;
+
+    Ok(())
+}
 
 fn check_json(buf: &mut String, type_name: &str) -> std::fmt::Result {
     const BODY: &str = /* dart */
         r#"
         if (obj != decoded) {
             throw Exception("json-roundrip error");
+        }
+
+        if (obj.hashCode != decoded.hashCode) {
+            throw Exception("json-roundrip hashCode error");
         }
     "#;
     writeln!(buf, "void checkJson{type_name}({type_name} obj) {{")?;
@@ -117,6 +142,7 @@ fn main_dart() -> String {
     main_fn(&mut buf).unwrap();
 
     for name in TYPE_NAMES {
+        check_equals_and_hash_code(&mut buf, name).unwrap();
         check_json(&mut buf, name).unwrap();
         check_builder(&mut buf, name).unwrap();
     }
@@ -124,7 +150,6 @@ fn main_dart() -> String {
     for name in ENUM_NAMES {
         check_json(&mut buf, name).unwrap();
     }
-
 
     buf
 }
@@ -134,8 +159,6 @@ const PUBSPEC: &str = /* yaml */
 name: dart_typegen_test
 environment:
     sdk: ">3.0.0"
-dependencies:
-    equatable: 2.0.7
 "#;
 
 #[test]

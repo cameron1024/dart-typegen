@@ -3,5 +3,3 @@ source: src/tests/snapshots/mod.rs
 expression: dart
 ---
 // a comment
-
-import "package:equatable/equatable.dart";

@@ -2,9 +2,7 @@
 source: src/tests/snapshots/mod.rs
 expression: dart
 ---
-import "package:equatable/equatable.dart";
-
-abstract final class Animal with EquatableMixin {
+abstract final class Animal {
   const Animal();
 
   AnimalBuilder toBuilder();
@@ -22,11 +20,8 @@ abstract final class AnimalBuilder {
   Animal build();
 }
 
-final class Dog extends Animal with EquatableMixin {
+final class Dog extends Animal {
   const Dog() : super();
-
-  @override
-  List<Object?> get props => [];
 
   DogBuilder toBuilder() => DogBuilder();
 
@@ -60,11 +55,8 @@ final class DogBuilder extends AnimalBuilder {
   Dog build() => Dog();
 }
 
-final class Cat extends Animal with EquatableMixin {
+final class Cat extends Animal {
   const Cat() : super();
-
-  @override
-  List<Object?> get props => [];
 
   CatBuilder toBuilder() => CatBuilder();
 

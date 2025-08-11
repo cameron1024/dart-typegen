@@ -10,6 +10,7 @@ keywords = ["dart", "codegen"]
 categories = ["command-line-utilities"]
 
 [dependencies]
+chumsky = "0.10.1"
 clap = { version = "4.5.40", features = ["derive", "string"] }
 convert_case = "0.8.0"
 human-panic = "2.0.3"

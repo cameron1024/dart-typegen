@@ -4,6 +4,9 @@ use miette::{ IntoDiagnostic, Result};
 
 use crate::model::Library;
 
+mod ty;
+pub use ty::*;
+
 pub struct Context {
     pub path: Option<PathBuf>,
     pub text: String,

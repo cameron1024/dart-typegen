@@ -15,7 +15,6 @@ impl Context {
         if let Some(superclass) = &superclass {
             write!(buf, "extends {} ", superclass.name)?;
         }
-        write!(buf, "with EquatableMixin ")?;
 
         braced(buf, |out| {
             for field in &class.fields {
@@ -65,14 +64,6 @@ impl Context {
                 Some(_) => writeln!(out, " : super();")?,
                 None => writeln!(out, ";")?,
             }
-
-            writeln!(out)?;
-
-            writeln!(out, "@override List<Object?> get props => [")?;
-            for field in &class.fields {
-                writeln!(out, "{},", field.name)?;
-            }
-            writeln!(out, "];")?;
 
             writeln!(out)?;
 

@@ -1,0 +1,6 @@
+// A class with a field that is a list
+
+class "Foo" {
+  field "x" type="List<String>"
+  field "y" type="List<int>"
+}

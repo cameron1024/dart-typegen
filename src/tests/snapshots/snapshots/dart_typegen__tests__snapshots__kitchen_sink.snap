@@ -2,9 +2,7 @@
 source: src/tests/snapshots/mod.rs
 expression: dart
 ---
-import "package:equatable/equatable.dart";
-
-final class TopLevel with EquatableMixin {
+final class TopLevel {
   final String name;
 
   /// the age of this toplevel thing
@@ -24,9 +22,6 @@ final class TopLevel with EquatableMixin {
     required this.pet,
     this.secondPet,
   });
-
-  @override
-  List<Object?> get props => [name, age, color, pet, secondPet];
 
   TopLevelBuilder toBuilder() => TopLevelBuilder(
     name: name,
@@ -68,11 +63,11 @@ final class TopLevel with EquatableMixin {
     if (other is! TopLevel) {
       return false;
     }
-    if (this.name != other.name) return false;
-    if (this.age != other.age) return false;
-    if (this.color != other.color) return false;
-    if (this.pet != other.pet) return false;
-    if (this.secondPet != other.secondPet) return false;
+    if (name != other.name) return false;
+    if (age != other.age) return false;
+    if (color != other.color) return false;
+    if (pet != other.pet) return false;
+    if (secondPet != other.secondPet) return false;
     return true;
   }
 
@@ -105,7 +100,7 @@ final class TopLevelBuilder {
   );
 }
 
-abstract final class Unused with EquatableMixin {
+abstract final class Unused {
   const Unused();
 
   UnusedBuilder toBuilder();
@@ -123,11 +118,8 @@ abstract final class UnusedBuilder {
   Unused build();
 }
 
-final class X extends Unused with EquatableMixin {
+final class X extends Unused {
   const X() : super();
-
-  @override
-  List<Object?> get props => [];
 
   XBuilder toBuilder() => XBuilder();
 
@@ -161,11 +153,8 @@ final class XBuilder extends UnusedBuilder {
   X build() => X();
 }
 
-final class Y extends Unused with EquatableMixin {
+final class Y extends Unused {
   const Y() : super();
-
-  @override
-  List<Object?> get props => [];
 
   YBuilder toBuilder() => YBuilder();
 
@@ -202,7 +191,7 @@ final class YBuilder extends UnusedBuilder {
 /// Some docs for animal
 ///
 /// It's either a dog or a cat
-sealed class Animal with EquatableMixin {
+sealed class Animal {
   const Animal();
 
   AnimalBuilder toBuilder();
@@ -221,32 +210,37 @@ sealed class AnimalBuilder {
 }
 
 /// Fun-loving buddy
-final class Dog extends Animal with EquatableMixin {
+final class Dog extends Animal {
   /// the name
   final String name;
   final Color color;
+  final List<String> aliases;
 
-  const Dog({this.name = "Dog", required this.color}) : super();
+  const Dog({this.name = "Dog", required this.color, required this.aliases})
+    : super();
 
-  @override
-  List<Object?> get props => [name, color];
-
-  DogBuilder toBuilder() => DogBuilder(name: name, color: color);
+  DogBuilder toBuilder() =>
+      DogBuilder(name: name, color: color, aliases: aliases);
 
   @override
   Map<String, dynamic> toJson() => {
     "name": name,
     "color": color,
+    "aliases": aliases,
     "custom-discriminant": "Dog",
   };
-  factory Dog.fromJson(Map<String, dynamic> json) =>
-      Dog(name: json["name"] as String, color: json["color"] as Color);
+  factory Dog.fromJson(Map<String, dynamic> json) => Dog(
+    name: json["name"] as String,
+    color: json["color"] as Color,
+    aliases: json["aliases"] as List<String>,
+  );
 
   @override
   String toString() =>
       "Dog("
       "name: $name,"
-      "color: $color"
+      "color: $color,"
+      "aliases: $aliases"
       ")";
   @override
   bool operator ==(Object other) {
@@ -256,54 +250,65 @@ final class Dog extends Animal with EquatableMixin {
     if (other is! Dog) {
       return false;
     }
-    if (this.name != other.name) return false;
-    if (this.color != other.color) return false;
+    if (name != other.name) return false;
+    if (color != other.color) return false;
+    if (aliases.length != other.aliases.length) return false;
+    for (var i = 0; i < aliases.length; i++) {
+      if (aliases[i] != other.aliases[i]) return false;
+    }
     return true;
   }
 
   @override
-  int get hashCode => Object.hashAll([name, color]);
+  int get hashCode => Object.hashAll([name, color, aliases]);
 }
 
 /// Builder class for [Dog]
 final class DogBuilder extends AnimalBuilder {
   String name;
   Color color;
+  List<String> aliases;
 
-  DogBuilder({required this.name, required this.color}) : super();
+  DogBuilder({required this.name, required this.color, required this.aliases})
+    : super();
 
-  Dog build() => Dog(name: name, color: color);
+  Dog build() => Dog(name: name, color: color, aliases: aliases);
 }
 
 /// Evil hellspawn
-final class Cat extends Animal with EquatableMixin {
+final class Cat extends Animal {
   final String name;
   final int satanicPower;
+  final Map<String, dynamic> data;
 
-  const Cat({this.name = "Destroyer of Worlds", this.satanicPower = 9001})
-    : super();
+  const Cat({
+    this.name = "Destroyer of Worlds",
+    this.satanicPower = 9001,
+    required this.data,
+  }) : super();
 
-  @override
-  List<Object?> get props => [name, satanicPower];
-
-  CatBuilder toBuilder() => CatBuilder(name: name, satanicPower: satanicPower);
+  CatBuilder toBuilder() =>
+      CatBuilder(name: name, satanicPower: satanicPower, data: data);
 
   @override
   Map<String, dynamic> toJson() => {
     "name": name,
     "satanicPower": satanicPower,
+    "data": data,
     "custom-discriminant": "Cat",
   };
   factory Cat.fromJson(Map<String, dynamic> json) => Cat(
     name: json["name"] as String,
     satanicPower: json["satanicPower"] as int,
+    data: json["data"] as Map<String, dynamic>,
   );
 
   @override
   String toString() =>
       "Cat("
       "name: $name,"
-      "satanicPower: $satanicPower"
+      "satanicPower: $satanicPower,"
+      "data: $data"
       ")";
   @override
   bool operator ==(Object other) {
@@ -313,23 +318,32 @@ final class Cat extends Animal with EquatableMixin {
     if (other is! Cat) {
       return false;
     }
-    if (this.name != other.name) return false;
-    if (this.satanicPower != other.satanicPower) return false;
+    if (name != other.name) return false;
+    if (satanicPower != other.satanicPower) return false;
+    if (data.length != other.data.length) return false;
+    for (final entry in data.entries) {
+      if (entry.value != other.data[entry.key]) return false;
+    }
     return true;
   }
 
   @override
-  int get hashCode => Object.hashAll([name, satanicPower]);
+  int get hashCode => Object.hashAll([name, satanicPower, data]);
 }
 
 /// Builder class for [Cat]
 final class CatBuilder extends AnimalBuilder {
   String name;
   int satanicPower;
+  Map<String, dynamic> data;
 
-  CatBuilder({required this.name, required this.satanicPower}) : super();
+  CatBuilder({
+    required this.name,
+    required this.satanicPower,
+    required this.data,
+  }) : super();
 
-  Cat build() => Cat(name: name, satanicPower: satanicPower);
+  Cat build() => Cat(name: name, satanicPower: satanicPower, data: data);
 }
 
 enum Color {

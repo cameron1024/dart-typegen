@@ -39,6 +39,7 @@ macro_rules! all_test_files {
         $macro_name!(enum_json_value);
         $macro_name!(enum_simple);
         $macro_name!(kitchen_sink);
+        $macro_name!(type_list);
         $macro_name!(postamble);
         $macro_name!(preamble);
         $macro_name!(union_docs);

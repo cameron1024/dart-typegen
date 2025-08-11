@@ -33,8 +33,6 @@ impl Context {
             writeln!(buf, "{preamble}").into_diagnostic()?;
         }
 
-        writeln!(buf, "import \"package:equatable/equatable.dart\";").into_diagnostic()?;
-
         for class in &self.library.classes {
             self.codegen_immutable_class(&mut buf, class, None)
                 .into_diagnostic()?;

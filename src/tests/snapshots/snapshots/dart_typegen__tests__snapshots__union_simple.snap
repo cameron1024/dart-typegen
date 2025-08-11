@@ -2,9 +2,7 @@
 source: src/tests/snapshots/mod.rs
 expression: dart
 ---
-import "package:equatable/equatable.dart";
-
-abstract final class Animal with EquatableMixin {
+abstract final class Animal {
   const Animal();
 
   AnimalBuilder toBuilder();
@@ -21,13 +19,10 @@ abstract final class AnimalBuilder {
   Animal build();
 }
 
-final class Dog extends Animal with EquatableMixin {
+final class Dog extends Animal {
   final String name;
 
   const Dog({required this.name}) : super();
-
-  @override
-  List<Object?> get props => [name];
 
   DogBuilder toBuilder() => DogBuilder(name: name);
 
@@ -49,7 +44,7 @@ final class Dog extends Animal with EquatableMixin {
     if (other is! Dog) {
       return false;
     }
-    if (this.name != other.name) return false;
+    if (name != other.name) return false;
     return true;
   }
 
@@ -66,13 +61,10 @@ final class DogBuilder extends AnimalBuilder {
   Dog build() => Dog(name: name);
 }
 
-final class Cat extends Animal with EquatableMixin {
+final class Cat extends Animal {
   final int age;
 
   const Cat({required this.age}) : super();
-
-  @override
-  List<Object?> get props => [age];
 
   CatBuilder toBuilder() => CatBuilder(age: age);
 
@@ -94,7 +86,7 @@ final class Cat extends Animal with EquatableMixin {
     if (other is! Cat) {
       return false;
     }
-    if (this.age != other.age) return false;
+    if (age != other.age) return false;
     return true;
   }
 

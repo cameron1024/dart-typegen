@@ -2,9 +2,7 @@
 source: src/tests/snapshots/mod.rs
 expression: dart
 ---
-import "package:equatable/equatable.dart";
-
-sealed class Foo with EquatableMixin {
+sealed class Foo {
   const Foo();
 
   FooBuilder toBuilder();
@@ -21,11 +19,8 @@ sealed class FooBuilder {
   Foo build();
 }
 
-final class X extends Foo with EquatableMixin {
+final class X extends Foo {
   const X() : super();
-
-  @override
-  List<Object?> get props => [];
 
   XBuilder toBuilder() => XBuilder();
 
@@ -59,11 +54,8 @@ final class XBuilder extends FooBuilder {
   X build() => X();
 }
 
-final class Y extends Foo with EquatableMixin {
+final class Y extends Foo {
   const Y() : super();
-
-  @override
-  List<Object?> get props => [];
 
   YBuilder toBuilder() => YBuilder();
 

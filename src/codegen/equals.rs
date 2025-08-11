@@ -1,3 +1,5 @@
+use crate::context::TyKind;
+
 use super::*;
 
 impl Context {
@@ -28,10 +30,44 @@ impl Context {
     }
 
     fn generate_field_equals(&self, buf: &mut String, field: &Field) -> std::fmt::Result {
-        // TODO: type check field to deal with lists
-
+        use TyKind::*;
+        // unwrap() checked during validation
+        let ty = self.parse_ty(&field.ty).0.unwrap();
         let name = &field.name;
-        writeln!(buf, "if (this.{name} != other.{name}) return false;")?;
+
+        match ty.kind {
+            Simple(_) | Nullable(_) => writeln!(buf, "if ({name} != other.{name}) return false;"),
+            List(_) => {
+                writeln!(
+                    buf,
+                    "if ({name}.length != other.{name}.length) return false;"
+                )?;
+                writeln!(buf, "for (var i = 0; i < {name}.length; i++)")?;
+                braced(buf, |out| {
+                    writeln!(out, "if ({name}[i] != other.{name}[i]) return false;")
+                })
+            }
+            Set(_) => {
+                writeln!(
+                    buf,
+                    "if ({name}.length != other.{name}.length) return false;"
+                )?;
+                writeln!(buf, "for (final elem in this)")?;
+                braced(buf, |out| {
+                    writeln!(out, "if (!other.contains(elem)) return false;")
+                })
+            }
+            Map { .. } => {
+                writeln!(
+                    buf,
+                    "if ({name}.length != other.{name}.length) return false;"
+                )?;
+                writeln!(buf, "for (final entry in {name}.entries)")?;
+                braced(buf, |out| {
+                    writeln!(out, "if (entry.value != other.{name}[entry.key]) return false;")
+                })
+            }
+        }?;
 
         Ok(())
     }

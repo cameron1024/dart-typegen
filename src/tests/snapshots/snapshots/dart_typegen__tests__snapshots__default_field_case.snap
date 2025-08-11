@@ -2,16 +2,11 @@
 source: src/tests/snapshots/mod.rs
 expression: dart
 ---
-import "package:equatable/equatable.dart";
-
-final class Foo with EquatableMixin {
+final class Foo {
   final String multipleWords;
   final String evenMoreMultipleWords;
 
   const Foo({required this.multipleWords, required this.evenMoreMultipleWords});
-
-  @override
-  List<Object?> get props => [multipleWords, evenMoreMultipleWords];
 
   FooBuilder toBuilder() => FooBuilder(
     multipleWords: multipleWords,
@@ -41,8 +36,8 @@ final class Foo with EquatableMixin {
     if (other is! Foo) {
       return false;
     }
-    if (this.multipleWords != other.multipleWords) return false;
-    if (this.evenMoreMultipleWords != other.evenMoreMultipleWords) return false;
+    if (multipleWords != other.multipleWords) return false;
+    if (evenMoreMultipleWords != other.evenMoreMultipleWords) return false;
     return true;
   }
 

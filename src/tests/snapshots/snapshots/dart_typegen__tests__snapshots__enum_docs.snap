@@ -2,8 +2,6 @@
 source: src/tests/snapshots/mod.rs
 expression: dart
 ---
-import "package:equatable/equatable.dart";
-
 /// Multi line comment
 ///
 /// More stuff

@@ -611,6 +611,30 @@ Library {
                             docs: None,
                             json_key: None,
                         },
+                        Field {
+                            name: SpannedScalar {
+                                value: "aliases",
+                                span: SourceSpan {
+                                    offset: SourceOffset(
+                                        1488,
+                                    ),
+                                    length: 9,
+                                },
+                            },
+                            ty: SpannedScalar {
+                                value: "List<String>",
+                                span: SourceSpan {
+                                    offset: SourceOffset(
+                                        1503,
+                                    ),
+                                    length: 14,
+                                },
+                            },
+                            defaults_to: None,
+                            defaults_to_dart: None,
+                            docs: None,
+                            json_key: None,
+                        },
                     ],
                     docs: Some(
                         SpannedScalar {
@@ -636,7 +660,7 @@ Library {
                         value: "Cat",
                         span: SourceSpan {
                             offset: SourceOffset(
-                                1491,
+                                1531,
                             ),
                             length: 5,
                         },
@@ -647,7 +671,7 @@ Library {
                                 value: "name",
                                 span: SourceSpan {
                                     offset: SourceOffset(
-                                        1535,
+                                        1575,
                                     ),
                                     length: 6,
                                 },
@@ -656,7 +680,7 @@ Library {
                                 value: "String",
                                 span: SourceSpan {
                                     offset: SourceOffset(
-                                        1547,
+                                        1587,
                                     ),
                                     length: 8,
                                 },
@@ -666,8 +690,8 @@ Library {
                                     type_name: None,
                                     literal: Spanned {
                                         span: Span(
-                                            1576,
-                                            1597,
+                                            1616,
+                                            1637,
                                         ),
                                         value: String(
                                             "Destroyer of Worlds",
@@ -684,7 +708,7 @@ Library {
                                 value: "satanicPower",
                                 span: SourceSpan {
                                     offset: SourceOffset(
-                                        1614,
+                                        1654,
                                     ),
                                     length: 14,
                                 },
@@ -693,7 +717,7 @@ Library {
                                 value: "int",
                                 span: SourceSpan {
                                     offset: SourceOffset(
-                                        1634,
+                                        1674,
                                     ),
                                     length: 5,
                                 },
@@ -704,12 +728,36 @@ Library {
                                     value: "9001",
                                     span: SourceSpan {
                                         offset: SourceOffset(
-                                            1665,
+                                            1705,
                                         ),
                                         length: 6,
                                     },
                                 },
                             ),
+                            docs: None,
+                            json_key: None,
+                        },
+                        Field {
+                            name: SpannedScalar {
+                                value: "data",
+                                span: SourceSpan {
+                                    offset: SourceOffset(
+                                        1728,
+                                    ),
+                                    length: 6,
+                                },
+                            },
+                            ty: SpannedScalar {
+                                value: "Map<String, dynamic>",
+                                span: SourceSpan {
+                                    offset: SourceOffset(
+                                        1740,
+                                    ),
+                                    length: 22,
+                                },
+                            },
+                            defaults_to: None,
+                            defaults_to_dart: None,
                             docs: None,
                             json_key: None,
                         },
@@ -719,7 +767,7 @@ Library {
                             value: "Evil hellspawn",
                             span: SourceSpan {
                                 offset: SourceOffset(
-                                    1508,
+                                    1548,
                                 ),
                                 length: 16,
                             },
