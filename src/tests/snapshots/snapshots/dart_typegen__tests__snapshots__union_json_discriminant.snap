@@ -38,6 +38,19 @@ final class Dog extends Animal with EquatableMixin {
   String toString() =>
       "Dog("
       ")";
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Dog) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([]);
 }
 
 /// Builder class for [Dog]
@@ -63,6 +76,19 @@ final class Cat extends Animal with EquatableMixin {
   String toString() =>
       "Cat("
       ")";
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Cat) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([]);
 }
 
 /// Builder class for [Cat]

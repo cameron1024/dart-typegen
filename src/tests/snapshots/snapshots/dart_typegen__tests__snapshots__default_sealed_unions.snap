@@ -37,6 +37,19 @@ final class X extends Foo with EquatableMixin {
   String toString() =>
       "X("
       ")";
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! X) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([]);
 }
 
 /// Builder class for [X]
@@ -62,6 +75,19 @@ final class Y extends Foo with EquatableMixin {
   String toString() =>
       "Y("
       ")";
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Y) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([]);
 }
 
 /// Builder class for [Y]

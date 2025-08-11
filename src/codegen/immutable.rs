@@ -106,6 +106,18 @@ impl Context {
                 self.generate_to_string_enum(out, class)?;
             }
 
+            let generate_equals = self
+                .library
+                .defaults
+                .as_ref()
+                .and_then(|d| d.generate_equals.as_ref())
+                .map(|g| g.value)
+                .unwrap_or(true);
+
+            if generate_equals {
+                self.generate_equals_and_hash(out, class)?;
+            }
+
             for extra in &class.extra_dart {
                 writeln!(out, "{extra}")?;
                 writeln!(out)?;

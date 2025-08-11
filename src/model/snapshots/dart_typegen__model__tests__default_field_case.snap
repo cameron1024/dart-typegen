@@ -8,6 +8,7 @@ Library {
     defaults: Some(
         Defaults {
             generate_to_string: None,
+            generate_equals: None,
             union: None,
             field: Some(
                 FieldOptions {

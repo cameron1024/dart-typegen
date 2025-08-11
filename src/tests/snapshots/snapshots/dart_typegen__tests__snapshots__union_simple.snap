@@ -41,6 +41,20 @@ final class Dog extends Animal with EquatableMixin {
       "Dog("
       "name: $name"
       ")";
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Dog) {
+      return false;
+    }
+    if (this.name != other.name) return false;
+    return true;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([name]);
 }
 
 /// Builder class for [Dog]
@@ -72,6 +86,20 @@ final class Cat extends Animal with EquatableMixin {
       "Cat("
       "age: $age"
       ")";
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Cat) {
+      return false;
+    }
+    if (this.age != other.age) return false;
+    return true;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([age]);
 }
 
 /// Builder class for [Cat]

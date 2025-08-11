@@ -60,6 +60,24 @@ final class TopLevel with EquatableMixin {
       "pet: $pet,"
       "secondPet: $secondPet"
       ")";
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! TopLevel) {
+      return false;
+    }
+    if (this.name != other.name) return false;
+    if (this.age != other.age) return false;
+    if (this.color != other.color) return false;
+    if (this.pet != other.pet) return false;
+    if (this.secondPet != other.secondPet) return false;
+    return true;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([name, age, color, pet, secondPet]);
 }
 
 /// Builder class for [TopLevel]
@@ -121,6 +139,19 @@ final class X extends Unused with EquatableMixin {
   String toString() =>
       "X("
       ")";
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! X) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([]);
 }
 
 /// Builder class for [X]
@@ -146,6 +177,19 @@ final class Y extends Unused with EquatableMixin {
   String toString() =>
       "Y("
       ")";
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Y) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([]);
 }
 
 /// Builder class for [Y]
@@ -204,6 +248,21 @@ final class Dog extends Animal with EquatableMixin {
       "name: $name,"
       "color: $color"
       ")";
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Dog) {
+      return false;
+    }
+    if (this.name != other.name) return false;
+    if (this.color != other.color) return false;
+    return true;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([name, color]);
 }
 
 /// Builder class for [Dog]
@@ -246,6 +305,21 @@ final class Cat extends Animal with EquatableMixin {
       "name: $name,"
       "satanicPower: $satanicPower"
       ")";
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Cat) {
+      return false;
+    }
+    if (this.name != other.name) return false;
+    if (this.satanicPower != other.satanicPower) return false;
+    return true;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([name, satanicPower]);
 }
 
 /// Builder class for [Cat]

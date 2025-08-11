@@ -4,6 +4,20 @@ use crate::{codegen::dart_format, context::Context};
 
 const TYPE_NAMES: &[&str] = &["TopLevel", "Animal", "Dog", "Cat", "Unused"];
 const ENUM_NAMES: &[&str] = &["Color"];
+const EXPRESSIONS: &[&str] = &[
+    "topLevel",
+    "topLevel.color",
+    "topLevel.name",
+    "topLevel.color",
+    "topLevel.pet",
+    "topLevel.secondPet",
+    "topLevelAlt",
+    "topLevelAlt.color",
+    "topLevelAlt.name",
+    "topLevelAlt.color",
+    "topLevelAlt.pet",
+    "topLevelAlt.secondPet",
+];
 
 const DEFAULT_TOPLEVEL: &str = /* dart */
     r#"
@@ -88,6 +102,10 @@ fn main_fn(buf: &mut String) -> std::fmt::Result {
     call_checks(buf, "TopLevel", "topLevelAlt")?;
     call_checks(buf, "Animal", "topLevelAlt.pet")?;
 
+    for expr in EXPRESSIONS {
+        writeln!(buf, "if ({expr} != {expr}) throw Exception('not equal');").unwrap();
+    }
+
     writeln!(buf, "}}")?;
 
     Ok(())
@@ -106,6 +124,7 @@ fn main_dart() -> String {
     for name in ENUM_NAMES {
         check_json(&mut buf, name).unwrap();
     }
+
 
     buf
 }

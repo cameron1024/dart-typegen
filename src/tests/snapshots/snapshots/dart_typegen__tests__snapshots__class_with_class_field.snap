@@ -27,6 +27,21 @@ final class Foo with EquatableMixin {
       "x: $x,"
       "bar: $bar"
       ")";
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Foo) {
+      return false;
+    }
+    if (this.x != other.x) return false;
+    if (this.bar != other.bar) return false;
+    return true;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([x, bar]);
 }
 
 /// Builder class for [Foo]
@@ -62,6 +77,21 @@ final class Bar with EquatableMixin {
       "x: $x,"
       "bar: $bar"
       ")";
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Bar) {
+      return false;
+    }
+    if (this.x != other.x) return false;
+    if (this.bar != other.bar) return false;
+    return true;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([x, bar]);
 }
 
 /// Builder class for [Bar]

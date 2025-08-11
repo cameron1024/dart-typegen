@@ -11,6 +11,7 @@ use crate::{codegen::util::braced, context::Context, model::*};
 pub use util::dart_format;
 
 mod enumeration;
+mod equals;
 mod immutable;
 mod json;
 mod mutable;

@@ -33,6 +33,21 @@ final class Foo with EquatableMixin {
       "multipleWords: $multipleWords,"
       "evenMoreMultipleWords: $evenMoreMultipleWords"
       ")";
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Foo) {
+      return false;
+    }
+    if (this.multipleWords != other.multipleWords) return false;
+    if (this.evenMoreMultipleWords != other.evenMoreMultipleWords) return false;
+    return true;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([multipleWords, evenMoreMultipleWords]);
 }
 
 /// Builder class for [Foo]

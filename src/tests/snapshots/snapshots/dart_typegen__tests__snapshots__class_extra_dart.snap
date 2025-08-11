@@ -23,6 +23,20 @@ final class Foo with EquatableMixin {
       "Foo("
       "x: $x"
       ")";
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Foo) {
+      return false;
+    }
+    if (this.x != other.x) return false;
+    return true;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([x]);
   void foo() {}
 
   void bar() {}
