@@ -53,6 +53,11 @@ pub fn dart_format(dart: String) -> miette::Result<String> {
 
     let output = process.wait_with_output().into_diagnostic()?;
     if !output.status.success() {
+        let path = "__dart_typegen_failed.dart";
+        match std::fs::write(path, &dart) {
+            Ok(_) => eprintln!("Written input to `{path}`"),
+            Err(_) => eprintln!("Failed to write input to `{path}`"),
+        }
         let src = NamedSource::new("<stdin>", dart).with_language("dart");
         let stderr = String::from_utf8(output.stderr).unwrap();
         bail!(DartFormatError { src, stderr });

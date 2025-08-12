@@ -1,3 +1,5 @@
+use crate::context::TyKind;
+
 use super::*;
 
 impl Context {
@@ -17,20 +19,28 @@ impl Context {
             let field_name = &field.name;
 
             if let Some(to_json) = &field.to_json {
+                writeln!(buf, "\"{json_key}\": ")?;
                 writeln!(buf, "// ignore: unnecessary_parenthesis")?;
-                writeln!(buf, "\"{json_key}\": ({to_json})({field_name}),")?;
+                write!(buf, "({to_json})({field_name}),")?;
             } else {
-                let needs_to_json = self
+                write!(buf, "\"{json_key}\": ")?;
+                let ty = self.parse_ty(&field.ty).0.unwrap();
+
+                let is_generated_by_us = self
                     .library
                     .classes
                     .iter()
                     .any(|c| c.name.as_str() == field.ty.as_str());
-                let to_json = match needs_to_json {
-                    false => "",
-                    true => ".toJson()",
-                };
 
-                writeln!(buf, "\"{json_key}\": {field_name}{to_json},")?;
+                if is_generated_by_us {
+                    write!(buf, "{field_name}.toJson()")?;
+                } else if let TyKind::Set(_) = ty.kind {
+                    write!(buf, "{field_name}.toList()")?;
+                } else {
+                    write!(buf, "{field_name}")?;
+                }
+
+                writeln!(buf, ",")?;
             }
         }
 
@@ -57,30 +67,38 @@ impl Context {
             let json_key = self.library.json_key_for(class, field);
             let field_ty = &field.ty;
             let field_name = &field.name;
+            let expr = format!("json[\"{json_key}\"]");
 
+            write!(buf, "{field_name}: ")?;
 
-            // an explicit `from-json` overrides everything
+            // if a field has a default, we always check for null and then return the default if
+            // null
+            if let Some(defaults_to) = &field.defaults_to {
+                let default = format_dart_literal_const(defaults_to);
+                write!(buf, "{expr} == null ? {default} : ")?;
+            } else if let Some(defaults_to_dart) = &field.defaults_to_dart {
+                write!(buf, "{expr} == null ? {defaults_to_dart} : ")?;
+            }
+
             if let Some(from_json) = &field.from_json {
+                writeln!(buf)?;
                 writeln!(buf, "// ignore: unnecessary_parenthesis")?;
-                writeln!(buf, "{field_name}: ({from_json})(json[\"{json_key}\"])")?;
+                writeln!(buf, "({from_json})({expr})")?;
             } else {
-                write!(buf, "{field_name}: ")?;
-
-                let needs_from_json = self
+                let is_generated_by_us = self
                     .library
                     .classes
                     .iter()
                     .any(|c| c.name.as_str() == field.ty.as_str());
 
-                if needs_from_json {
-                    write!(buf, "{field_ty}.fromJson(")?;
-                }
-                write!(buf, "json[\"{json_key}\"]")?;
-
-                if needs_from_json {
-                    write!(buf, " as Map<String, dynamic>)")?;
+                if is_generated_by_us {
+                    write!(buf, "{field_ty}.fromJson({expr} as Map<String, dynamic>)")?;
                 } else {
-                    write!(buf, "as {field_ty}")?;
+                    let ty = self.parse_ty(&field.ty).0.unwrap();
+                    match ty.kind {
+                        TyKind::Set(_) => write!(buf, "Set.from({expr} as List<dynamic>)")?,
+                        _ => write!(buf, "{expr} as {}", field.ty)?,
+                    }
                 }
             }
             writeln!(buf, ",")?;
