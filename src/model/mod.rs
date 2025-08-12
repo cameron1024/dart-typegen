@@ -80,8 +80,12 @@ pub struct Class {
     pub annotations: Option<SpannedScalar<String>>,
 
     /// Extra text to include into the class body
-    #[knus(children, unwrap(argument))]
-    pub extra_dart: Vec<SpannedScalar<String>>,
+    #[knus(child, unwrap(argument))]
+    pub extra_dart: Option<SpannedScalar<String>>,
+
+    /// Extra text to include into the class body
+    #[knus(child, unwrap(argument))]
+    pub builder_extra_dart: Option<SpannedScalar<String>>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Decode)]

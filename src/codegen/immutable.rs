@@ -120,7 +120,7 @@ impl Context {
                 self.generate_equals_and_hash(out, class)?;
             }
 
-            for extra in &class.extra_dart {
+            if let Some(extra) = &class.extra_dart {
                 writeln!(out, "{extra}")?;
                 writeln!(out)?;
             }
