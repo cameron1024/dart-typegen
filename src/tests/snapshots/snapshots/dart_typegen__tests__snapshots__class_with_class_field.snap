@@ -19,7 +19,7 @@ final class Foo {
   @override
   String toString() =>
       "Foo("
-      "x: $x,"
+      "x: $x, "
       "bar: $bar"
       ")";
   @override
@@ -66,7 +66,7 @@ final class Bar {
   @override
   String toString() =>
       "Bar("
-      "x: $x,"
+      "x: $x, "
       "bar: $bar"
       ")";
   @override

@@ -22,6 +22,7 @@ Library {
                     length: 5,
                 },
             },
+            allow_non_pascal_case: None,
             fields: [
                 Field {
                     name: SpannedScalar {
@@ -53,7 +54,9 @@ Library {
             docs: None,
             json_key_case: None,
             json_discriminant_value: None,
-            extra_dart: [],
+            annotations: None,
+            extra_dart: None,
+            builder_extra_dart: None,
         },
     ],
     unions: [],

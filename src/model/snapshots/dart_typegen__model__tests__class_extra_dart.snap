@@ -22,6 +22,7 @@ Library {
                     length: 5,
                 },
             },
+            allow_non_pascal_case: None,
             fields: [
                 Field {
                     name: SpannedScalar {
@@ -53,35 +54,19 @@ Library {
             docs: None,
             json_key_case: None,
             json_discriminant_value: None,
-            extra_dart: [
-                SpannedScalar {
-                    value: "void foo() {}",
-                    span: SourceSpan {
-                        offset: SourceOffset(
-                            102,
-                        ),
-                        length: 15,
-                    },
-                },
-                SpannedScalar {
-                    value: "void bar() {}",
-                    span: SourceSpan {
-                        offset: SourceOffset(
-                            131,
-                        ),
-                        length: 15,
-                    },
-                },
+            annotations: None,
+            extra_dart: Some(
                 SpannedScalar {
                     value: "\n    void baz() {\n      print(x);\n    }\n  ",
                     span: SourceSpan {
                         offset: SourceOffset(
-                            160,
+                            102,
                         ),
                         length: 47,
                     },
                 },
-            ],
+            ),
+            builder_extra_dart: None,
         },
     ],
     unions: [],

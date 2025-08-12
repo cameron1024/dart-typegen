@@ -22,7 +22,7 @@ final class Foo {
   @override
   String toString() =>
       "Foo("
-      "x: $x,"
+      "x: $x, "
       "y: $y"
       ")";
   @override

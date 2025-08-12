@@ -36,23 +36,23 @@ final class TopLevel {
     "age": age,
     "color": color,
     "pet": pet,
-    "secondPet": secondPet,
+    "second_pet": secondPet,
   };
   factory TopLevel.fromJson(Map<String, dynamic> json) => TopLevel(
     name: json["name"] as String,
     age: json["age"] as int,
     color: json["color"] as Color,
     pet: json["pet"] as Animal,
-    secondPet: json["secondPet"] as Animal?,
+    secondPet: json["second_pet"] as Animal?,
   );
 
   @override
   String toString() =>
       "TopLevel("
-      "name: $name,"
-      "age: $age,"
-      "color: $color,"
-      "pet: $pet,"
+      "name: $name, "
+      "age: $age, "
+      "color: $color, "
+      "pet: $pet, "
       "secondPet: $secondPet"
       ")";
   @override
@@ -109,7 +109,7 @@ abstract final class Unused {
   factory Unused.fromJson(Map<String, dynamic> json) =>
       switch (json["something-custom-for-unused"]) {
         "unused_x" => X.fromJson(json),
-        "y" => Y.fromJson(json),
+        "Y" => Y.fromJson(json),
         final other => throw ArgumentError("unknown discriminant: $other"),
       };
 }
@@ -159,7 +159,7 @@ final class Y extends Unused {
   YBuilder toBuilder() => YBuilder();
 
   @override
-  Map<String, dynamic> toJson() => {"something-custom-for-unused": "y"};
+  Map<String, dynamic> toJson() => {"something-custom-for-unused": "Y"};
   factory Y.fromJson(Map<String, dynamic> json) => Y();
 
   @override
@@ -238,8 +238,8 @@ final class Dog extends Animal {
   @override
   String toString() =>
       "Dog("
-      "name: $name,"
-      "color: $color,"
+      "name: $name, "
+      "color: $color, "
       "aliases: $aliases"
       ")";
   @override
@@ -293,21 +293,23 @@ final class Cat extends Animal {
   @override
   Map<String, dynamic> toJson() => {
     "name": name,
-    "satanicPower": ((i) => i ^ 121)(satanicPower),
+    // ignore: unnecessary_parenthesis
+    "satanic_power": ((i) => i ^ 121)(satanicPower),
     "data": data,
     "custom-discriminant": "Cat",
   };
   factory Cat.fromJson(Map<String, dynamic> json) => Cat(
     name: json["name"] as String,
-    satanicPower: ((i) => i ^ 121)(json["satanicPower"]),
+    // ignore: unnecessary_parenthesis
+    satanicPower: ((i) => i ^ 121)(json["satanic_power"]),
     data: json["data"] as Map<String, dynamic>,
   );
 
   @override
   String toString() =>
       "Cat("
-      "name: $name,"
-      "satanicPower: $satanicPower,"
+      "name: $name, "
+      "satanicPower: $satanicPower, "
       "data: $data"
       ")";
   @override

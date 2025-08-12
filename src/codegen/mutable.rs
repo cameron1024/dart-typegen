@@ -56,6 +56,11 @@ impl Context {
             }
             writeln!(out, ");")?;
 
+            if let Some(extra) = &class.builder_extra_dart {
+                writeln!(out, "{extra}")?;
+                writeln!(out)?;
+            }
+
             Ok(())
         })?;
 

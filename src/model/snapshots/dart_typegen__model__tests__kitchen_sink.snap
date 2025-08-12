@@ -19,6 +19,7 @@ Library {
                 },
             ),
             generate_equals: None,
+            class: None,
             union: Some(
                 UnionOptions {
                     sealed: Some(
@@ -205,6 +206,7 @@ Library {
                     length: 10,
                 },
             },
+            allow_non_pascal_case: None,
             fields: [
                 Field {
                     name: SpannedScalar {
@@ -397,7 +399,9 @@ Library {
             docs: None,
             json_key_case: None,
             json_discriminant_value: None,
-            extra_dart: [],
+            annotations: None,
+            extra_dart: None,
+            builder_extra_dart: None,
         },
     ],
     unions: [
@@ -464,6 +468,7 @@ Library {
                             length: 3,
                         },
                     },
+                    allow_non_pascal_case: None,
                     fields: [],
                     docs: None,
                     json_key_case: None,
@@ -481,7 +486,9 @@ Library {
                             },
                         },
                     ),
-                    extra_dart: [],
+                    annotations: None,
+                    extra_dart: None,
+                    builder_extra_dart: None,
                 },
                 Class {
                     span: Span(
@@ -497,11 +504,14 @@ Library {
                             length: 3,
                         },
                     },
+                    allow_non_pascal_case: None,
                     fields: [],
                     docs: None,
                     json_key_case: None,
                     json_discriminant_value: None,
-                    extra_dart: [],
+                    annotations: None,
+                    extra_dart: None,
+                    builder_extra_dart: None,
                 },
             ],
             extra_dart: [],
@@ -549,6 +559,7 @@ Library {
                             length: 5,
                         },
                     },
+                    allow_non_pascal_case: None,
                     fields: [
                         Field {
                             name: SpannedScalar {
@@ -665,7 +676,9 @@ Library {
                     ),
                     json_key_case: None,
                     json_discriminant_value: None,
-                    extra_dart: [],
+                    annotations: None,
+                    extra_dart: None,
+                    builder_extra_dart: None,
                 },
                 Class {
                     span: Span(
@@ -681,6 +694,7 @@ Library {
                             length: 5,
                         },
                     },
+                    allow_non_pascal_case: None,
                     fields: [
                         Field {
                             name: SpannedScalar {
@@ -817,7 +831,9 @@ Library {
                     ),
                     json_key_case: None,
                     json_discriminant_value: None,
-                    extra_dart: [],
+                    annotations: None,
+                    extra_dart: None,
+                    builder_extra_dart: None,
                 },
             ],
             extra_dart: [],

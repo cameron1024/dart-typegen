@@ -32,9 +32,6 @@ final class Foo {
 
   @override
   int get hashCode => Object.hashAll([x]);
-  void foo() {}
-
-  void bar() {}
 
   void baz() {
     print(x);
