@@ -1,3 +1,9 @@
+## [0.1.6] - 2025-08-12
+
+### 🐛 Bug Fixes
+
+- [**breaking**] Only single extra-dart allowed per class
+- Json codegen bugs when dealing with sets using CBOR
 ## [0.1.5] - 2025-08-11
 
 ### 🚀 Features
