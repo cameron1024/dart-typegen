@@ -69,12 +69,12 @@ generate it ¯\\_(ツ)_/¯.
 Create a config file `foo.kdl` (the name doesn't matter), for example:
 ```kdl
 preamble "// ignore_for_file: some_lint"
-
-class "Foo" {
-  field "name" type="String"
-  field "age" type="int" { defaults-to 123; }
-
-  extra_dart "void printMe() => print((name, age));"
+class Foo {
+    field name type=String
+    field age type=int {
+        defaults-to 123
+    }
+    extra-dart "void printMe() => print((name, age));"
 }
 ```
 Then, run the command:
@@ -84,26 +84,45 @@ dart-typegen generate -i foo.kdl -o foo.dart
 This will generate the following Dart in `foo.dart`:
 ```dart
 // ignore_for_file: some_lint
-import "package:equatable/equatable.dart";
-
-final class Foo with EquatableMixin {
+final class Foo {
   final String name;
   final int age;
 
   const Foo({required this.name, this.age = 123});
 
-  @override
-  List<Object?> get props => [name, age];
-
   FooBuilder toBuilder() => FooBuilder(name: name, age: age);
 
   Map<String, dynamic> toJson() => {"name": name, "age": age};
-  factory Foo.fromJson(Map<String, dynamic> json) =>
-      Foo(name: json["name"] as String, age: json["age"] as int);
+  factory Foo.fromJson(Map<String, dynamic> json) => Foo(
+    name: json["name"] as String,
+    age: json["age"] == null ? 123 : json["age"] as int,
+  );
 
+  @override
+  String toString() =>
+      "Foo("
+      "name: $name, "
+      "age: $age"
+      ")";
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Foo) {
+      return false;
+    }
+    if (name != other.name) return false;
+    if (age != other.age) return false;
+    return true;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([name, age]);
   void printMe() => print((name, age));
 }
 
+/// Builder class for [Foo]
 final class FooBuilder {
   String name;
   int age;
@@ -163,14 +182,13 @@ So let's generate them.
 To generate "unions", declare them in your config file:
 ```kdl
 // It wouldn't be an OO example without some animals...
-union "Animal" {
-  class "Dog" {
-    field "breed" type="String";
-  }
-
-  class "Cat" {
-    field "color" type="int";
-  }
+union Animal {
+    class Dog {
+        field breed type=String
+    }
+    class Cat {
+        field color type=int
+    }
 }
 ```
 This will generate:
@@ -190,7 +208,8 @@ If you are confident you will never need to add a new variant (without a
 breaking change), you can opt into using sealed classes with:
 ```kdl
 union "MyUnion" sealed=true {
-  // ...
+ // ...
+
 }
 ```
 
@@ -198,10 +217,10 @@ union "MyUnion" sealed=true {
 
 Fields can be given default values:
 ```kdl
-class "Foo" {
-  field "bar" type="String" {
-    defaults-to "stuff"
-  }
+class Foo {
+    field bar type=String {
+        defaults-to stuff
+    }
 }
 ```
 The generated constructor will now contain `this.bar = "stuff"` instead of
@@ -215,10 +234,10 @@ collection literals, identifiers, etc.). For these cases, the
 `defaults-to-dart` argument can be used instead. It takes a single string which
 is interpreted as Dart code:
 ```kdl
-class "Foo" {
-  field "bar" type="List<int>" {
-    defaults-to-dart "const [1, 2, 3]"
-  }
+class Foo {
+    field bar type=List<int> {
+        defaults-to-dart "const [1, 2, 3]"
+    }
 }
 ```
 It is an error to have both `defaults-to` and `defaults-to-dart` on the same
@@ -327,9 +346,15 @@ It depends. It has several advantages over more standard tooling (performance,
 reliability, etc.), but also some downsides:
 - it's much less configurable - I've added support for features I personally
   need, and very little else
-- it doesn't have access to type information - if you need to be able to
-  customize code generation based on the types of fields, use `build_runner`
+- it doesn't have access to (much )type information - if you need to be able to
+  customize code generation based on the types of fields, use `build_runner`.
 - less community support
+
+> [!NOTE]
+> It's not strictly true that `dart-typegen` has *no* type information. It has
+> a small parser for Dart's type syntax, so can provide simple analysis like
+> "is the type of the form `List<T>`". However, this is very little information
+> compared to what `build_runner` has access to.
 
 This tool is very much influenced by problems I encountered at work, where I
 work on a library, not an application. This means that many of the tradeoffs I
