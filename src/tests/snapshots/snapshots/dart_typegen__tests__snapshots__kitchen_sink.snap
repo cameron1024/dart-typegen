@@ -35,15 +35,17 @@ final class TopLevel {
     "name": name,
     "age": age,
     "color": color,
-    "pet": pet,
+    "pet": pet.toJson(),
     "second_pet": secondPet,
   };
   factory TopLevel.fromJson(Map<String, dynamic> json) => TopLevel(
     name: json["name"] as String,
-    age: json["age"] as int,
-    color: json["color"] as Color,
-    pet: json["pet"] as Animal,
-    secondPet: json["second_pet"] as Animal?,
+    age: json["age"] == null ? 123 : json["age"] as int,
+    color: json["color"] == null ? Color.green : json["color"] as Color,
+    pet: Animal.fromJson(json["pet"] as Map<String, dynamic>),
+    secondPet: json["second_pet"] == null
+        ? null
+        : json["second_pet"] as Animal?,
   );
 
   @override
@@ -230,7 +232,7 @@ final class Dog extends Animal {
     "custom-discriminant": "Dog",
   };
   factory Dog.fromJson(Map<String, dynamic> json) => Dog(
-    name: json["name"] as String,
+    name: json["name"] == null ? "Dog" : json["name"] as String,
     color: json["color"] as Color,
     aliases: json["aliases"] as List<String>,
   );
@@ -293,15 +295,19 @@ final class Cat extends Animal {
   @override
   Map<String, dynamic> toJson() => {
     "name": name,
-    // ignore: unnecessary_parenthesis
-    "satanic_power": ((i) => i ^ 121)(satanicPower),
+    "satanic_power":
+        // ignore: unnecessary_parenthesis
+        ((i) => i ^ 121)(satanicPower),
     "data": data,
     "custom-discriminant": "Cat",
   };
   factory Cat.fromJson(Map<String, dynamic> json) => Cat(
-    name: json["name"] as String,
-    // ignore: unnecessary_parenthesis
-    satanicPower: ((i) => i ^ 121)(json["satanic_power"]),
+    name: json["name"] == null ? "Destroyer of Worlds" : json["name"] as String,
+    satanicPower: json["satanic_power"] == null
+        ? 9001
+        :
+          // ignore: unnecessary_parenthesis
+          ((i) => i ^ 121)(json["satanic_power"]),
     data: json["data"] as Map<String, dynamic>,
   );
 

@@ -11,8 +11,10 @@ final class Foo {
   FooBuilder toBuilder() => FooBuilder(x: x, y: y);
 
   Map<String, dynamic> toJson() => {"x": x, "y": y};
-  factory Foo.fromJson(Map<String, dynamic> json) =>
-      Foo(x: json["x"] as String, y: json["y"] as int);
+  factory Foo.fromJson(Map<String, dynamic> json) => Foo(
+    x: json["x"] == null ? "hello" : json["x"] as String,
+    y: json["y"] == null ? 123 + 234 : json["y"] as int,
+  );
 
   @override
   String toString() =>

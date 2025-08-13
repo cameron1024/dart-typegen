@@ -28,9 +28,8 @@ impl Context {
 
                 let is_generated_by_us = self
                     .library
-                    .classes
-                    .iter()
-                    .any(|c| c.name.as_str() == field.ty.as_str());
+                    .class_and_union_names()
+                    .any(|c| c.as_str() == field.ty.as_str());
 
                 if is_generated_by_us {
                     write!(buf, "{field_name}.toJson()")?;

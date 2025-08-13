@@ -9,6 +9,7 @@ Library {
         Defaults {
             generate_to_string: None,
             generate_equals: None,
+            dart_format_language_version: None,
             class: None,
             union: None,
             field: Some(

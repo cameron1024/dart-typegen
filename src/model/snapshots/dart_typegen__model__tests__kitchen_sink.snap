@@ -19,6 +19,7 @@ Library {
                 },
             ),
             generate_equals: None,
+            dart_format_language_version: None,
             class: None,
             union: Some(
                 UnionOptions {
