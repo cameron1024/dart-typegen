@@ -10,6 +10,9 @@ pub struct Defaults {
     #[knus(child, unwrap(argument))]
     pub generate_equals: Option<SpannedScalar<bool>>,
 
+    #[knus(child, unwrap(argument))]
+    pub dart_format_language_version: Option<SpannedScalar<String>>,
+
     #[knus(child)]
     pub class: Option<ClassOptions>,
 

@@ -37,16 +37,21 @@ impl Library {
 }
 
 /// Run `dart format` on a string
-pub fn dart_format(dart: String) -> miette::Result<String> {
+pub fn dart_format(dart: String, version: Option<&str>) -> miette::Result<String> {
     use std::io::Write;
-    let mut process = Command::new("dart")
-        .arg("format")
+
+    let mut command = Command::new("dart");
+    match version {
+        None => command.arg("format"),
+        Some(version) => command.arg("format").arg("--language-version").arg(version),
+    };
+
+    let mut process = command
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
         .spawn()
         .into_diagnostic()?;
-
 
     let stdin = process.stdin.as_mut().unwrap();
     stdin.write_all(dart.as_bytes()).into_diagnostic()?;
@@ -100,6 +105,6 @@ fn dart_format_works() {
         }
         ";
 
-    let formatted = dart_format(unformatted.to_string()).unwrap();
+    let formatted = dart_format(unformatted.to_string(), Some("3.8")).unwrap();
     assert_eq!(formatted.trim(), "class Foo {}");
 }

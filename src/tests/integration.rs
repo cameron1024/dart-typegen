@@ -171,7 +171,7 @@ fn integration_test() {
 
     let context = Context::from_str(include_str!(crate::test_file!(kitchen_sink))).unwrap();
     let generated = context.codegen_to_string().unwrap();
-    let main = dart_format(main_dart()).unwrap();
+    let main = dart_format(main_dart(), Some("3.8")).unwrap();
 
     std::fs::write(package_dir.join("pubspec.yaml"), PUBSPEC).unwrap();
     std::fs::write(package_dir.join("generated.dart"), generated).unwrap();

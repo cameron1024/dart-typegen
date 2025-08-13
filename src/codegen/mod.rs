@@ -53,7 +53,14 @@ impl Context {
             writeln!(buf, "{postamble}").into_diagnostic()?;
         }
 
-        let formatted = dart_format(buf)?;
+        let lang_version = self
+            .library
+            .defaults
+            .as_ref()
+            .and_then(|d| d.dart_format_language_version.as_ref())
+            .map(|v| v.as_str());
+
+        let formatted = dart_format(buf, lang_version)?;
         out.write_all(formatted.as_bytes()).into_diagnostic()?;
 
         Ok(())
