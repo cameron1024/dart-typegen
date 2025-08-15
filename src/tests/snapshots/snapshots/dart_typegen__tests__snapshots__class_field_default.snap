@@ -8,6 +8,8 @@ final class Foo {
 
   const Foo({this.x = "hello", this.y = 123 + 234});
 
+  static FooBuilder builder({String x = "hello", int y = 123 + 234}) =>
+      FooBuilder(x: x, y: y);
   FooBuilder toBuilder() => FooBuilder(x: x, y: y);
 
   Map<String, dynamic> toJson() => {"x": x, "y": y};

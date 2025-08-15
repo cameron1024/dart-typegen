@@ -78,9 +78,12 @@ impl Context {
 
             writeln!(out)?;
 
+            self.generate_builder_factory(out, class)?;
+
             let builder_name = format!("{}Builder", class.name);
 
             writeln!(out, "{builder_name} toBuilder() => {builder_name}(")?;
+
             for field in &class.fields {
                 let needs_to_builder = self.library.type_has_builder(&field.ty);
                 let name = field.name.as_str();
@@ -143,6 +146,63 @@ impl Context {
             writeln!(buf, "\"{name}: ${name}{trailing_comma}\"")?;
         }
         writeln!(buf, "\")\";")?;
+        Ok(())
+    }
+
+    fn generate_builder_factory(&self, buf: &mut String, class: &Class) -> std::fmt::Result {
+        let class_name = &class.name;
+
+        if class.fields.is_empty() {
+            writeln!(
+                buf,
+                "static {class_name}Builder builder() => {class_name}Builder();"
+            )?;
+            return Ok(());
+        }
+
+        writeln!(buf, "static {class_name}Builder builder({{")?;
+        for field in &class.fields {
+            let required_kw = if field.defaults_to.is_none() && field.defaults_to_dart.is_none() {
+                "required"
+            } else {
+                ""
+            };
+
+            let field_ty = &field.ty;
+            let field_name = &field.name;
+
+            write!(buf, "{required_kw} {field_ty} {field_name}")?;
+            match (&field.defaults_to, &field.defaults_to_dart) {
+                (Some(_), Some(_)) => unreachable!("checked in validation"),
+                (None, None) => {}
+                (Some(defaults_to), None) => {
+                    let dart = format_dart_literal_const(defaults_to);
+                    if dart != "null" {
+                        writeln!(buf, "= {dart}")?;
+                    }
+                }
+                (None, Some(defaults_to_dart)) => {
+                    if &**defaults_to_dart != "null" {
+                        writeln!(buf, "= {defaults_to_dart}")?;
+                    }
+                }
+            }
+            writeln!(buf, ",")?;
+        }
+        writeln!(buf, "}}) => {class_name}Builder(")?;
+        for field in &class.fields {
+            let field_ty = &field.ty;
+            let field_name = &field.name;
+
+            write!(buf, "{field_name}: ")?;
+            let has_builder = self.library.type_has_builder(field_ty);
+            match has_builder {
+                true => writeln!(buf, "{field_name}.toBuilder(),")?,
+                false => writeln!(buf, "{field_name},")?,
+            };
+        }
+        writeln!(buf, ");")?;
+
         Ok(())
     }
 }

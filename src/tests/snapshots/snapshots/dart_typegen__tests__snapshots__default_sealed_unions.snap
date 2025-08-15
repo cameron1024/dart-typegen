@@ -22,6 +22,7 @@ sealed class FooBuilder {
 final class X extends Foo {
   const X() : super();
 
+  static XBuilder builder() => XBuilder();
   XBuilder toBuilder() => XBuilder();
 
   @override
@@ -57,6 +58,7 @@ final class XBuilder extends FooBuilder {
 final class Y extends Foo {
   const Y() : super();
 
+  static YBuilder builder() => YBuilder();
   YBuilder toBuilder() => YBuilder();
 
   @override

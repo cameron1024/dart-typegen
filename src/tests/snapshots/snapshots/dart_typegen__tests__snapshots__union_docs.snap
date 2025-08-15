@@ -27,6 +27,7 @@ final class Dog extends Animal {
 
   const Dog({required this.name}) : super();
 
+  static DogBuilder builder({required String name}) => DogBuilder(name: name);
   DogBuilder toBuilder() => DogBuilder(name: name);
 
   @override
@@ -69,6 +70,7 @@ final class Cat extends Animal {
 
   const Cat({required this.age}) : super();
 
+  static CatBuilder builder({required int age}) => CatBuilder(age: age);
   CatBuilder toBuilder() => CatBuilder(age: age);
 
   @override

@@ -23,6 +23,19 @@ final class TopLevel {
     this.secondPet,
   });
 
+  static TopLevelBuilder builder({
+    required String name,
+    int age = 123,
+    Color color = Color.green,
+    required Animal pet,
+    Animal? secondPet,
+  }) => TopLevelBuilder(
+    name: name,
+    age: age,
+    color: color,
+    pet: pet.toBuilder(),
+    secondPet: secondPet,
+  );
   TopLevelBuilder toBuilder() => TopLevelBuilder(
     name: name,
     age: age,
@@ -123,6 +136,7 @@ abstract final class UnusedBuilder {
 final class X extends Unused {
   const X() : super();
 
+  static XBuilder builder() => XBuilder();
   XBuilder toBuilder() => XBuilder();
 
   @override
@@ -158,6 +172,7 @@ final class XBuilder extends UnusedBuilder {
 final class Y extends Unused {
   const Y() : super();
 
+  static YBuilder builder() => YBuilder();
   YBuilder toBuilder() => YBuilder();
 
   @override
@@ -221,6 +236,11 @@ final class Dog extends Animal {
   const Dog({this.name = "Dog", required this.color, required this.aliases})
     : super();
 
+  static DogBuilder builder({
+    String name = "Dog",
+    required Color color,
+    required List<String> aliases,
+  }) => DogBuilder(name: name, color: color, aliases: aliases);
   DogBuilder toBuilder() =>
       DogBuilder(name: name, color: color, aliases: aliases);
 
@@ -289,6 +309,11 @@ final class Cat extends Animal {
     required this.data,
   }) : super();
 
+  static CatBuilder builder({
+    String name = "Destroyer of Worlds",
+    int satanicPower = 9001,
+    required Map<String, dynamic> data,
+  }) => CatBuilder(name: name, satanicPower: satanicPower, data: data);
   CatBuilder toBuilder() =>
       CatBuilder(name: name, satanicPower: satanicPower, data: data);
 

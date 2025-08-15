@@ -23,6 +23,7 @@ abstract final class AnimalBuilder {
 final class Dog extends Animal {
   const Dog() : super();
 
+  static DogBuilder builder() => DogBuilder();
   DogBuilder toBuilder() => DogBuilder();
 
   @override
@@ -58,6 +59,7 @@ final class DogBuilder extends AnimalBuilder {
 final class Cat extends Animal {
   const Cat() : super();
 
+  static CatBuilder builder() => CatBuilder();
   CatBuilder toBuilder() => CatBuilder();
 
   @override

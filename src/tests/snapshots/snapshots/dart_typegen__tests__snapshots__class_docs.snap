@@ -8,6 +8,7 @@ final class Foo {
 
   const Foo({required this.x});
 
+  static FooBuilder builder({required String x}) => FooBuilder(x: x);
   FooBuilder toBuilder() => FooBuilder(x: x);
 
   Map<String, dynamic> toJson() => {"x": x};
@@ -52,6 +53,7 @@ final class Bar {
 
   const Bar({required this.x});
 
+  static BarBuilder builder({required String x}) => BarBuilder(x: x);
   BarBuilder toBuilder() => BarBuilder(x: x);
 
   Map<String, dynamic> toJson() => {"x": x};

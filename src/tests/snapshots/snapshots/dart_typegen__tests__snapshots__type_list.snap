@@ -8,6 +8,8 @@ final class Foo {
 
   const Foo({required this.x, required this.y});
 
+  static FooBuilder builder({required List<String> x, required List<int> y}) =>
+      FooBuilder(x: x, y: y);
   FooBuilder toBuilder() => FooBuilder(x: x, y: y);
 
   Map<String, dynamic> toJson() => {"x": x, "y": y};

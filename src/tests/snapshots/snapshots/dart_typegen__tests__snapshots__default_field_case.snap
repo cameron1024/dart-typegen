@@ -8,6 +8,13 @@ final class Foo {
 
   const Foo({required this.multipleWords, required this.evenMoreMultipleWords});
 
+  static FooBuilder builder({
+    required String multipleWords,
+    required String evenMoreMultipleWords,
+  }) => FooBuilder(
+    multipleWords: multipleWords,
+    evenMoreMultipleWords: evenMoreMultipleWords,
+  );
   FooBuilder toBuilder() => FooBuilder(
     multipleWords: multipleWords,
     evenMoreMultipleWords: evenMoreMultipleWords,
