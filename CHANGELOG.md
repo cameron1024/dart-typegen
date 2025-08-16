@@ -1,3 +1,9 @@
+## [0.1.8] - 2025-08-16
+
+### 🚀 Features
+
+- Generate `Type.builder()` static functions
+- Allow adding annotations to builder classes
 ## [0.1.7] - 2025-08-13
 
 ### 🚀 Features
