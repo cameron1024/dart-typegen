@@ -2,6 +2,8 @@
 source: src/tests/snapshots/mod.rs
 expression: dart
 ---
+// woohoo look a comment at the start of the file
+
 final class TopLevel {
   final String name;
 
@@ -91,6 +93,7 @@ final class TopLevel {
 }
 
 /// Builder class for [TopLevel]
+@_CustomAnnotation()
 final class TopLevelBuilder {
   String name;
   int age;
@@ -163,6 +166,7 @@ final class X extends Unused {
 }
 
 /// Builder class for [X]
+@_CustomAnnotation()
 final class XBuilder extends UnusedBuilder {
   XBuilder() : super();
 
@@ -199,6 +203,7 @@ final class Y extends Unused {
 }
 
 /// Builder class for [Y]
+@_CustomAnnotation()
 final class YBuilder extends UnusedBuilder {
   YBuilder() : super();
 
@@ -286,6 +291,7 @@ final class Dog extends Animal {
 }
 
 /// Builder class for [Dog]
+@_CustomAnnotation()
 final class DogBuilder extends AnimalBuilder {
   String name;
   Color color;
@@ -365,6 +371,7 @@ final class Cat extends Animal {
 }
 
 /// Builder class for [Cat]
+@_CustomAnnotation()
 final class CatBuilder extends AnimalBuilder {
   String name;
   int satanicPower;
@@ -405,4 +412,8 @@ enum Color {
   void hello() {}
 
   void goodbye() => print("cya");
+}
+
+class _CustomAnnotation {
+  const _CustomAnnotation();
 }

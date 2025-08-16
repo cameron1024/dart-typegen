@@ -55,6 +55,7 @@ Library {
             json_key_case: None,
             json_discriminant_value: None,
             annotations: None,
+            builder_annotations: None,
             extra_dart: Some(
                 SpannedScalar {
                     value: "\n    void baz() {\n      print(x);\n    }\n  ",

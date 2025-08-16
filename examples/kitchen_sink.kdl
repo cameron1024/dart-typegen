@@ -8,10 +8,25 @@ defaults {
     sealed true
     json-discriminant "custom-discriminant"
   }
+
+  class {
+    builder-annotations "@_CustomAnnotation()"
+  }
+
   field {
     json-key-case "snake"
   }
 }
+
+preamble r#"
+  // woohoo look a comment at the start of the file
+"#
+
+postamble r#"
+  class _CustomAnnotation {
+    const _CustomAnnotation();
+  }
+"#
 
 class "TopLevel" {
   field "name" type="String"

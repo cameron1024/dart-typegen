@@ -101,6 +101,7 @@ Library {
             json_key_case: None,
             json_discriminant_value: None,
             annotations: None,
+            builder_annotations: None,
             extra_dart: None,
             builder_extra_dart: None,
         },

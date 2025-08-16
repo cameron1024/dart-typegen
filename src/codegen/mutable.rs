@@ -10,9 +10,24 @@ impl Context {
         let builder_name = format!("{}Builder", class.name);
 
         self.write_doc_comment(buf, &format!("Builder class for [{}]", class.name))?;
+
+        let default_annotations = self
+            .library
+            .defaults
+            .as_ref()
+            .and_then(|d| d.class.as_ref())
+            .and_then(|c| c.builder_annotations.as_ref());
+
+        if let Some(annotations) = default_annotations {
+            writeln!(buf, "{annotations}")?;
+        }
+
+        if let Some(annotations) = &class.builder_annotations {
+            writeln!(buf, "{annotations}")?;
+        }
+
         write!(buf, "final class {builder_name} ",)?;
         if let Some(superclass) = &superclass {
-            
             write!(buf, "extends {}Builder ", superclass.name)?;
         }
 

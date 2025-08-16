@@ -27,6 +27,8 @@ pub struct Defaults {
 pub struct ClassOptions {
     #[knus(child, unwrap(argument))]
     pub annotations: Option<SpannedScalar<String>>,
+    #[knus(child, unwrap(argument))]
+    pub builder_annotations: Option<SpannedScalar<String>>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Decode)]
