@@ -5,6 +5,7 @@ expression: ron
 Library {
     preamble: None,
     postamble: None,
+    meta: None,
     defaults: None,
     enums: [],
     classes: [

@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use convert_case::{Case, Casing};
 use knus::ast::{Integer, Literal, Radix};
-use miette::{Diagnostic, NamedSource, Result, SourceSpan};
+use miette::{Diagnostic, NamedSource, Result, Severity, SourceSpan};
 use thiserror::Error;
 
 use crate::{
@@ -14,13 +14,25 @@ use crate::{
 mod tests;
 
 impl Context {
-    pub fn validate(&self) -> Result<()> {
+    pub fn validate(&self, deny_warnings: bool) -> Result<()> {
         let errors = self.collect_errors();
+
         if errors.is_empty() {
-            Ok(())
-        } else {
-            miette::bail!(MultiError { errors })
+            return Ok(());
         }
+
+        if !deny_warnings
+            && errors
+                .iter()
+                .all(|e| e.severity() == Some(Severity::Warning))
+        {
+            for error in errors {
+                eprintln!("{error:?}");
+            }
+            return Ok(());
+        }
+
+        miette::bail!(MultiError { errors })
     }
 
     fn collect_errors(&self) -> Vec<miette::Report> {
@@ -37,6 +49,7 @@ impl Context {
         json_discrimminant_non_union_class(self, &mut errors, &source);
         duplicate_json_keys(self, &mut errors, &source);
         invalid_field_types(self, &mut errors, &source);
+        version_too_low(self, &mut errors, &source);
 
         errors
     }
@@ -380,12 +393,12 @@ fn json_key_span(field: &Field) -> SourceSpan {
 // === Invalid Field Types ===
 
 #[derive(Debug, Error, Diagnostic)]
-#[error("Multiple fields have the same json key")]
+#[error("Invalid Field Type")]
 struct InvalidFieldType {
     #[source_code]
     src: NamedSource<String>,
 
-    #[label("first field")]
+    #[label]
     span: SourceSpan,
 
     #[help]
@@ -428,5 +441,70 @@ fn invalid_field_types(
                 }
             }
         }
+    }
+}
+
+// === Invalid Field Types ===
+
+#[derive(Debug, Error, Diagnostic)]
+#[error(
+    "This config requires `dart-typegen` version {required} (or any semver-compatible version), but the current version is {current}"
+)]
+#[diagnostic(severity(Warning))]
+struct IncompatibleVersion {
+    #[source_code]
+    src: NamedSource<String>,
+
+    #[label("Version defined here")]
+    span: SourceSpan,
+
+    required: String,
+    current: String,
+}
+
+#[derive(Debug, Error, Diagnostic)]
+#[error("This version is not a valid semantic version")]
+struct VersionNotSemver {
+    #[source_code]
+    src: NamedSource<String>,
+
+    #[label("Not valid semantic version")]
+    span: SourceSpan,
+}
+
+fn version_too_low(
+    context: &Context,
+    errors: &mut Vec<miette::Report>,
+    source: &NamedSource<String>,
+) {
+    let min_version = context
+        .library
+        .meta
+        .as_ref()
+        .and_then(|meta| meta.version.as_ref());
+
+    let Some(min_version) = min_version else {
+        return;
+    };
+
+    let current = semver::Version::parse(env!("CARGO_PKG_VERSION")).unwrap();
+    let Ok(requirement) = semver::VersionReq::parse(min_version) else {
+        let err = VersionNotSemver {
+            src: source.clone(),
+            span: min_version.span,
+        };
+        errors.push(err.into());
+        return;
+    };
+
+    if !requirement.matches(&current) {
+        let err = IncompatibleVersion {
+            src: source.clone(),
+            span: min_version.span,
+            required: min_version.to_string(),
+            current: env!("CARGO_PKG_VERSION").to_string(),
+        };
+
+        errors.push(err.into());
     }
 }

@@ -5,9 +5,11 @@ use knus::{Decode, ast::Value, span::Span};
 use miette::IntoDiagnostic;
 
 pub use options::*;
+pub use meta::*;
 pub use util::*;
 
 mod options;
+mod meta;
 mod util;
 
 #[cfg(test)]
@@ -22,6 +24,9 @@ pub struct Library {
     pub preamble: Option<String>,
     #[knus(child, unwrap(argument))]
     pub postamble: Option<String>,
+    
+    #[knus(child)]
+    pub meta: Option<Meta>,
 
     #[knus(child)]
     pub defaults: Option<Defaults>,

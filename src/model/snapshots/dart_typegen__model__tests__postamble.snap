@@ -7,6 +7,7 @@ Library {
     postamble: Some(
         "\n  void someCode() {}\n",
     ),
+    meta: None,
     defaults: None,
     enums: [],
     classes: [],
