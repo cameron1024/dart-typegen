@@ -1,3 +1,8 @@
+## [0.1.11] - 2025-08-17
+
+### 🐛 Bug Fixes
+
+- Enum variants now correctly use docs for the variant, rather than duplicating the docs for the enum itself
 ## [0.1.10] - 2025-08-17
 
 ### 🚀 Features
