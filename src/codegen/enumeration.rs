@@ -6,6 +6,20 @@ impl Context {
             self.write_doc_comment(buf, doc)?;
         }
 
+        let default_annotations = self
+            .library
+            .defaults
+            .as_ref()
+            .and_then(|d| d.r#enum.as_ref())
+            .and_then(|e| e.annotations.as_ref());
+
+        if let Some(annotations) = default_annotations {
+            writeln!(buf, "{annotations}")?;
+        }
+        if let Some(annotations) = &enumeration.annotations {
+            writeln!(buf, "{annotations}")?;
+        }
+
         let name = &enumeration.name;
         writeln!(buf, "enum {name}")?;
 

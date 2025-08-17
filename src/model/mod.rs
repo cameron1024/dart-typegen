@@ -151,6 +151,8 @@ pub struct Enum {
     pub name: SpannedScalar<String>,
     #[knus(child, unwrap(argument))]
     pub docs: Option<SpannedScalar<String>>,
+    #[knus(child, unwrap(argument))]
+    pub annotations: Option<SpannedScalar<String>>,
     #[knus(children(name = "variant"))]
     pub variants: Vec<EnumVariant>,
     #[knus(children, unwrap(argument))]

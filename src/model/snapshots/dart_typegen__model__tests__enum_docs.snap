@@ -33,6 +33,7 @@ Library {
                     },
                 },
             ),
+            annotations: None,
             variants: [
                 EnumVariant {
                     name: SpannedScalar {

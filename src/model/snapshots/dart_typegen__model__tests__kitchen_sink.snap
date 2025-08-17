@@ -33,7 +33,7 @@ Library {
                             value: "@_CustomAnnotation()",
                             span: SourceSpan {
                                 offset: SourceOffset(
-                                    249,
+                                    302,
                                 ),
                                 length: 22,
                             },
@@ -67,6 +67,21 @@ Library {
                     ),
                 },
             ),
+            enum: Some(
+                EnumOptions {
+                    annotations: Some(
+                        SpannedScalar {
+                            value: "@_CustomAnnotation()",
+                            span: SourceSpan {
+                                offset: SourceOffset(
+                                    240,
+                                ),
+                                length: 22,
+                            },
+                        },
+                    ),
+                },
+            ),
             field: Some(
                 FieldOptions {
                     json_key_case: Some(
@@ -74,7 +89,7 @@ Library {
                             value: Snake,
                             span: SourceSpan {
                                 offset: SourceOffset(
-                                    305,
+                                    358,
                                 ),
                                 length: 7,
                             },
@@ -94,19 +109,20 @@ Library {
                 value: "Color",
                 span: SourceSpan {
                     offset: SourceOffset(
-                        909,
+                        962,
                     ),
                     length: 7,
                 },
             },
             docs: None,
+            annotations: None,
             variants: [
                 EnumVariant {
                     name: SpannedScalar {
                         value: "red",
                         span: SourceSpan {
                             offset: SourceOffset(
-                                929,
+                                982,
                             ),
                             length: 5,
                         },
@@ -116,7 +132,7 @@ Library {
                             value: "a bad color",
                             span: SourceSpan {
                                 offset: SourceOffset(
-                                    946,
+                                    999,
                                 ),
                                 length: 13,
                             },
@@ -127,8 +143,8 @@ Library {
                             type_name: None,
                             literal: Spanned {
                                 span: Span(
-                                    976,
-                                    987,
+                                    1029,
+                                    1040,
                                 ),
                                 value: String(
                                     "ew, gross",
@@ -142,7 +158,7 @@ Library {
                         value: "green",
                         span: SourceSpan {
                             offset: SourceOffset(
-                                1002,
+                                1055,
                             ),
                             length: 7,
                         },
@@ -152,7 +168,7 @@ Library {
                             value: "\nThe best color\n\nTruly, there has never been a greater color\n    ",
                             span: SourceSpan {
                                 offset: SourceOffset(
-                                    1021,
+                                    1074,
                                 ),
                                 length: 70,
                             },
@@ -163,8 +179,8 @@ Library {
                             type_name: None,
                             literal: Spanned {
                                 span: Span(
-                                    1108,
-                                    1111,
+                                    1161,
+                                    1164,
                                 ),
                                 value: Int(
                                     Integer(
@@ -181,7 +197,7 @@ Library {
                         value: "blue",
                         span: SourceSpan {
                             offset: SourceOffset(
-                                1127,
+                                1180,
                             ),
                             length: 6,
                         },
@@ -195,7 +211,7 @@ Library {
                     value: "void hello() {}",
                     span: SourceSpan {
                         offset: SourceOffset(
-                            1148,
+                            1201,
                         ),
                         length: 17,
                     },
@@ -204,7 +220,7 @@ Library {
                     value: "\n    void goodbye() => print(\"cya\");\n  ",
                     span: SourceSpan {
                         offset: SourceOffset(
-                            1179,
+                            1232,
                         ),
                         length: 44,
                     },
@@ -222,7 +238,7 @@ Library {
                 value: "TopLevel",
                 span: SourceSpan {
                     offset: SourceOffset(
-                        476,
+                        529,
                     ),
                     length: 10,
                 },
@@ -234,7 +250,7 @@ Library {
                         value: "name",
                         span: SourceSpan {
                             offset: SourceOffset(
-                                497,
+                                550,
                             ),
                             length: 6,
                         },
@@ -243,7 +259,7 @@ Library {
                         value: "String",
                         span: SourceSpan {
                             offset: SourceOffset(
-                                509,
+                                562,
                             ),
                             length: 8,
                         },
@@ -260,7 +276,7 @@ Library {
                         value: "age",
                         span: SourceSpan {
                             offset: SourceOffset(
-                                526,
+                                579,
                             ),
                             length: 5,
                         },
@@ -269,7 +285,7 @@ Library {
                         value: "int",
                         span: SourceSpan {
                             offset: SourceOffset(
-                                537,
+                                590,
                             ),
                             length: 5,
                         },
@@ -279,8 +295,8 @@ Library {
                             type_name: None,
                             literal: Spanned {
                                 span: Span(
-                                    603,
-                                    606,
+                                    656,
+                                    659,
                                 ),
                                 value: Int(
                                     Integer(
@@ -297,7 +313,7 @@ Library {
                             value: "the age of this toplevel thing",
                             span: SourceSpan {
                                 offset: SourceOffset(
-                                    554,
+                                    607,
                                 ),
                                 length: 32,
                             },
@@ -312,7 +328,7 @@ Library {
                         value: "color",
                         span: SourceSpan {
                             offset: SourceOffset(
-                                620,
+                                673,
                             ),
                             length: 7,
                         },
@@ -321,7 +337,7 @@ Library {
                         value: "Color",
                         span: SourceSpan {
                             offset: SourceOffset(
-                                633,
+                                686,
                             ),
                             length: 7,
                         },
@@ -332,7 +348,7 @@ Library {
                             value: "Color.green",
                             span: SourceSpan {
                                 offset: SourceOffset(
-                                    664,
+                                    717,
                                 ),
                                 length: 13,
                             },
@@ -343,7 +359,7 @@ Library {
                             value: "\nThe color of the thing\n\nDefaults to [Color.green] because it's the best color\n    ",
                             span: SourceSpan {
                                 offset: SourceOffset(
-                                    687,
+                                    740,
                                 ),
                                 length: 88,
                             },
@@ -358,7 +374,7 @@ Library {
                         value: "pet",
                         span: SourceSpan {
                             offset: SourceOffset(
-                                789,
+                                842,
                             ),
                             length: 5,
                         },
@@ -367,7 +383,7 @@ Library {
                         value: "Animal",
                         span: SourceSpan {
                             offset: SourceOffset(
-                                800,
+                                853,
                             ),
                             length: 8,
                         },
@@ -384,7 +400,7 @@ Library {
                         value: "secondPet",
                         span: SourceSpan {
                             offset: SourceOffset(
-                                818,
+                                871,
                             ),
                             length: 11,
                         },
@@ -393,7 +409,7 @@ Library {
                         value: "Animal?",
                         span: SourceSpan {
                             offset: SourceOffset(
-                                835,
+                                888,
                             ),
                             length: 9,
                         },
@@ -403,8 +419,8 @@ Library {
                             type_name: None,
                             literal: Spanned {
                                 span: Span(
-                                    859,
-                                    863,
+                                    912,
+                                    916,
                                 ),
                                 value: Null,
                             },
@@ -421,7 +437,7 @@ Library {
                         value: "data",
                         span: SourceSpan {
                             offset: SourceOffset(
-                                876,
+                                929,
                             ),
                             length: 6,
                         },
@@ -430,7 +446,7 @@ Library {
                         value: "List<Data>",
                         span: SourceSpan {
                             offset: SourceOffset(
-                                888,
+                                941,
                             ),
                             length: 12,
                         },
@@ -460,7 +476,7 @@ Library {
                 value: "Data",
                 span: SourceSpan {
                     offset: SourceOffset(
-                        2088,
+                        2141,
                     ),
                     length: 6,
                 },
@@ -472,7 +488,7 @@ Library {
                         value: "dogs",
                         span: SourceSpan {
                             offset: SourceOffset(
-                                2105,
+                                2158,
                             ),
                             length: 6,
                         },
@@ -481,7 +497,7 @@ Library {
                         value: "Set<Dog>",
                         span: SourceSpan {
                             offset: SourceOffset(
-                                2117,
+                                2170,
                             ),
                             length: 10,
                         },
@@ -498,7 +514,7 @@ Library {
                         value: "cats",
                         span: SourceSpan {
                             offset: SourceOffset(
-                                2136,
+                                2189,
                             ),
                             length: 6,
                         },
@@ -507,7 +523,7 @@ Library {
                         value: "List<Cat>",
                         span: SourceSpan {
                             offset: SourceOffset(
-                                2148,
+                                2201,
                             ),
                             length: 11,
                         },
@@ -524,7 +540,7 @@ Library {
                         value: "animals",
                         span: SourceSpan {
                             offset: SourceOffset(
-                                2168,
+                                2221,
                             ),
                             length: 9,
                         },
@@ -533,7 +549,7 @@ Library {
                         value: "Map<String, Animal>",
                         span: SourceSpan {
                             offset: SourceOffset(
-                                2183,
+                                2236,
                             ),
                             length: 21,
                         },
@@ -565,7 +581,7 @@ Library {
                 value: "Unused",
                 span: SourceSpan {
                     offset: SourceOffset(
-                        1285,
+                        1338,
                     ),
                     length: 8,
                 },
@@ -575,7 +591,7 @@ Library {
                     value: false,
                     span: SourceSpan {
                         offset: SourceOffset(
-                            1301,
+                            1354,
                         ),
                         length: 5,
                     },
@@ -586,7 +602,7 @@ Library {
                     value: "something-custom-for-unused",
                     span: SourceSpan {
                         offset: SourceOffset(
-                            1329,
+                            1382,
                         ),
                         length: 29,
                     },
@@ -597,7 +613,7 @@ Library {
                     value: ScreamingSnake,
                     span: SourceSpan {
                         offset: SourceOffset(
-                            1390,
+                            1443,
                         ),
                         length: 17,
                     },
@@ -614,7 +630,7 @@ Library {
                         value: "X",
                         span: SourceSpan {
                             offset: SourceOffset(
-                                1420,
+                                1473,
                             ),
                             length: 3,
                         },
@@ -628,8 +644,8 @@ Library {
                             type_name: None,
                             literal: Spanned {
                                 span: Span(
-                                    1454,
-                                    1464,
+                                    1507,
+                                    1517,
                                 ),
                                 value: String(
                                     "unused_x",
@@ -651,7 +667,7 @@ Library {
                         value: "Y",
                         span: SourceSpan {
                             offset: SourceOffset(
-                                1477,
+                                1530,
                             ),
                             length: 3,
                         },
@@ -678,7 +694,7 @@ Library {
                 value: "Animal",
                 span: SourceSpan {
                     offset: SourceOffset(
-                        1489,
+                        1542,
                     ),
                     length: 8,
                 },
@@ -691,7 +707,7 @@ Library {
                     value: "\nSome docs for animal\n\nIt's either a dog or a cat\n  ",
                     span: SourceSpan {
                         offset: SourceOffset(
-                            1507,
+                            1560,
                         ),
                         length: 57,
                     },
@@ -707,7 +723,7 @@ Library {
                         value: "Dog",
                         span: SourceSpan {
                             offset: SourceOffset(
-                                1573,
+                                1626,
                             ),
                             length: 5,
                         },
@@ -719,7 +735,7 @@ Library {
                                 value: "name",
                                 span: SourceSpan {
                                     offset: SourceOffset(
-                                        1619,
+                                        1672,
                                     ),
                                     length: 6,
                                 },
@@ -728,7 +744,7 @@ Library {
                                 value: "String",
                                 span: SourceSpan {
                                     offset: SourceOffset(
-                                        1631,
+                                        1684,
                                     ),
                                     length: 8,
                                 },
@@ -738,8 +754,8 @@ Library {
                                     type_name: None,
                                     literal: Spanned {
                                         span: Span(
-                                            1660,
-                                            1665,
+                                            1713,
+                                            1718,
                                         ),
                                         value: String(
                                             "Dog",
@@ -753,7 +769,7 @@ Library {
                                     value: "the name",
                                     span: SourceSpan {
                                         offset: SourceOffset(
-                                            1677,
+                                            1730,
                                         ),
                                         length: 10,
                                     },
@@ -768,7 +784,7 @@ Library {
                                 value: "color",
                                 span: SourceSpan {
                                     offset: SourceOffset(
-                                        1704,
+                                        1757,
                                     ),
                                     length: 7,
                                 },
@@ -777,7 +793,7 @@ Library {
                                 value: "Color",
                                 span: SourceSpan {
                                     offset: SourceOffset(
-                                        1717,
+                                        1770,
                                     ),
                                     length: 7,
                                 },
@@ -794,7 +810,7 @@ Library {
                                 value: "aliases",
                                 span: SourceSpan {
                                     offset: SourceOffset(
-                                        1735,
+                                        1788,
                                     ),
                                     length: 9,
                                 },
@@ -803,7 +819,7 @@ Library {
                                 value: "List<String>",
                                 span: SourceSpan {
                                     offset: SourceOffset(
-                                        1750,
+                                        1803,
                                     ),
                                     length: 14,
                                 },
@@ -821,7 +837,7 @@ Library {
                             value: "Fun-loving buddy",
                             span: SourceSpan {
                                 offset: SourceOffset(
-                                    1590,
+                                    1643,
                                 ),
                                 length: 18,
                             },
@@ -843,7 +859,7 @@ Library {
                         value: "Cat",
                         span: SourceSpan {
                             offset: SourceOffset(
-                                1778,
+                                1831,
                             ),
                             length: 5,
                         },
@@ -855,7 +871,7 @@ Library {
                                 value: "name",
                                 span: SourceSpan {
                                     offset: SourceOffset(
-                                        1822,
+                                        1875,
                                     ),
                                     length: 6,
                                 },
@@ -864,7 +880,7 @@ Library {
                                 value: "String",
                                 span: SourceSpan {
                                     offset: SourceOffset(
-                                        1834,
+                                        1887,
                                     ),
                                     length: 8,
                                 },
@@ -874,8 +890,8 @@ Library {
                                     type_name: None,
                                     literal: Spanned {
                                         span: Span(
-                                            1863,
-                                            1884,
+                                            1916,
+                                            1937,
                                         ),
                                         value: String(
                                             "Destroyer of Worlds",
@@ -894,7 +910,7 @@ Library {
                                 value: "satanicPower",
                                 span: SourceSpan {
                                     offset: SourceOffset(
-                                        1901,
+                                        1954,
                                     ),
                                     length: 14,
                                 },
@@ -903,7 +919,7 @@ Library {
                                 value: "int",
                                 span: SourceSpan {
                                     offset: SourceOffset(
-                                        1921,
+                                        1974,
                                     ),
                                     length: 5,
                                 },
@@ -914,7 +930,7 @@ Library {
                                     value: "9001",
                                     span: SourceSpan {
                                         offset: SourceOffset(
-                                            1952,
+                                            2005,
                                         ),
                                         length: 6,
                                     },
@@ -926,7 +942,7 @@ Library {
                                     value: "(i) => i ^ 121",
                                     span: SourceSpan {
                                         offset: SourceOffset(
-                                            1973,
+                                            2026,
                                         ),
                                         length: 16,
                                     },
@@ -937,7 +953,7 @@ Library {
                                     value: "(i) => i ^ 121",
                                     span: SourceSpan {
                                         offset: SourceOffset(
-                                            2006,
+                                            2059,
                                         ),
                                         length: 16,
                                     },
@@ -950,7 +966,7 @@ Library {
                                 value: "data",
                                 span: SourceSpan {
                                     offset: SourceOffset(
-                                        2039,
+                                        2092,
                                     ),
                                     length: 6,
                                 },
@@ -959,7 +975,7 @@ Library {
                                 value: "Map<String, dynamic>",
                                 span: SourceSpan {
                                     offset: SourceOffset(
-                                        2051,
+                                        2104,
                                     ),
                                     length: 22,
                                 },
@@ -977,7 +993,7 @@ Library {
                             value: "Evil hellspawn",
                             span: SourceSpan {
                                 offset: SourceOffset(
-                                    1795,
+                                    1848,
                                 ),
                                 length: 16,
                             },

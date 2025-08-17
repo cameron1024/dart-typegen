@@ -13,6 +13,7 @@ Library {
             dart_format_language_version: None,
             class: None,
             union: None,
+            enum: None,
             field: Some(
                 FieldOptions {
                     json_key_case: Some(

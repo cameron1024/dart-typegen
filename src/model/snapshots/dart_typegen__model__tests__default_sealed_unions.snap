@@ -28,6 +28,7 @@ Library {
                     json_discriminant: None,
                 },
             ),
+            enum: None,
             field: None,
         },
     ),

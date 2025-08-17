@@ -553,6 +553,7 @@ final class CatBuilder extends AnimalBuilder {
   Cat build() => Cat(name: name, satanicPower: satanicPower, data: data);
 }
 
+@_CustomAnnotation()
 enum Color {
   red,
   green,

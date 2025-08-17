@@ -20,6 +20,9 @@ pub struct Defaults {
     pub union: Option<UnionOptions>,
 
     #[knus(child)]
+    pub r#enum: Option<EnumOptions>,
+
+    #[knus(child)]
     pub field: Option<FieldOptions>,
 }
 
@@ -29,6 +32,12 @@ pub struct ClassOptions {
     pub annotations: Option<SpannedScalar<String>>,
     #[knus(child, unwrap(argument))]
     pub builder_annotations: Option<SpannedScalar<String>>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Decode)]
+pub struct EnumOptions {
+    #[knus(child, unwrap(argument))]
+    pub annotations: Option<SpannedScalar<String>>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Decode)]

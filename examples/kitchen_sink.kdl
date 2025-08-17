@@ -9,6 +9,10 @@ defaults {
     json-discriminant "custom-discriminant"
   }
 
+  enum {
+    annotations "@_CustomAnnotation()"
+  }
+
   class {
     builder-annotations "@_CustomAnnotation()"
   }
