@@ -43,13 +43,18 @@ final class Foo {
     if (other is! Foo) {
       return false;
     }
-    if (multipleWords != other.multipleWords) return false;
-    if (evenMoreMultipleWords != other.evenMoreMultipleWords) return false;
+    if (multipleWords != other.multipleWords) {
+      return false;
+    }
+    if (evenMoreMultipleWords != other.evenMoreMultipleWords) {
+      return false;
+    }
     return true;
   }
 
   @override
-  int get hashCode => Object.hashAll([multipleWords, evenMoreMultipleWords]);
+  int get hashCode =>
+      Object.hashAll([multipleWords.hashCode, evenMoreMultipleWords.hashCode]);
 }
 
 /// Builder class for [Foo]

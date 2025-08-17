@@ -27,12 +27,14 @@ final class Foo {
     if (other is! Foo) {
       return false;
     }
-    if (x != other.x) return false;
+    if (x != other.x) {
+      return false;
+    }
     return true;
   }
 
   @override
-  int get hashCode => Object.hashAll([x]);
+  int get hashCode => Object.hashAll([x.hashCode]);
 }
 
 /// Builder class for [Foo]

@@ -48,12 +48,14 @@ final class Dog extends Animal {
     if (other is! Dog) {
       return false;
     }
-    if (name != other.name) return false;
+    if (name != other.name) {
+      return false;
+    }
     return true;
   }
 
   @override
-  int get hashCode => Object.hashAll([name]);
+  int get hashCode => Object.hashAll([name.hashCode]);
 }
 
 /// Builder class for [Dog]
@@ -91,12 +93,14 @@ final class Cat extends Animal {
     if (other is! Cat) {
       return false;
     }
-    if (age != other.age) return false;
+    if (age != other.age) {
+      return false;
+    }
     return true;
   }
 
   @override
-  int get hashCode => Object.hashAll([age]);
+  int get hashCode => Object.hashAll([age.hashCode]);
 }
 
 /// Builder class for [Cat]

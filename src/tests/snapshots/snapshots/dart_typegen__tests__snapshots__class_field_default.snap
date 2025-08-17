@@ -32,13 +32,17 @@ final class Foo {
     if (other is! Foo) {
       return false;
     }
-    if (x != other.x) return false;
-    if (y != other.y) return false;
+    if (x != other.x) {
+      return false;
+    }
+    if (y != other.y) {
+      return false;
+    }
     return true;
   }
 
   @override
-  int get hashCode => Object.hashAll([x, y]);
+  int get hashCode => Object.hashAll([x.hashCode, y.hashCode]);
 }
 
 /// Builder class for [Foo]

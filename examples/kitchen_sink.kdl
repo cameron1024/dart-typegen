@@ -46,6 +46,8 @@ Defaults to [Color.green] because it's the best color
 
   field "pet" type="Animal" 
   field "secondPet" type="Animal?" { defaults-to null; }
+
+  field "data" type="List<Data>"
 }
 
 enum "Color" {
@@ -110,4 +112,11 @@ It's either a dog or a cat
     }
     field "data" type="Map<String, dynamic>"
   }
+}
+
+
+class "Data" {
+  field "dogs" type="Set<Dog>"
+  field "cats" type="List<Cat>"
+  field "animals" type="Map<String, Animal>"
 }

@@ -1,4 +1,4 @@
-use std::borrow::Cow;
+use std::{borrow::Cow, fmt::Display};
 
 use chumsky::{
     extra::Err,
@@ -20,6 +20,18 @@ pub struct Ty {
     // Span relative to document, the type string
     pub span: Span,
     pub kind: TyKind,
+}
+
+impl Display for Ty {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match &self.kind {
+            TyKind::Simple(ident) => write!(f, "{ident}"),
+            TyKind::List(inner) => write!(f, "List<{inner}>"),
+            TyKind::Set(inner) => write!(f, "Set<{inner}>"),
+            TyKind::Map { key, value } => write!(f, "Map<{key}, {value}>"),
+            TyKind::Nullable(inner) => write!(f, "{inner}?"),
+        }
+    }
 }
 
 impl Context {
@@ -78,9 +90,7 @@ fn ty<'a>(span_offset: usize) -> impl Parser<'a, &'a str, Ty, Err<Rich<'a, char>
             .then_ignore(just(',').or_not())
             .then_ignore(whitespace().repeated())
             .then_ignore(just('>'))
-            .map(|(_list, ty)| {
-                TyKind::List(Box::new(ty))
-            });
+            .map(|(_list, ty)| TyKind::List(Box::new(ty)));
 
         let set = just("Set")
             .then_ignore(whitespace().repeated())
@@ -91,9 +101,7 @@ fn ty<'a>(span_offset: usize) -> impl Parser<'a, &'a str, Ty, Err<Rich<'a, char>
             .then_ignore(just(',').or_not())
             .then_ignore(whitespace().repeated())
             .then_ignore(just('>'))
-            .map(|(_, ty)| {
-                TyKind::Set(Box::new(ty))
-            });
+            .map(|(_, ty)| TyKind::Set(Box::new(ty)));
 
         let map = just("Map")
             .then_ignore(whitespace().repeated())
@@ -108,13 +116,10 @@ fn ty<'a>(span_offset: usize) -> impl Parser<'a, &'a str, Ty, Err<Rich<'a, char>
             .then_ignore(just(',').or_not())
             .then_ignore(whitespace().repeated())
             .then_ignore(just('>'))
-            .map(|((_, key), value)| {
-                TyKind::Map {
-                    key: Box::new(key),
-                    value: Box::new(value),
-                }
+            .map(|((_, key), value)| TyKind::Map {
+                key: Box::new(key),
+                value: Box::new(value),
             });
-
 
         let simple = ident().map(|s| TyKind::Simple(s.to_string()));
 
@@ -198,7 +203,6 @@ mod tests {
         let _ = parse("List<A,>");
         let _ = parse("List    <    A    ,      >");
         let _ = parse("Map<A, B>");
-
 
         let ty = parse("Hello");
         assert_eq!(ty.kind, TyKind::Simple("Hello".to_string()));

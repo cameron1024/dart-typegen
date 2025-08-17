@@ -5,7 +5,10 @@ use knus::ast::{Integer, Literal, Radix};
 use miette::{Diagnostic, NamedSource, Result, SourceSpan};
 use thiserror::Error;
 
-use crate::{context::Context, model::Field};
+use crate::{
+    context::{Context, TyKind},
+    model::Field,
+};
 
 #[cfg(test)]
 mod tests;
@@ -33,6 +36,7 @@ impl Context {
         empty_enum(self, &mut errors, &source);
         json_discrimminant_non_union_class(self, &mut errors, &source);
         duplicate_json_keys(self, &mut errors, &source);
+        invalid_field_types(self, &mut errors, &source);
 
         errors
     }
@@ -366,5 +370,63 @@ fn duplicate_json_keys(
 }
 
 fn json_key_span(field: &Field) -> SourceSpan {
-   field.json_key.as_ref().map(|key| key.span).unwrap_or(field.name.span)
+    field
+        .json_key
+        .as_ref()
+        .map(|key| key.span)
+        .unwrap_or(field.name.span)
+}
+
+// === Invalid Field Types ===
+
+#[derive(Debug, Error, Diagnostic)]
+#[error("Multiple fields have the same json key")]
+struct InvalidFieldType {
+    #[source_code]
+    src: NamedSource<String>,
+
+    #[label("first field")]
+    span: SourceSpan,
+
+    #[help]
+    message: &'static str,
+}
+
+fn invalid_field_types(
+    context: &Context,
+    errors: &mut Vec<miette::Report>,
+    source: &NamedSource<String>,
+) {
+    for (field, (ty, parse_errors)) in context
+        .library
+        .all_fields()
+        .map(|f| (f, context.parse_ty(&f.ty)))
+    {
+        errors.extend(parse_errors);
+        let Some(ty) = ty else {
+            let err = InvalidFieldType {
+                src: source.clone(),
+                span: field.ty.span,
+                message: "Failed to parse type",
+            };
+
+            errors.push(err.into());
+            return;
+        };
+
+        if let TyKind::Map { key, .. } = &ty.kind {
+            match &key.kind {
+                TyKind::Simple(s) if s == "String" => {}
+                _ => {
+                    let err = InvalidFieldType {
+                        src: source.clone(),
+                        span: key.span.into(),
+                        message: "Only `String` is supported as a Map key type",
+                    };
+
+                    errors.push(err.into());
+                }
+            }
+        }
+    }
 }

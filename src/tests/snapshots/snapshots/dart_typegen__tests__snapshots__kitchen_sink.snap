@@ -16,6 +16,7 @@ final class TopLevel {
   final Color color;
   final Animal pet;
   final Animal? secondPet;
+  final List<Data> data;
 
   const TopLevel({
     required this.name,
@@ -23,6 +24,7 @@ final class TopLevel {
     this.color = Color.green,
     required this.pet,
     this.secondPet,
+    required this.data,
   });
 
   static TopLevelBuilder builder({
@@ -31,12 +33,14 @@ final class TopLevel {
     Color color = Color.green,
     required Animal pet,
     Animal? secondPet,
+    required List<Data> data,
   }) => TopLevelBuilder(
     name: name,
     age: age,
     color: color,
     pet: pet.toBuilder(),
     secondPet: secondPet,
+    data: data,
   );
   TopLevelBuilder toBuilder() => TopLevelBuilder(
     name: name,
@@ -44,23 +48,26 @@ final class TopLevel {
     color: color,
     pet: pet.toBuilder(),
     secondPet: secondPet,
+    data: data,
   );
 
   Map<String, dynamic> toJson() => {
     "name": name,
     "age": age,
-    "color": color,
+    "color": color.toJson(),
     "pet": pet.toJson(),
-    "second_pet": secondPet,
+    "second_pet": secondPet?.toJson(),
+    "data": data.map((inner) => inner.toJson()).toList(),
   };
   factory TopLevel.fromJson(Map<String, dynamic> json) => TopLevel(
     name: json["name"] as String,
     age: json["age"] == null ? 123 : json["age"] as int,
-    color: json["color"] == null ? Color.green : json["color"] as Color,
-    pet: Animal.fromJson(json["pet"] as Map<String, dynamic>),
+    color: json["color"] == null ? Color.green : Color.fromJson(json["color"]),
+    pet: Animal.fromJson(json["pet"]),
     secondPet: json["second_pet"] == null
         ? null
-        : json["second_pet"] as Animal?,
+        : Animal.fromJson(json["second_pet"]),
+    data: json["data"].map<Data>((inner) => Data.fromJson(inner)).toList(),
   );
 
   @override
@@ -70,7 +77,8 @@ final class TopLevel {
       "age: $age, "
       "color: $color, "
       "pet: $pet, "
-      "secondPet: $secondPet"
+      "secondPet: $secondPet, "
+      "data: $data"
       ")";
   @override
   bool operator ==(Object other) {
@@ -80,16 +88,41 @@ final class TopLevel {
     if (other is! TopLevel) {
       return false;
     }
-    if (name != other.name) return false;
-    if (age != other.age) return false;
-    if (color != other.color) return false;
-    if (pet != other.pet) return false;
-    if (secondPet != other.secondPet) return false;
+    if (name != other.name) {
+      return false;
+    }
+    if (age != other.age) {
+      return false;
+    }
+    if (color != other.color) {
+      return false;
+    }
+    if (pet != other.pet) {
+      return false;
+    }
+    if (secondPet != other.secondPet) {
+      return false;
+    }
+    if (data.length != other.data.length) {
+      return false;
+    }
+    for (var i = 0; i < data.length; i++) {
+      if (data[i] != other.data[i]) {
+        return false;
+      }
+    }
     return true;
   }
 
   @override
-  int get hashCode => Object.hashAll([name, age, color, pet, secondPet]);
+  int get hashCode => Object.hashAll([
+    name.hashCode,
+    age.hashCode,
+    color.hashCode,
+    pet.hashCode,
+    secondPet?.hashCode,
+    Object.hashAll(data.map((elem) => elem.hashCode)),
+  ]);
 }
 
 /// Builder class for [TopLevel]
@@ -100,6 +133,7 @@ final class TopLevelBuilder {
   Color color;
   AnimalBuilder pet;
   Animal? secondPet;
+  List<Data> data;
 
   TopLevelBuilder({
     required this.name,
@@ -107,6 +141,7 @@ final class TopLevelBuilder {
     required this.color,
     required this.pet,
     required this.secondPet,
+    required this.data,
   });
 
   TopLevel build() => TopLevel(
@@ -115,7 +150,100 @@ final class TopLevelBuilder {
     color: color,
     pet: pet.build(),
     secondPet: secondPet,
+    data: data,
   );
+}
+
+final class Data {
+  final Set<Dog> dogs;
+  final List<Cat> cats;
+  final Map<String, Animal> animals;
+
+  const Data({required this.dogs, required this.cats, required this.animals});
+
+  static DataBuilder builder({
+    required Set<Dog> dogs,
+    required List<Cat> cats,
+    required Map<String, Animal> animals,
+  }) => DataBuilder(dogs: dogs, cats: cats, animals: animals);
+  DataBuilder toBuilder() =>
+      DataBuilder(dogs: dogs, cats: cats, animals: animals);
+
+  Map<String, dynamic> toJson() => {
+    "dogs": dogs.map((inner) => inner.toJson()).toList(),
+    "cats": cats.map((inner) => inner.toJson()).toList(),
+    "animals": animals.map((key, value) => MapEntry(key, value.toJson())),
+  };
+  factory Data.fromJson(Map<String, dynamic> json) => Data(
+    dogs: json["dogs"].map<Dog>((inner) => Dog.fromJson(inner)).toSet(),
+    cats: json["cats"].map<Cat>((inner) => Cat.fromJson(inner)).toList(),
+    animals: (json["animals"] as Map).map<String, Animal>(
+      (key, value) => MapEntry(key as String, Animal.fromJson(value)),
+    ),
+  );
+
+  @override
+  String toString() =>
+      "Data("
+      "dogs: $dogs, "
+      "cats: $cats, "
+      "animals: $animals"
+      ")";
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+    if (other is! Data) {
+      return false;
+    }
+    if (dogs.length != other.dogs.length) {
+      return false;
+    }
+    for (final elem in dogs) {
+      if (!other.dogs.contains(elem)) {
+        return false;
+      }
+    }
+    if (cats.length != other.cats.length) {
+      return false;
+    }
+    for (var i = 0; i < cats.length; i++) {
+      if (cats[i] != other.cats[i]) {
+        return false;
+      }
+    }
+    if (animals.length != other.animals.length) {
+      return false;
+    }
+    for (final entry in animals.entries) {
+      if (entry.value != other.animals[entry.key]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+    Object.hashAll(dogs.map((elem) => elem.hashCode)),
+    Object.hashAll(cats.map((elem) => elem.hashCode)),
+    Object.hashAll(
+      animals.entries.expand((entry) => [entry.key, entry.value.hashCode]),
+    ),
+  ]);
+}
+
+/// Builder class for [Data]
+@_CustomAnnotation()
+final class DataBuilder {
+  Set<Dog> dogs;
+  List<Cat> cats;
+  Map<String, Animal> animals;
+
+  DataBuilder({required this.dogs, required this.cats, required this.animals});
+
+  Data build() => Data(dogs: dogs, cats: cats, animals: animals);
 }
 
 abstract final class Unused {
@@ -252,14 +380,14 @@ final class Dog extends Animal {
   @override
   Map<String, dynamic> toJson() => {
     "name": name,
-    "color": color,
-    "aliases": aliases,
+    "color": color.toJson(),
+    "aliases": aliases.map((inner) => inner).toList(),
     "custom-discriminant": "Dog",
   };
   factory Dog.fromJson(Map<String, dynamic> json) => Dog(
     name: json["name"] == null ? "Dog" : json["name"] as String,
-    color: json["color"] as Color,
-    aliases: json["aliases"] as List<String>,
+    color: Color.fromJson(json["color"]),
+    aliases: json["aliases"].map<String>((inner) => inner as String).toList(),
   );
 
   @override
@@ -277,17 +405,29 @@ final class Dog extends Animal {
     if (other is! Dog) {
       return false;
     }
-    if (name != other.name) return false;
-    if (color != other.color) return false;
-    if (aliases.length != other.aliases.length) return false;
+    if (name != other.name) {
+      return false;
+    }
+    if (color != other.color) {
+      return false;
+    }
+    if (aliases.length != other.aliases.length) {
+      return false;
+    }
     for (var i = 0; i < aliases.length; i++) {
-      if (aliases[i] != other.aliases[i]) return false;
+      if (aliases[i] != other.aliases[i]) {
+        return false;
+      }
     }
     return true;
   }
 
   @override
-  int get hashCode => Object.hashAll([name, color, aliases]);
+  int get hashCode => Object.hashAll([
+    name.hashCode,
+    color.hashCode,
+    Object.hashAll(aliases.map((elem) => elem.hashCode)),
+  ]);
 }
 
 /// Builder class for [Dog]
@@ -329,7 +469,7 @@ final class Cat extends Animal {
     "satanic_power":
         // ignore: unnecessary_parenthesis
         ((i) => i ^ 121)(satanicPower),
-    "data": data,
+    "data": data.map((key, value) => MapEntry(key, value)),
     "custom-discriminant": "Cat",
   };
   factory Cat.fromJson(Map<String, dynamic> json) => Cat(
@@ -339,7 +479,9 @@ final class Cat extends Animal {
         :
           // ignore: unnecessary_parenthesis
           ((i) => i ^ 121)(json["satanic_power"]),
-    data: json["data"] as Map<String, dynamic>,
+    data: (json["data"] as Map).map<String, dynamic>(
+      (key, value) => MapEntry(key as String, value as dynamic),
+    ),
   );
 
   @override
@@ -357,17 +499,31 @@ final class Cat extends Animal {
     if (other is! Cat) {
       return false;
     }
-    if (name != other.name) return false;
-    if (satanicPower != other.satanicPower) return false;
-    if (data.length != other.data.length) return false;
+    if (name != other.name) {
+      return false;
+    }
+    if (satanicPower != other.satanicPower) {
+      return false;
+    }
+    if (data.length != other.data.length) {
+      return false;
+    }
     for (final entry in data.entries) {
-      if (entry.value != other.data[entry.key]) return false;
+      if (entry.value != other.data[entry.key]) {
+        return false;
+      }
     }
     return true;
   }
 
   @override
-  int get hashCode => Object.hashAll([name, satanicPower, data]);
+  int get hashCode => Object.hashAll([
+    name.hashCode,
+    satanicPower.hashCode,
+    Object.hashAll(
+      data.entries.expand((entry) => [entry.key, entry.value.hashCode]),
+    ),
+  ]);
 }
 
 /// Builder class for [Cat]

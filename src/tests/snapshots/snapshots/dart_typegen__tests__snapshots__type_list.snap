@@ -12,9 +12,14 @@ final class Foo {
       FooBuilder(x: x, y: y);
   FooBuilder toBuilder() => FooBuilder(x: x, y: y);
 
-  Map<String, dynamic> toJson() => {"x": x, "y": y};
-  factory Foo.fromJson(Map<String, dynamic> json) =>
-      Foo(x: json["x"] as List<String>, y: json["y"] as List<int>);
+  Map<String, dynamic> toJson() => {
+    "x": x.map((inner) => inner).toList(),
+    "y": y.map((inner) => inner).toList(),
+  };
+  factory Foo.fromJson(Map<String, dynamic> json) => Foo(
+    x: json["x"].map<String>((inner) => inner as String).toList(),
+    y: json["y"].map<int>((inner) => inner as int).toList(),
+  );
 
   @override
   String toString() =>
@@ -30,19 +35,30 @@ final class Foo {
     if (other is! Foo) {
       return false;
     }
-    if (x.length != other.x.length) return false;
-    for (var i = 0; i < x.length; i++) {
-      if (x[i] != other.x[i]) return false;
+    if (x.length != other.x.length) {
+      return false;
     }
-    if (y.length != other.y.length) return false;
+    for (var i = 0; i < x.length; i++) {
+      if (x[i] != other.x[i]) {
+        return false;
+      }
+    }
+    if (y.length != other.y.length) {
+      return false;
+    }
     for (var i = 0; i < y.length; i++) {
-      if (y[i] != other.y[i]) return false;
+      if (y[i] != other.y[i]) {
+        return false;
+      }
     }
     return true;
   }
 
   @override
-  int get hashCode => Object.hashAll([x, y]);
+  int get hashCode => Object.hashAll([
+    Object.hashAll(x.map((elem) => elem.hashCode)),
+    Object.hashAll(y.map((elem) => elem.hashCode)),
+  ]);
 }
 
 /// Builder class for [Foo]

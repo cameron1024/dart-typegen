@@ -35,6 +35,36 @@ const DEFAULT_TOPLEVEL: &str = /* dart */
             satanicPower: 15,
             data: {"hello": "world", "foo": 123, },
         ),
+        data: [
+            Data(
+                dogs: {
+                    Dog(
+                        name: "Alfred",
+                        color: Color.green,
+                        aliases: ["buddy", "megatron"],
+                    ),
+                },
+                cats: [
+                    Cat(
+                        name: "Fish",
+                        satanicPower: 999999,
+                        data: {},
+                    ),
+                ],
+                animals: {
+                    "a dog": Dog(
+                        name: "Alfred",
+                        color: Color.green,
+                        aliases: ["buddy", "megatron"],
+                    ),
+                    "a cat": Cat(
+                        name: "Fish",
+                        satanicPower: 999999,
+                        data: {},
+                    ),
+                }
+            ),
+        ],
     );
 "#;
 
@@ -44,9 +74,31 @@ const ALT_TOPLEVEL: &str = /* dart */
     final topLevelAlt = TopLevel(
         name: "Some name",
         pet: Cat(data: {}),
-        
+        data: [],
     );
 "#;
+
+const CHECK_PURE_JSON: &str = /* dart */
+    r#"
+    void checkPureJson(dynamic json) {
+        switch (json)  {
+            case null || bool _ || int _ || double _ || String _:
+                return;
+            case List<dynamic> list:
+                for (final item in list) {
+                    checkPureJson(item);
+                }
+            case Map<dynamic, dynamic> map:
+                for (final entry in map.entries) {
+                    if (entry.key is! String) throw "${entry.key} is not a String";
+                    checkPureJson(entry.value);
+                }
+            default:
+                throw "Unknown type: ${json.runtimeType}";
+
+        }
+    }  
+    "#;
 
 fn check_equals_and_hash_code(buf: &mut String, type_name: &str) -> std::fmt::Result {
     const BODY: &str = /* dart */
@@ -77,6 +129,8 @@ fn check_json(buf: &mut String, type_name: &str) -> std::fmt::Result {
         if (obj.hashCode != decoded.hashCode) {
             throw Exception("json-roundrip hashCode error");
         }
+
+        checkPureJson(encoded);
     "#;
     writeln!(buf, "void checkJson{type_name}({type_name} obj) {{")?;
 
@@ -108,6 +162,7 @@ fn check_builder(buf: &mut String, type_name: &str) -> std::fmt::Result {
 }
 
 fn call_checks(buf: &mut String, type_name: &str, expr: &str) -> std::fmt::Result {
+    writeln!(buf, "checkEquals{type_name}({expr});")?;
     writeln!(buf, "checkJson{type_name}({expr});")?;
     writeln!(buf, "checkBuilder{type_name}({expr});")?;
     Ok(())
@@ -119,13 +174,13 @@ fn main_fn(buf: &mut String) -> std::fmt::Result {
     writeln!(buf, "void main() {{")?;
 
     writeln!(buf, "{DEFAULT_TOPLEVEL}")?;
-    call_checks(buf, "TopLevel", "topLevel")?;
-    call_checks(buf, "Animal", "topLevel.pet")?;
     call_checks(buf, "Animal", "topLevel.secondPet!")?;
+    call_checks(buf, "Animal", "topLevel.pet")?;
+    call_checks(buf, "TopLevel", "topLevel")?;
 
     writeln!(buf, "{ALT_TOPLEVEL}")?;
-    call_checks(buf, "TopLevel", "topLevelAlt")?;
     call_checks(buf, "Animal", "topLevelAlt.pet")?;
+    call_checks(buf, "TopLevel", "topLevelAlt")?;
 
     for expr in EXPRESSIONS {
         writeln!(buf, "if ({expr} != {expr}) throw Exception('not equal');").unwrap();
@@ -140,6 +195,7 @@ fn main_dart() -> String {
     let mut buf = String::new();
 
     main_fn(&mut buf).unwrap();
+    writeln!(&mut buf, "{CHECK_PURE_JSON}").unwrap();
 
     for name in TYPE_NAMES {
         check_equals_and_hash_code(&mut buf, name).unwrap();

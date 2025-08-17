@@ -13,10 +13,8 @@ final class Foo {
   FooBuilder toBuilder() => FooBuilder(x: x, bar: bar.toBuilder());
 
   Map<String, dynamic> toJson() => {"x": x, "bar": bar.toJson()};
-  factory Foo.fromJson(Map<String, dynamic> json) => Foo(
-    x: json["x"] as String,
-    bar: Bar.fromJson(json["bar"] as Map<String, dynamic>),
-  );
+  factory Foo.fromJson(Map<String, dynamic> json) =>
+      Foo(x: json["x"] as String, bar: Bar.fromJson(json["bar"]));
 
   @override
   String toString() =>
@@ -32,13 +30,17 @@ final class Foo {
     if (other is! Foo) {
       return false;
     }
-    if (x != other.x) return false;
-    if (bar != other.bar) return false;
+    if (x != other.x) {
+      return false;
+    }
+    if (bar != other.bar) {
+      return false;
+    }
     return true;
   }
 
   @override
-  int get hashCode => Object.hashAll([x, bar]);
+  int get hashCode => Object.hashAll([x.hashCode, bar.hashCode]);
 }
 
 /// Builder class for [Foo]
@@ -62,10 +64,8 @@ final class Bar {
   BarBuilder toBuilder() => BarBuilder(x: x, bar: bar.toBuilder());
 
   Map<String, dynamic> toJson() => {"x": x, "bar": bar.toJson()};
-  factory Bar.fromJson(Map<String, dynamic> json) => Bar(
-    x: json["x"] as String,
-    bar: Bar.fromJson(json["bar"] as Map<String, dynamic>),
-  );
+  factory Bar.fromJson(Map<String, dynamic> json) =>
+      Bar(x: json["x"] as String, bar: Bar.fromJson(json["bar"]));
 
   @override
   String toString() =>
@@ -81,13 +81,17 @@ final class Bar {
     if (other is! Bar) {
       return false;
     }
-    if (x != other.x) return false;
-    if (bar != other.bar) return false;
+    if (x != other.x) {
+      return false;
+    }
+    if (bar != other.bar) {
+      return false;
+    }
     return true;
   }
 
   @override
-  int get hashCode => Object.hashAll([x, bar]);
+  int get hashCode => Object.hashAll([x.hashCode, bar.hashCode]);
 }
 
 /// Builder class for [Bar]
