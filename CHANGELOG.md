@@ -1,3 +1,8 @@
+## [0.1.12] - 2025-08-17
+
+### 🐛 Bug Fixes
+
+- Nullable fromJson implementation with `strict-casts: true` implementation
 ## [0.1.11] - 2025-08-17
 
 ### 🐛 Bug Fixes
