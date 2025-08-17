@@ -153,10 +153,10 @@ pub struct Enum {
     pub docs: Option<SpannedScalar<String>>,
     #[knus(child, unwrap(argument))]
     pub annotations: Option<SpannedScalar<String>>,
+    #[knus(child, unwrap(argument))]
+    pub extra_dart: Option<SpannedScalar<String>>,
     #[knus(children(name = "variant"))]
     pub variants: Vec<EnumVariant>,
-    #[knus(children, unwrap(argument))]
-    pub extra_dart: Vec<SpannedScalar<String>>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Decode)]

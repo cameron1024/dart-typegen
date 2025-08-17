@@ -90,7 +90,7 @@ impl Context {
                 self.generate_to_string_class(out, enumeration)?;
             }
 
-            for extra_dart in &enumeration.extra_dart {
+            if let Some(extra_dart) = &enumeration.extra_dart {
                 writeln!(out, "{extra_dart}")?;
             }
 
