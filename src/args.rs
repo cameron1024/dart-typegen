@@ -14,6 +14,9 @@ use crate::{context::Context};
 pub struct Args {
     #[clap(subcommand)]
     pub cmd: Cmd,
+
+    #[clap(long, short, default_value_t = false)]
+    pub deny_warnings: bool,
 }
 
 #[derive(Debug, Subcommand)]
@@ -37,11 +40,11 @@ pub fn run(args: &Args) -> miette::Result<()> {
     match &args.cmd {
         Cmd::Validate { path } => {
             let context = Context::from_path(path)?;
-            context.validate()?;
+            context.validate(args.deny_warnings)?;
         }
         Cmd::Generate { input, output } => {
             let context = Context::from_path(input)?;
-            context.validate()?;
+            context.validate(args.deny_warnings)?;
 
             match &output {
                 Some(output) => {
