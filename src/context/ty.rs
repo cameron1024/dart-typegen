@@ -41,7 +41,8 @@ impl Context {
 
         let errors = errors.into_iter().map(|err| ParseDartTypeError {
             src: self.named_source(),
-            span: knus::span::Span(err.span().start, err.span().end).into(),
+            span: knus::span::Span(err.span().start + span_offset, err.span().end + span_offset)
+                .into(),
             reason: err.reason().to_string(),
         });
 
