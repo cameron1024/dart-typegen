@@ -36,35 +36,35 @@ impl Context {
         let name = &field.name;
 
         match ty.kind {
-            Simple(_) | Nullable(_) => writeln!(buf, "if ({name} != other.{name}) return false;"),
+            Simple(_) | Nullable(_) => writeln!(buf, "if ({name} != other.{name}) {{ return false; }}"),
             List(_) => {
                 writeln!(
                     buf,
-                    "if ({name}.length != other.{name}.length) return false;"
+                    "if ({name}.length != other.{name}.length) {{ return false; }}"
                 )?;
                 writeln!(buf, "for (var i = 0; i < {name}.length; i++)")?;
                 braced(buf, |out| {
-                    writeln!(out, "if ({name}[i] != other.{name}[i]) return false;")
+                    writeln!(out, "if ({name}[i] != other.{name}[i]) {{ return false; }}")
                 })
             }
             Set(_) => {
                 writeln!(
                     buf,
-                    "if ({name}.length != other.{name}.length) return false;"
+                    "if ({name}.length != other.{name}.length) {{ return false; }}"
                 )?;
                 writeln!(buf, "for (final elem in {name})")?;
                 braced(buf, |out| {
-                    writeln!(out, "if (!other.{name}.contains(elem)) return false;")
+                    writeln!(out, "if (!other.{name}.contains(elem)) {{ return false; }}")
                 })
             }
             Map { .. } => {
                 writeln!(
                     buf,
-                    "if ({name}.length != other.{name}.length) return false;"
+                    "if ({name}.length != other.{name}.length) {{ return false; }}"
                 )?;
                 writeln!(buf, "for (final entry in {name}.entries)")?;
                 braced(buf, |out| {
-                    writeln!(out, "if (entry.value != other.{name}[entry.key]) return false;")
+                    writeln!(out, "if (entry.value != other.{name}[entry.key]) {{ return false; }}")
                 })
             }
         }?;
