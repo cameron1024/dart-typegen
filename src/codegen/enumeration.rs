@@ -25,7 +25,7 @@ impl Context {
 
         braced(buf, |out| {
             for variant in &enumeration.variants {
-                if let Some(doc) = &enumeration.docs {
+                if let Some(doc) = &variant.docs {
                     self.write_doc_comment(out, doc)?;
                 }
                 writeln!(out, "{},", &variant.name)?;
