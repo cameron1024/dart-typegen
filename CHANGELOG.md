@@ -1,3 +1,16 @@
+## [0.1.9] - 2025-08-17
+
+### 🚀 Features
+
+- Allow specifying semver-compatible `dart-typegen` version requirements
+- `--deny-warnings` CLI argument
+
+### 🐛 Bug Fixes
+
+- Always use braces when generating `operator==` implementations
+- A collection of related bugs from improper handling of composite types (in to/from json and equality operations)
+- Improved code generation in contexts with `strict-casts: true` enabled
+- Correct span for Dart type parse errors
 ## [0.1.8] - 2025-08-16
 
 ### 🚀 Features
