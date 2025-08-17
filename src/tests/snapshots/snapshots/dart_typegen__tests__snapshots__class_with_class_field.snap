@@ -13,8 +13,10 @@ final class Foo {
   FooBuilder toBuilder() => FooBuilder(x: x, bar: bar.toBuilder());
 
   Map<String, dynamic> toJson() => {"x": x, "bar": bar.toJson()};
-  factory Foo.fromJson(Map<String, dynamic> json) =>
-      Foo(x: json["x"] as String, bar: Bar.fromJson(json["bar"]));
+  factory Foo.fromJson(Map<String, dynamic> json) => Foo(
+    x: json["x"] as String,
+    bar: Bar.fromJson(json["bar"] as Map<String, dynamic>),
+  );
 
   @override
   String toString() =>
@@ -64,8 +66,10 @@ final class Bar {
   BarBuilder toBuilder() => BarBuilder(x: x, bar: bar.toBuilder());
 
   Map<String, dynamic> toJson() => {"x": x, "bar": bar.toJson()};
-  factory Bar.fromJson(Map<String, dynamic> json) =>
-      Bar(x: json["x"] as String, bar: Bar.fromJson(json["bar"]));
+  factory Bar.fromJson(Map<String, dynamic> json) => Bar(
+    x: json["x"] as String,
+    bar: Bar.fromJson(json["bar"] as Map<String, dynamic>),
+  );
 
   @override
   String toString() =>

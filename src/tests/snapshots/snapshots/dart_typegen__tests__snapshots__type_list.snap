@@ -17,8 +17,10 @@ final class Foo {
     "y": y.map((inner) => inner).toList(),
   };
   factory Foo.fromJson(Map<String, dynamic> json) => Foo(
-    x: json["x"].map<String>((inner) => inner as String).toList(),
-    y: json["y"].map<int>((inner) => inner as int).toList(),
+    x: (json["x"] as List<dynamic>)
+        .map<String>((inner) => inner as String)
+        .toList(),
+    y: (json["y"] as List<dynamic>).map<int>((inner) => inner as int).toList(),
   );
 
   @override

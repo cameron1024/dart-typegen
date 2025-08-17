@@ -63,11 +63,13 @@ final class TopLevel {
     name: json["name"] as String,
     age: json["age"] == null ? 123 : json["age"] as int,
     color: json["color"] == null ? Color.green : Color.fromJson(json["color"]),
-    pet: Animal.fromJson(json["pet"]),
+    pet: Animal.fromJson(json["pet"] as Map<String, dynamic>),
     secondPet: json["second_pet"] == null
         ? null
-        : Animal.fromJson(json["second_pet"]),
-    data: json["data"].map<Data>((inner) => Data.fromJson(inner)).toList(),
+        : Animal.fromJson(json["second_pet"] as Map<String, dynamic>),
+    data: (json["data"] as List<dynamic>)
+        .map<Data>((inner) => Data.fromJson(inner as Map<String, dynamic>))
+        .toList(),
   );
 
   @override
@@ -175,10 +177,17 @@ final class Data {
     "animals": animals.map((key, value) => MapEntry(key, value.toJson())),
   };
   factory Data.fromJson(Map<String, dynamic> json) => Data(
-    dogs: json["dogs"].map<Dog>((inner) => Dog.fromJson(inner)).toSet(),
-    cats: json["cats"].map<Cat>((inner) => Cat.fromJson(inner)).toList(),
+    dogs: (json["dogs"] as List<dynamic>)
+        .map<Dog>((inner) => Dog.fromJson(inner as Map<String, dynamic>))
+        .toSet(),
+    cats: (json["cats"] as List<dynamic>)
+        .map<Cat>((inner) => Cat.fromJson(inner as Map<String, dynamic>))
+        .toList(),
     animals: (json["animals"] as Map).map<String, Animal>(
-      (key, value) => MapEntry(key as String, Animal.fromJson(value)),
+      (key, value) => MapEntry(
+        key as String,
+        Animal.fromJson(value as Map<String, dynamic>),
+      ),
     ),
   );
 
@@ -387,7 +396,9 @@ final class Dog extends Animal {
   factory Dog.fromJson(Map<String, dynamic> json) => Dog(
     name: json["name"] == null ? "Dog" : json["name"] as String,
     color: Color.fromJson(json["color"]),
-    aliases: json["aliases"].map<String>((inner) => inner as String).toList(),
+    aliases: (json["aliases"] as List<dynamic>)
+        .map<String>((inner) => inner as String)
+        .toList(),
   );
 
   @override
