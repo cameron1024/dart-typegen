@@ -157,7 +157,10 @@ impl Context {
             }
             // TODO(cameron): rethink this - there is special handling for top-level nulls in the
             // fromJson code
-            TyKind::Nullable(inner) => self.write_expr_from_json(buf, expr, inner)?,
+            TyKind::Nullable(inner) => {
+                write!(buf, "{expr} == null ? null : ")?;
+                self.write_expr_from_json(buf, expr, inner)?;
+            }
         }
 
         Ok(())
