@@ -72,7 +72,6 @@ Truly, there has never been a greater color
 
   variant "blue"
 
-  extra-dart "void hello() {}"
   extra-dart r#"
     void goodbye() => print("cya");
   "#

@@ -1,3 +1,5 @@
+use crate::context::{Ty, TyKind};
+
 use super::*;
 
 impl Context {
@@ -33,14 +35,8 @@ impl Context {
 
         braced(buf, |out| {
             for field in &class.fields {
-                let field_needs_build = self.library.type_has_builder(&field.ty);
-                let ty_name = if field_needs_build {
-                    format!("{}Builder", field.ty)
-                } else {
-                    field.ty.to_string()
-                };
-
-                writeln!(out, "{ty_name} {};", field.name)?;
+                self.write_builder_ty(out, &self.parse_ty(&field.ty).0.unwrap())?;
+                writeln!(out, " {};", field.name)?;
             }
 
             writeln!(out)?;
@@ -64,10 +60,10 @@ impl Context {
 
             writeln!(out, "{0} build() => {0}(", class.name)?;
             for field in &class.fields {
-                let field_needs_build = self.library.type_has_builder(&field.ty);
-                let name = field.name.as_str();
-                let build = if field_needs_build { ".build()" } else { "" };
-                writeln!(out, "{name}: {name}{build},")?;
+                let name = &field.name;
+                write!(out, "{name}: ")?;
+                self.write_build_expr(out, name, &self.parse_ty(&field.ty).0.unwrap())?;
+                writeln!(out, ",")?;
             }
             writeln!(out, ");")?;
 
@@ -78,6 +74,72 @@ impl Context {
 
             Ok(())
         })?;
+
+        Ok(())
+    }
+
+    pub(super) fn write_builder_ty(&self, buf: &mut String, ty: &Ty) -> std::fmt::Result {
+        match &ty.kind {
+            TyKind::Simple(ident) if self.library.type_has_builder(ident) => {
+                write!(buf, "{ident}Builder")?;
+            }
+            TyKind::Simple(ident) => {
+                write!(buf, "{ident}")?;
+            }
+            TyKind::List(inner) => {
+                write!(buf, "List<")?;
+                self.write_builder_ty(buf, inner)?;
+                write!(buf, ">")?;
+            }
+            TyKind::Set(inner) => {
+                write!(buf, "Set<")?;
+                self.write_builder_ty(buf, inner)?;
+                write!(buf, ">")?;
+            }
+            TyKind::Map { value, .. } => {
+                write!(buf, "Map<String, ")?;
+                self.write_builder_ty(buf, value)?;
+                write!(buf, ">")?;
+            }
+            TyKind::Nullable(inner) => {
+                self.write_builder_ty(buf, inner)?;
+                write!(buf, "?")?;
+            }
+        }
+
+        Ok(())
+    }
+
+    fn write_build_expr(&self, buf: &mut String, expr: &str, ty: &Ty) -> std::fmt::Result {
+        match &ty.kind {
+            TyKind::Simple(ident) if self.library.type_has_builder(ident) => {
+                write!(buf, "{expr}.build()")?;
+            }
+            TyKind::Simple(_) => {
+                write!(buf, "{expr}")?;
+            }
+            TyKind::List(inner) => {
+                write!(buf, "{expr}.map((elem) => ")?;
+                self.write_build_expr(buf, "elem", inner)?;
+                write!(buf, ").toList()")?;
+            }
+            TyKind::Set(inner) => {
+                write!(buf, "{expr}.map((elem) => ")?;
+                self.write_build_expr(buf, "elem", inner)?;
+                write!(buf, ").toSet()")?;
+            }
+            TyKind::Map { value, .. } => {
+                write!(buf, "{expr}.map((key, value) => MapEntry(key, ")?;
+                self.write_build_expr(buf, "value", value)?;
+                write!(buf, "))")?;
+            }
+            TyKind::Nullable(inner) => {
+                write!(buf, "{expr} == null ? null : ")?;
+                let mut inner_builder_ty = String::new();
+                self.write_builder_ty(&mut inner_builder_ty, inner)?;
+                self.write_build_expr(buf, &format!("({expr} as {inner_builder_ty})"), inner)?;
+            }
+        }
 
         Ok(())
     }

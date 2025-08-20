@@ -2,6 +2,7 @@
 source: src/tests/snapshots/mod.rs
 expression: dart
 ---
+// ignore_for_file: unnecessary_cast
 final class Foo {
   final List<String> x;
   final List<int> y;
@@ -9,8 +10,14 @@ final class Foo {
   const Foo({required this.x, required this.y});
 
   static FooBuilder builder({required List<String> x, required List<int> y}) =>
-      FooBuilder(x: x, y: y);
-  FooBuilder toBuilder() => FooBuilder(x: x, y: y);
+      FooBuilder(
+        x: x.map((elem) => elem).toList(),
+        y: y.map((elem) => elem).toList(),
+      );
+  FooBuilder toBuilder() => FooBuilder(
+    x: x.map((elem) => elem).toList(),
+    y: y.map((elem) => elem).toList(),
+  );
 
   Map<String, dynamic> toJson() => {
     "x": x.map((inner) => inner).toList(),
@@ -70,5 +77,6 @@ final class FooBuilder {
 
   FooBuilder({required this.x, required this.y});
 
-  Foo build() => Foo(x: x, y: y);
+  Foo build() =>
+      Foo(x: x.map((elem) => elem).toList(), y: y.map((elem) => elem).toList());
 }

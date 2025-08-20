@@ -2,18 +2,13 @@
 source: src/tests/snapshots/mod.rs
 expression: dart
 ---
+// ignore_for_file: unnecessary_cast
 /// Multi line comment
 ///
 /// More stuff
 enum Foo {
-  /// Multi line comment
-  ///
-  /// More stuff
+  /// single line comment
   a,
-
-  /// Multi line comment
-  ///
-  /// More stuff
   b;
 
   factory Foo.fromJson(dynamic json) => switch (json) {

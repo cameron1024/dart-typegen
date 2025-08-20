@@ -29,6 +29,8 @@ impl Context {
     pub fn codegen(&self, out: &mut impl std::io::Write) -> Result<()> {
         let mut buf = String::new();
 
+        writeln!(buf, "// ignore_for_file: unnecessary_cast").into_diagnostic()?;
+
         if let Some(preamble) = &self.library.preamble {
             writeln!(buf, "{preamble}").into_diagnostic()?;
         }

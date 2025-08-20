@@ -2,4 +2,6 @@
 source: src/tests/snapshots/mod.rs
 expression: dart
 ---
+// ignore_for_file: unnecessary_cast
+
 // a comment

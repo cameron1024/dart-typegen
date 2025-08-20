@@ -1,3 +1,5 @@
+use crate::context::{Ty, TyKind};
+
 use super::*;
 
 impl Context {
@@ -85,10 +87,11 @@ impl Context {
             writeln!(out, "{builder_name} toBuilder() => {builder_name}(")?;
 
             for field in &class.fields {
-                let needs_to_builder = self.library.type_has_builder(&field.ty);
-                let name = field.name.as_str();
-                let to_builder = if needs_to_builder { ".toBuilder()" } else { "" };
-                writeln!(out, "{name}: {name}{to_builder},")?;
+                let name = &field.name;
+
+                write!(out, "{name}: ")?;
+                self.write_to_builder_expr(out, name, &self.parse_ty(&field.ty).0.unwrap())?;
+                writeln!(out, ",")?;
             }
             writeln!(out, ");")?;
 
@@ -178,12 +181,12 @@ impl Context {
                 (Some(defaults_to), None) => {
                     let dart = format_dart_literal_const(defaults_to);
                     if dart != "null" {
-                        writeln!(buf, "= {dart}")?;
+                        writeln!(buf, " = {dart}")?;
                     }
                 }
                 (None, Some(defaults_to_dart)) => {
                     if &**defaults_to_dart != "null" {
-                        writeln!(buf, "= {defaults_to_dart}")?;
+                        writeln!(buf, " = {defaults_to_dart}")?;
                     }
                 }
             }
@@ -191,17 +194,45 @@ impl Context {
         }
         writeln!(buf, "}}) => {class_name}Builder(")?;
         for field in &class.fields {
-            let field_ty = &field.ty;
             let field_name = &field.name;
 
             write!(buf, "{field_name}: ")?;
-            let has_builder = self.library.type_has_builder(field_ty);
-            match has_builder {
-                true => writeln!(buf, "{field_name}.toBuilder(),")?,
-                false => writeln!(buf, "{field_name},")?,
-            };
+            self.write_to_builder_expr(buf, field_name, &self.parse_ty(&field.ty).0.unwrap())?;
+            writeln!(buf, ",")?;
         }
         writeln!(buf, ");")?;
+
+        Ok(())
+    }
+
+    fn write_to_builder_expr(&self, buf: &mut String, expr: &str, ty: &Ty) -> std::fmt::Result {
+        match &ty.kind {
+            TyKind::Simple(ident) if self.library.type_has_builder(ident) => {
+                write!(buf, "{expr}.toBuilder()")?;
+            }
+            TyKind::Simple(_) => {
+                write!(buf, "{expr}")?;
+            }
+            TyKind::List(inner) => {
+                write!(buf, "{expr}.map((elem) => ")?;
+                self.write_to_builder_expr(buf, "elem", inner)?;
+                write!(buf, ").toList()")?;
+            }
+            TyKind::Set(inner) => {
+                write!(buf, "{expr}.map((elem) => ")?;
+                self.write_to_builder_expr(buf, "elem", inner)?;
+                write!(buf, ").toSet()")?;
+            }
+            TyKind::Map { value, .. } => {
+                write!(buf, "{expr}.map((key, value) => MapEntry(key, ")?;
+                self.write_to_builder_expr(buf, "value", value)?;
+                write!(buf, "))")?;
+            }
+            TyKind::Nullable(inner) => {
+                write!(buf, "{expr} == null ? null : ")?;
+                self.write_to_builder_expr(buf, &format!("({expr} as {inner})"), inner)?;
+            }
+        }
 
         Ok(())
     }

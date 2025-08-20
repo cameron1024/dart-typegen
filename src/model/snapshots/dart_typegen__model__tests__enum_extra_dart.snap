@@ -24,6 +24,17 @@ Library {
             },
             docs: None,
             annotations: None,
+            extra_dart: Some(
+                SpannedScalar {
+                    value: "\n    void foo() => print(this);\n  ",
+                    span: SourceSpan {
+                        offset: SourceOffset(
+                            83,
+                        ),
+                        length: 39,
+                    },
+                },
+            ),
             variants: [
                 EnumVariant {
                     name: SpannedScalar {
@@ -50,17 +61,6 @@ Library {
                     },
                     docs: None,
                     json_value: None,
-                },
-            ],
-            extra_dart: [
-                SpannedScalar {
-                    value: "\n    void foo() => print(this);\n  ",
-                    span: SourceSpan {
-                        offset: SourceOffset(
-                            83,
-                        ),
-                        length: 39,
-                    },
                 },
             ],
         },

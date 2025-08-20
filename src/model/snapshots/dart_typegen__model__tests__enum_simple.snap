@@ -24,6 +24,7 @@ Library {
             },
             docs: None,
             annotations: None,
+            extra_dart: None,
             variants: [
                 EnumVariant {
                     name: SpannedScalar {
@@ -65,7 +66,6 @@ Library {
                     json_value: None,
                 },
             ],
-            extra_dart: [],
         },
     ],
     classes: [],

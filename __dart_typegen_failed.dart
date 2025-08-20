@@ -1,0 +1,566 @@
+
+  // woohoo look a comment at the start of the file
+
+final class TopLevel {
+final String name;
+/// the age of this toplevel thing
+final int age;
+/// The color of the thing
+/// 
+/// Defaults to [Color.green] because it's the best color
+final Color color;
+final Animal pet;
+final Animal? secondPet;
+final List<Data> data;
+
+const TopLevel({
+required this.name,
+ this.age= 123
+,
+ this.color= Color.green
+,
+required this.pet,
+ this.secondPet,
+required this.data,
+})
+;
+
+static TopLevelBuilder builder({
+required String name,
+ int age = 123
+,
+ Color color = Color.green
+,
+required AnimalBuilder pet,
+ AnimalBuilder? secondPet,
+required List<DataBuilder> data,
+}) => TopLevelBuilder(
+name: name,
+age: age,
+color: color,
+pet: pet.toBuilder(),
+secondPet: secondPet,
+data: data,
+);
+TopLevelBuilder toBuilder() => TopLevelBuilder(
+name: name,
+age: age,
+color: color,
+pet: pet.toBuilder(),
+secondPet: secondPet == null ? null : secondPet as Animal.toBuilder(),
+data: data.map((elem) => elem.toBuilder()).toList(),
+);
+
+Map<String, dynamic> toJson() => {
+"name": name,
+"age": age,
+"color": color.toJson(),
+"pet": pet.toJson(),
+"second_pet": secondPet?.toJson(),
+"data": data.map((inner) => inner.toJson()).toList(),
+};
+factory TopLevel.fromJson(Map<String, dynamic> json) => TopLevel(
+name: json["name"] as String,
+age: json["age"] == null ? 123 : json["age"] as int,
+color: json["color"] == null ? Color.green : Color.fromJson(json["color"]),
+pet: Animal.fromJson(json["pet"] as Map<String, dynamic>),
+secondPet: json["second_pet"] == null ? null : json["second_pet"] == null ? null : Animal.fromJson(json["second_pet"] as Map<String, dynamic>),
+data: (json["data"] as List<dynamic>).map<Data>((inner) => Data.fromJson(inner as Map<String, dynamic>)).toList(),
+);
+
+@override
+String toString() => "TopLevel("
+"name: $name, "
+"age: $age, "
+"color: $color, "
+"pet: $pet, "
+"secondPet: $secondPet, "
+"data: $data"
+")";
+@override
+ bool operator ==(Object other)
+{
+if (identical(this, other)) { return true;  }
+if (other is! TopLevel) { return false; }
+if (name != other.name) { return false; }
+if (age != other.age) { return false; }
+if (color != other.color) { return false; }
+if (pet != other.pet) { return false; }
+if (secondPet != other.secondPet) { return false; }
+if (data.length != other.data.length) { return false; }
+for (var i = 0; i < data.length; i++)
+{
+if (data[i] != other.data[i]) { return false; }
+}
+return true;
+}
+@override
+ int get hashCode => Object.hashAll([
+name.hashCode,
+age.hashCode,
+color.hashCode,
+pet.hashCode,
+secondPet?.hashCode
+,
+Object.hashAll(data.map((elem) => elem.hashCode)),
+]);
+}
+/// Builder class for [TopLevel]
+@_CustomAnnotation()
+final class TopLevelBuilder {
+String name;
+int age;
+Color color;
+AnimalBuilder pet;
+AnimalBuilder? secondPet;
+List<DataBuilder> data;
+
+TopLevelBuilder({
+required this.name,
+required this.age,
+required this.color,
+required this.pet,
+required this.secondPet,
+required this.data,
+});
+
+TopLevel build() => TopLevel(
+name: name,
+age: age,
+color: color,
+pet: pet.build(),
+secondPet: secondPet == null ? null : secondPet as Animal.build(),
+data: data.map((elem) => elem.build()).toList(),
+);
+}
+final class Data {
+final Set<Dog> dogs;
+final List<Cat> cats;
+final Map<String, Animal> animals;
+
+const Data({
+required this.dogs,
+required this.cats,
+required this.animals,
+})
+;
+
+static DataBuilder builder({
+required Set<DogBuilder> dogs,
+required List<CatBuilder> cats,
+required Map<String, AnimalBuilder> animals,
+}) => DataBuilder(
+dogs: dogs,
+cats: cats,
+animals: animals,
+);
+DataBuilder toBuilder() => DataBuilder(
+dogs: dogs.map((elem) => elem.toBuilder()).toSet(),
+cats: cats.map((elem) => elem.toBuilder()).toList(),
+animals: animals.map((key, value) => MapEntry(key, value.toBuilder())),
+);
+
+Map<String, dynamic> toJson() => {
+"dogs": dogs.map((inner) => inner.toJson()).toList(),
+"cats": cats.map((inner) => inner.toJson()).toList(),
+"animals": animals.map((key, value) => MapEntry(key, value.toJson())),
+};
+factory Data.fromJson(Map<String, dynamic> json) => Data(
+dogs: (json["dogs"] as List<dynamic>).map<Dog>((inner) => Dog.fromJson(inner as Map<String, dynamic>)).toSet(),
+cats: (json["cats"] as List<dynamic>).map<Cat>((inner) => Cat.fromJson(inner as Map<String, dynamic>)).toList(),
+animals: (json["animals"] as Map).map<String, Animal>((key, value) => MapEntry(key as String, Animal.fromJson(value as Map<String, dynamic>))),
+);
+
+@override
+String toString() => "Data("
+"dogs: $dogs, "
+"cats: $cats, "
+"animals: $animals"
+")";
+@override
+ bool operator ==(Object other)
+{
+if (identical(this, other)) { return true;  }
+if (other is! Data) { return false; }
+if (dogs.length != other.dogs.length) { return false; }
+for (final elem in dogs)
+{
+if (!other.dogs.contains(elem)) { return false; }
+}
+if (cats.length != other.cats.length) { return false; }
+for (var i = 0; i < cats.length; i++)
+{
+if (cats[i] != other.cats[i]) { return false; }
+}
+if (animals.length != other.animals.length) { return false; }
+for (final entry in animals.entries)
+{
+if (entry.value != other.animals[entry.key]) { return false; }
+}
+return true;
+}
+@override
+ int get hashCode => Object.hashAll([
+Object.hashAll(dogs.map((elem) => elem.hashCode)),
+Object.hashAll(cats.map((elem) => elem.hashCode)),
+Object.hashAll(animals.entries.expand((entry) => [entry.key, entry.value.hashCode])),
+]);
+}
+/// Builder class for [Data]
+@_CustomAnnotation()
+final class DataBuilder {
+Set<DogBuilder> dogs;
+List<CatBuilder> cats;
+Map<String, AnimalBuilder> animals;
+
+DataBuilder({
+required this.dogs,
+required this.cats,
+required this.animals,
+});
+
+Data build() => Data(
+dogs: dogs.map((elem) => elem.build()).toSet(),
+cats: cats.map((elem) => elem.build()).toList(),
+animals: animals.map((key, value) => MapEntry(key, value.build())),
+);
+}
+abstract final class Unused {
+const Unused();
+
+UnusedBuilder toBuilder();
+
+Map<String, dynamic> toJson(); 
+factory Unused.fromJson(Map<String, dynamic> json) => switch (json["something-custom-for-unused"]) {
+"unused_x" => X.fromJson(json),
+"Y" => Y.fromJson(json),
+final other => throw ArgumentError("unknown discriminant: $other"),
+};
+}
+abstract final class UnusedBuilder 
+{
+Unused build();
+}
+final class X extends Unused {
+
+const X()
+ : super();
+
+static XBuilder builder() => XBuilder();
+XBuilder toBuilder() => XBuilder(
+);
+
+@override
+Map<String, dynamic> toJson() => {
+"something-custom-for-unused": "unused_x"
+};
+factory X.fromJson(Map<String, dynamic> json) => X(
+);
+
+@override
+String toString() => "X("
+")";
+@override
+ bool operator ==(Object other)
+{
+if (identical(this, other)) { return true;  }
+if (other is! X) { return false; }
+return true;
+}
+@override
+ int get hashCode => Object.hashAll([
+]);
+}
+/// Builder class for [X]
+@_CustomAnnotation()
+final class XBuilder extends UnusedBuilder {
+
+XBuilder()
+ : super();
+
+X build() => X(
+);
+}
+final class Y extends Unused {
+
+const Y()
+ : super();
+
+static YBuilder builder() => YBuilder();
+YBuilder toBuilder() => YBuilder(
+);
+
+@override
+Map<String, dynamic> toJson() => {
+"something-custom-for-unused": "Y"
+};
+factory Y.fromJson(Map<String, dynamic> json) => Y(
+);
+
+@override
+String toString() => "Y("
+")";
+@override
+ bool operator ==(Object other)
+{
+if (identical(this, other)) { return true;  }
+if (other is! Y) { return false; }
+return true;
+}
+@override
+ int get hashCode => Object.hashAll([
+]);
+}
+/// Builder class for [Y]
+@_CustomAnnotation()
+final class YBuilder extends UnusedBuilder {
+
+YBuilder()
+ : super();
+
+Y build() => Y(
+);
+}
+/// Some docs for animal
+/// 
+/// It's either a dog or a cat
+sealed class Animal {
+const Animal();
+
+AnimalBuilder toBuilder();
+
+Map<String, dynamic> toJson(); 
+factory Animal.fromJson(Map<String, dynamic> json) => switch (json["custom-discriminant"]) {
+"Dog" => Dog.fromJson(json),
+"Cat" => Cat.fromJson(json),
+final other => throw ArgumentError("unknown discriminant: $other"),
+};
+}
+sealed class AnimalBuilder 
+{
+Animal build();
+}
+/// Fun-loving buddy
+final class Dog extends Animal {
+/// the name
+final String name;
+final Color color;
+final List<String> aliases;
+
+const Dog({
+ this.name= "Dog"
+,
+required this.color,
+required this.aliases,
+})
+ : super();
+
+static DogBuilder builder({
+ String name = "Dog"
+,
+required Color color,
+required List<String> aliases,
+}) => DogBuilder(
+name: name,
+color: color,
+aliases: aliases,
+);
+DogBuilder toBuilder() => DogBuilder(
+name: name,
+color: color,
+aliases: aliases.map((elem) => elem).toList(),
+);
+
+@override
+Map<String, dynamic> toJson() => {
+"name": name,
+"color": color.toJson(),
+"aliases": aliases.map((inner) => inner).toList(),
+"custom-discriminant": "Dog"
+};
+factory Dog.fromJson(Map<String, dynamic> json) => Dog(
+name: json["name"] == null ? "Dog" : json["name"] as String,
+color: Color.fromJson(json["color"]),
+aliases: (json["aliases"] as List<dynamic>).map<String>((inner) => inner as String).toList(),
+);
+
+@override
+String toString() => "Dog("
+"name: $name, "
+"color: $color, "
+"aliases: $aliases"
+")";
+@override
+ bool operator ==(Object other)
+{
+if (identical(this, other)) { return true;  }
+if (other is! Dog) { return false; }
+if (name != other.name) { return false; }
+if (color != other.color) { return false; }
+if (aliases.length != other.aliases.length) { return false; }
+for (var i = 0; i < aliases.length; i++)
+{
+if (aliases[i] != other.aliases[i]) { return false; }
+}
+return true;
+}
+@override
+ int get hashCode => Object.hashAll([
+name.hashCode,
+color.hashCode,
+Object.hashAll(aliases.map((elem) => elem.hashCode)),
+]);
+}
+/// Builder class for [Dog]
+@_CustomAnnotation()
+final class DogBuilder extends AnimalBuilder {
+String name;
+Color color;
+List<String> aliases;
+
+DogBuilder({
+required this.name,
+required this.color,
+required this.aliases,
+}) : super();
+
+Dog build() => Dog(
+name: name,
+color: color,
+aliases: aliases.map((elem) => elem).toList(),
+);
+}
+/// Evil hellspawn
+final class Cat extends Animal {
+final String name;
+final int satanicPower;
+final Map<String, dynamic> data;
+
+const Cat({
+ this.name= "Destroyer of Worlds"
+,
+ this.satanicPower= 9001
+,
+required this.data,
+})
+ : super();
+
+static CatBuilder builder({
+ String name = "Destroyer of Worlds"
+,
+ int satanicPower = 9001
+,
+required Map<String, dynamic> data,
+}) => CatBuilder(
+name: name,
+satanicPower: satanicPower,
+data: data,
+);
+CatBuilder toBuilder() => CatBuilder(
+name: name,
+satanicPower: satanicPower,
+data: data.map((key, value) => MapEntry(key, value)),
+);
+
+@override
+Map<String, dynamic> toJson() => {
+"name": name,
+"satanic_power": 
+// ignore: unnecessary_parenthesis
+((i) => i ^ 121)(satanicPower),"data": data.map((key, value) => MapEntry(key, value)),
+"custom-discriminant": "Cat"
+};
+factory Cat.fromJson(Map<String, dynamic> json) => Cat(
+name: json["name"] == null ? "Destroyer of Worlds" : json["name"] as String,
+satanicPower: json["satanic_power"] == null ? 9001 : 
+// ignore: unnecessary_parenthesis
+((i) => i ^ 121)(json["satanic_power"])
+,
+data: (json["data"] as Map).map<String, dynamic>((key, value) => MapEntry(key as String, value as dynamic)),
+);
+
+@override
+String toString() => "Cat("
+"name: $name, "
+"satanicPower: $satanicPower, "
+"data: $data"
+")";
+@override
+ bool operator ==(Object other)
+{
+if (identical(this, other)) { return true;  }
+if (other is! Cat) { return false; }
+if (name != other.name) { return false; }
+if (satanicPower != other.satanicPower) { return false; }
+if (data.length != other.data.length) { return false; }
+for (final entry in data.entries)
+{
+if (entry.value != other.data[entry.key]) { return false; }
+}
+return true;
+}
+@override
+ int get hashCode => Object.hashAll([
+name.hashCode,
+satanicPower.hashCode,
+Object.hashAll(data.entries.expand((entry) => [entry.key, entry.value.hashCode])),
+]);
+}
+/// Builder class for [Cat]
+@_CustomAnnotation()
+final class CatBuilder extends AnimalBuilder {
+String name;
+int satanicPower;
+Map<String, dynamic> data;
+
+CatBuilder({
+required this.name,
+required this.satanicPower,
+required this.data,
+}) : super();
+
+Cat build() => Cat(
+name: name,
+satanicPower: satanicPower,
+data: data.map((key, value) => MapEntry(key, value)),
+);
+}
+@_CustomAnnotation()
+enum Color
+{
+/// a bad color
+red,
+/// The best color
+/// 
+/// Truly, there has never been a greater color
+green,
+blue,
+;
+factory Color.fromJson(dynamic json) => switch (json){
+"ew, gross" => Color.red,
+123 => Color.green,
+"blue" => Color.blue,
+final other => throw ArgumentError("Unknown variant: $other"),
+}
+;
+
+dynamic toJson() => switch (this){
+Color.red => "ew, gross",Color.green => 123,Color.blue => "blue",}
+;
+@override
+String toString() => switch (this)
+{
+Color.red => "red",
+Color.green => "green",
+Color.blue => "blue",
+}
+;
+
+    void goodbye() => print("cya");
+  
+}
+
+  class _CustomAnnotation {
+    const _CustomAnnotation();
+  }
+

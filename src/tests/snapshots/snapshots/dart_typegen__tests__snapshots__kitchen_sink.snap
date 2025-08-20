@@ -2,6 +2,8 @@
 source: src/tests/snapshots/mod.rs
 expression: dart
 ---
+// ignore_for_file: unnecessary_cast
+
 // woohoo look a comment at the start of the file
 
 final class TopLevel {
@@ -39,16 +41,16 @@ final class TopLevel {
     age: age,
     color: color,
     pet: pet.toBuilder(),
-    secondPet: secondPet,
-    data: data,
+    secondPet: secondPet == null ? null : (secondPet as Animal).toBuilder(),
+    data: data.map((elem) => elem.toBuilder()).toList(),
   );
   TopLevelBuilder toBuilder() => TopLevelBuilder(
     name: name,
     age: age,
     color: color,
     pet: pet.toBuilder(),
-    secondPet: secondPet,
-    data: data,
+    secondPet: secondPet == null ? null : (secondPet as Animal).toBuilder(),
+    data: data.map((elem) => elem.toBuilder()).toList(),
   );
 
   Map<String, dynamic> toJson() => {
@@ -65,6 +67,8 @@ final class TopLevel {
     color: json["color"] == null ? Color.green : Color.fromJson(json["color"]),
     pet: Animal.fromJson(json["pet"] as Map<String, dynamic>),
     secondPet: json["second_pet"] == null
+        ? null
+        : json["second_pet"] == null
         ? null
         : Animal.fromJson(json["second_pet"] as Map<String, dynamic>),
     data: (json["data"] as List<dynamic>)
@@ -134,8 +138,8 @@ final class TopLevelBuilder {
   int age;
   Color color;
   AnimalBuilder pet;
-  Animal? secondPet;
-  List<Data> data;
+  AnimalBuilder? secondPet;
+  List<DataBuilder> data;
 
   TopLevelBuilder({
     required this.name,
@@ -151,8 +155,8 @@ final class TopLevelBuilder {
     age: age,
     color: color,
     pet: pet.build(),
-    secondPet: secondPet,
-    data: data,
+    secondPet: secondPet == null ? null : (secondPet as AnimalBuilder).build(),
+    data: data.map((elem) => elem.build()).toList(),
   );
 }
 
@@ -167,9 +171,16 @@ final class Data {
     required Set<Dog> dogs,
     required List<Cat> cats,
     required Map<String, Animal> animals,
-  }) => DataBuilder(dogs: dogs, cats: cats, animals: animals);
-  DataBuilder toBuilder() =>
-      DataBuilder(dogs: dogs, cats: cats, animals: animals);
+  }) => DataBuilder(
+    dogs: dogs.map((elem) => elem.toBuilder()).toSet(),
+    cats: cats.map((elem) => elem.toBuilder()).toList(),
+    animals: animals.map((key, value) => MapEntry(key, value.toBuilder())),
+  );
+  DataBuilder toBuilder() => DataBuilder(
+    dogs: dogs.map((elem) => elem.toBuilder()).toSet(),
+    cats: cats.map((elem) => elem.toBuilder()).toList(),
+    animals: animals.map((key, value) => MapEntry(key, value.toBuilder())),
+  );
 
   Map<String, dynamic> toJson() => {
     "dogs": dogs.map((inner) => inner.toJson()).toList(),
@@ -246,13 +257,17 @@ final class Data {
 /// Builder class for [Data]
 @_CustomAnnotation()
 final class DataBuilder {
-  Set<Dog> dogs;
-  List<Cat> cats;
-  Map<String, Animal> animals;
+  Set<DogBuilder> dogs;
+  List<CatBuilder> cats;
+  Map<String, AnimalBuilder> animals;
 
   DataBuilder({required this.dogs, required this.cats, required this.animals});
 
-  Data build() => Data(dogs: dogs, cats: cats, animals: animals);
+  Data build() => Data(
+    dogs: dogs.map((elem) => elem.build()).toSet(),
+    cats: cats.map((elem) => elem.build()).toList(),
+    animals: animals.map((key, value) => MapEntry(key, value.build())),
+  );
 }
 
 abstract final class Unused {
@@ -382,9 +397,16 @@ final class Dog extends Animal {
     String name = "Dog",
     required Color color,
     required List<String> aliases,
-  }) => DogBuilder(name: name, color: color, aliases: aliases);
-  DogBuilder toBuilder() =>
-      DogBuilder(name: name, color: color, aliases: aliases);
+  }) => DogBuilder(
+    name: name,
+    color: color,
+    aliases: aliases.map((elem) => elem).toList(),
+  );
+  DogBuilder toBuilder() => DogBuilder(
+    name: name,
+    color: color,
+    aliases: aliases.map((elem) => elem).toList(),
+  );
 
   @override
   Map<String, dynamic> toJson() => {
@@ -451,7 +473,11 @@ final class DogBuilder extends AnimalBuilder {
   DogBuilder({required this.name, required this.color, required this.aliases})
     : super();
 
-  Dog build() => Dog(name: name, color: color, aliases: aliases);
+  Dog build() => Dog(
+    name: name,
+    color: color,
+    aliases: aliases.map((elem) => elem).toList(),
+  );
 }
 
 /// Evil hellspawn
@@ -470,9 +496,16 @@ final class Cat extends Animal {
     String name = "Destroyer of Worlds",
     int satanicPower = 9001,
     required Map<String, dynamic> data,
-  }) => CatBuilder(name: name, satanicPower: satanicPower, data: data);
-  CatBuilder toBuilder() =>
-      CatBuilder(name: name, satanicPower: satanicPower, data: data);
+  }) => CatBuilder(
+    name: name,
+    satanicPower: satanicPower,
+    data: data.map((key, value) => MapEntry(key, value)),
+  );
+  CatBuilder toBuilder() => CatBuilder(
+    name: name,
+    satanicPower: satanicPower,
+    data: data.map((key, value) => MapEntry(key, value)),
+  );
 
   @override
   Map<String, dynamic> toJson() => {
@@ -550,12 +583,21 @@ final class CatBuilder extends AnimalBuilder {
     required this.data,
   }) : super();
 
-  Cat build() => Cat(name: name, satanicPower: satanicPower, data: data);
+  Cat build() => Cat(
+    name: name,
+    satanicPower: satanicPower,
+    data: data.map((key, value) => MapEntry(key, value)),
+  );
 }
 
 @_CustomAnnotation()
 enum Color {
+  /// a bad color
   red,
+
+  /// The best color
+  ///
+  /// Truly, there has never been a greater color
   green,
   blue;
 
@@ -577,7 +619,6 @@ enum Color {
     Color.green => "green",
     Color.blue => "blue",
   };
-  void hello() {}
 
   void goodbye() => print("cya");
 }
