@@ -291,7 +291,7 @@ dependencies = [
 
 [[package]]
 name = "dart-typegen"
-version = "0.1.12"
+version = "0.1.13"
 dependencies = [
  "chumsky 0.10.1",
  "clap",

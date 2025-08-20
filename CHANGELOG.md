@@ -1,3 +1,9 @@
+## [0.1.13] - 2025-08-20
+
+### 🐛 Bug Fixes
+
+- Only allow single `extra-dart` on enums
+- Much more comprehensive handling of composite types
 ## [0.1.12] - 2025-08-17
 
 ### 🐛 Bug Fixes
