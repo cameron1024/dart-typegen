@@ -61,6 +61,8 @@
 
           packages = with pkgs; [
             cargo-insta
+            mdbook
+            mdbook-alerts
           ];
         };
       }

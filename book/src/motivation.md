@@ -1,0 +1,249 @@
+# Motivation
+
+> [!NOTE]
+> For usage information, skip this section
+
+Isn't this re-inventing the wheel? Why not use \<XYZ other tool\>?
+
+Well, in order to evaluate that, it's worth talking about design goals:
+
+## Design goals
+
+### Generation
+
+It has to generate:
+- immutable classes (all fields final)
+- `operator==` and `hashCode` that implement value equality
+- `toJson` and `fromJson` functions
+- a way to create copies with some fields changed
+
+It also needs a single source of truth. There must not be two different
+definitions which must "agree" in order for the result to be correct.
+
+### Speed
+
+Code generation should be fast. I am used to programming in Rust, where you can do the following:
+```rust
+#[derive(Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
+struct User {
+  id: String,
+  name: String,
+}
+```
+The `#[derive(...)]` section is a macro, which runs as part of the compiler. It
+reads the `struct` definition, and generates the equivalent of `operator==`,
+`hashCode`, `toJson`, `fromJson` and `toString`.
+
+Since they are run by the compiler, there is no "now run `build_runner`" step.
+As soon as you add the macro, the code exists[^1].
+
+I want this user experience in Dart. Since Dart has cancelled (paused?
+Indefinitely delayed?) macros, we will have to do code generation, but there's
+no need to go through `build_runner`.
+
+### Reliability
+
+Generation should either always succeed, or always fail, depending only on the
+content of the config file, and basic IO state (e.g. having write permission
+for the output path).
+
+Some things that should not affect success/failure of code generation:
+- whether the Dart project has errors in it
+- whether I have run `dart pub get`/`flutter pub get` recently
+- dependencies of my Dart project
+
+### Support for tagged unions (a.k.a. sum types, Rust-style enums)
+
+In Rust, an `enum` can have variants that contain data:
+```rust
+enum Shape {
+  Point,
+  Circle { radius: f64 },
+  Rect { width: f64, height: f64 },
+}
+```
+If a value has type `Shape`, it must either be a `Point`, or a `Circle` (which
+has a `radius` field), or a `Rect` (which has `width` and `height` fields).
+
+To express an equivalent in Dart, you might write something like this:
+```dart
+sealed class Shape {}
+
+final class Point extends Shape {}
+
+final class Circle extends Shape {
+  final double radius;
+  Circle(this.radius);
+}
+
+final class Rect extends Shape {
+  final double width;
+  final double height;
+  Rect(this.width, this.height);
+}
+```
+I want a tool that natively understands these kinds of values, as I consider
+them a fundamental building block of any good programming language.
+
+### Minimal impact on dependency graph
+
+At my job, I maintain a Flutter FFI plugin. As part of this, I have to be
+careful about adding dependencies to the plugin, since they can cause version
+mismatch errors in customer code.
+
+If I add `some_package:1.2.3` to my code, and a customer depends on
+`some_package:0.9.4`, then they won't be able to use my plugin, since `pub`
+currently cannot support multiple versions of the same package in a dependency
+graph. There is a [5-year-old issue][pub multiple versions] about this very
+topic, with no activity in 2 years.
+
+Therefore, whatever tool I use must have minimal impact on the dependency graph
+of the codebase it is used in.
+
+### No `.copyWith()` functions
+
+It is common to use a `.copyWith()` function to allow a user to create a copy
+of an immutable class with some fields changed, but they have two downsides I
+consider disqualifying.
+
+#### `.copyWith()` doesn't handle `null`
+
+The following compiles, but is confusing:
+
+```dart
+class User {
+  final String id;
+  final String? name;
+
+  const User({required this.id, required this.name});
+
+  User copyWith({String? id, String? name}) => User(
+    id: id ?? this.id,
+    name: name ?? this.name,
+  );
+}
+
+void main() {
+  final user = User(id: "123", name: "John");
+  final userWitoutName = user.copyWith(name: null);
+  print(userWithoutName.name);  // prints "John"
+}
+```
+
+This is confusing and is a source of bugs.
+
+#### Poor handling of nested data
+
+If you have deeply nested immutable classes, you need to write something like this:
+```dart
+final newFoo = foo.copyWith(
+  bar: foo.bar.copyWith(
+    baz: foo.bar.baz.copyWith(
+      qux: "new qux",
+    ),
+  ),
+);
+```
+If the fields were mutable, you could just write `foo.bar.baz.qux = "new qux"`.
+We need immutability, but we have paid a high ergonomic cost for it.
+
+Those two issues make `.copyWith()` unacceptable for my use cases. Whatever
+tool I settle on needs an answer to both of these issues.
+
+### Idiomatic Dart
+
+The tool must generate idiomatic Dart. Since this is primarily intended for
+libraries/SDKs, I cannot assume that my users have familiarity with a
+particular package.
+
+Another way of looking at it is: "users of generated types shouldn't notice the
+types are generated by a tool".
+
+### Nice-to-haves
+
+Non essential features that would be nice to have:
+- a nice `.toString()`
+- helpful error messages
+- a Nix package so it can be used in derivations
+
+
+
+## So why not use...
+
+### ... `equatable` and `json_serializable`
+
+- performance - depends on `build_runner`, which has an unacceptable
+  performance cost (this is going to become a pattern).
+- reliability - depends on `build_runner`, which requires valid Dart source
+  code, needs `dart pub get`, etc. (this is also going to become a pattern).
+- no single source of truth - you need to provide a `props` getter which lists
+  all the fields, but this can get out of sync with the actual field list, which causes
+- `json_serializable` doesn't understand tagged unions, despite a [two year old
+  issue][json serializable sealed].
+- `toString()` output is a bit ugly. For example, it might generate a
+  `toString()` output like `Permissions(true, false, false, true)`. However,
+  other systems (e.g. Rust's `#[derive(Debug)]`) would generate something like:
+  `Permissions { create: true, read: false, update: false, delete: true }`
+- adds to the dependency graph (in a not-very-disruptive but still not zero way) 
+
+### `freezed`
+
+- performance and reliability (thanks `build_runner`)
+- adds to the dependency graph (in a not-very-disruptive but still not zero way) 
+
+### `built_value`
+
+- performance and reliability (thanks `build_runner`)
+- adds to the dependency graph (in a not-very-disruptive but still not zero way) 
+- has a somewhat opinionated API, which not all users may be familiar with
+
+### ...your hands? Just type it?
+
+No thanks.
+
+Also I want to be able to generate everything in under a second. I can't type
+that fast.
+
+## How does `dart-typegen` solve these issues?
+
+- It's fast
+  - Unlike `build_runner`, it doesn't have access to type information, so it
+    doesn't have to analyze Dart code at all.
+  - It's not a general-purpose tool - it's highly specialized for one specific
+    code generation task.
+  - It's written in Rust
+  - On my work codebase, `json_serializable` takes 20-30 seconds on an M4
+    Macbook Pro. `dart-typegen` takes 120ms.
+- It's reliable
+  - it doesn't read your Dart code, so it can't fail if that code has compile errors
+  - it doesn't read your package metadata, so it can't fail if `dart pub get`
+    hasn't been run
+- It supports tagged unions
+- It generates relatively idiomatic code
+- Instead of `.copyWith()`, it creates a `Builder` class for each class it
+  generates, which is a mutable version of the class. Regular classes and
+  builders can be converted between trivially.
+- It doesn't require any dependencies at runtime
+- It has a nice `toString()` representation that includes the field names
+- It has a Nix package
+- It has nice error messages
+
+## Should I use it?
+
+It depends. There are some important drawbacks:
+- it's nowhere near as well-supported as alternatives
+- it only has limited type information (it embeds a small Dart type parser, but
+  this will not do "full" type analysis)
+- it's not very flexible
+
+If you need one of these, you should consider a different package.
+
+But, if your use cases align with mine, you may want to use it.
+
+[^1]: Yes, technically, there is a performance cost to using macros. But it is
+    very small, even in large projects, and nothing even close to
+    `build_runner`.
+
+
+[pub multiple versions]: https://github.com/dart-lang/pub/issues/2272
+[json serializable sealed]: https://github.com/google/json_serializable.dart/issues/1342
