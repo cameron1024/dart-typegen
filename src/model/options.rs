@@ -47,6 +47,11 @@ pub struct UnionOptions {
 
     #[knus(child, unwrap(argument))]
     pub json_discriminant: Option<SpannedScalar<String>>,
+
+    #[knus(child, unwrap(argument))]
+    pub annotations: Option<SpannedScalar<String>>,
+    #[knus(child, unwrap(argument))]
+    pub builder_annotations: Option<SpannedScalar<String>>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Decode)]

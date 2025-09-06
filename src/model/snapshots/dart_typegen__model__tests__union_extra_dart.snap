@@ -37,6 +37,8 @@ Library {
                 },
             ),
             json_discriminant_value_case: None,
+            annotations: None,
+            builder_annotations: None,
             docs: None,
             classes: [
                 Class {

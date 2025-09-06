@@ -6,6 +6,7 @@ expression: dart
 
 // woohoo look a comment at the start of the file
 
+@_CustomAnnotation()
 final class TopLevel {
   final String name;
 
@@ -160,6 +161,7 @@ final class TopLevelBuilder {
   );
 }
 
+@_CustomAnnotation()
 final class Data {
   final Set<Dog> dogs;
   final List<Cat> cats;
@@ -270,6 +272,7 @@ final class DataBuilder {
   );
 }
 
+@_CustomAnnotation()
 abstract final class Unused {
   const Unused();
 
@@ -284,10 +287,12 @@ abstract final class Unused {
       };
 }
 
+@_CustomAnnotation()
 abstract final class UnusedBuilder {
   Unused build();
 }
 
+@_CustomAnnotation()
 final class X extends Unused {
   const X() : super();
 
@@ -325,6 +330,7 @@ final class XBuilder extends UnusedBuilder {
   X build() => X();
 }
 
+@_CustomAnnotation()
 final class Y extends Unused {
   const Y() : super();
 
@@ -365,6 +371,7 @@ final class YBuilder extends UnusedBuilder {
 /// Some docs for animal
 ///
 /// It's either a dog or a cat
+@_CustomAnnotation()
 sealed class Animal {
   const Animal();
 
@@ -379,11 +386,13 @@ sealed class Animal {
       };
 }
 
+@_CustomAnnotation()
 sealed class AnimalBuilder {
   Animal build();
 }
 
 /// Fun-loving buddy
+@_CustomAnnotation()
 final class Dog extends Animal {
   /// the name
   final String name;
@@ -481,6 +490,7 @@ final class DogBuilder extends AnimalBuilder {
 }
 
 /// Evil hellspawn
+@_CustomAnnotation()
 final class Cat extends Animal {
   final String name;
   final int satanicPower;

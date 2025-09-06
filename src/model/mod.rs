@@ -135,6 +135,10 @@ pub struct Union {
     #[knus(child, unwrap(argument))]
     pub json_discriminant_value_case: Option<SpannedScalar<RenameCase>>,
     #[knus(child, unwrap(argument))]
+    pub annotations: Option<SpannedScalar<String>>,
+    #[knus(child, unwrap(argument))]
+    pub builder_annotations: Option<SpannedScalar<String>>,
+    #[knus(child, unwrap(argument))]
     pub docs: Option<SpannedScalar<String>>,
     #[knus(children(name = "class"))]
     pub classes: Vec<Class>,

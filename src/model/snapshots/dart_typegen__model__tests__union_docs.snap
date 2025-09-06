@@ -27,6 +27,8 @@ Library {
             sealed: None,
             json_discriminant: None,
             json_discriminant_value_case: None,
+            annotations: None,
+            builder_annotations: None,
             docs: Some(
                 SpannedScalar {
                     value: "\nSome docs \n\nSome more lines\n  ",

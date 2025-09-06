@@ -26,6 +26,8 @@ Library {
                         },
                     ),
                     json_discriminant: None,
+                    annotations: None,
+                    builder_annotations: None,
                 },
             ),
             enum: None,
@@ -52,6 +54,8 @@ Library {
             sealed: None,
             json_discriminant: None,
             json_discriminant_value_case: None,
+            annotations: None,
+            builder_annotations: None,
             docs: None,
             classes: [
                 Class {

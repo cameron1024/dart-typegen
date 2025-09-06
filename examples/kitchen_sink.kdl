@@ -7,6 +7,8 @@ defaults {
   union {
     sealed true
     json-discriminant "custom-discriminant"
+    annotations "@_CustomAnnotation()"
+    builder-annotations "@_CustomAnnotation()"
   }
 
   enum {
@@ -14,6 +16,7 @@ defaults {
   }
 
   class {
+    annotations "@_CustomAnnotation()"
     builder-annotations "@_CustomAnnotation()"
   }
 

@@ -6,6 +6,19 @@ impl Context {
             self.write_doc_comment(buf, docs)?;
         }
 
+        if let Some(annotations) = &union.annotations {
+            writeln!(buf, "{annotations}")?;
+        }
+        if let Some(annotations) = &self
+            .library
+            .defaults
+            .as_ref()
+            .and_then(|d| d.union.as_ref())
+            .and_then(|c| c.annotations.as_ref())
+        {
+            writeln!(buf, "{annotations}")?;
+        }
+
         let modifiers = match self.library.is_sealed(union) {
             false => "abstract final",
             true => "sealed",
@@ -59,6 +72,20 @@ impl Context {
 
             Ok(())
         })?;
+
+
+        if let Some(annotations) = &union.builder_annotations {
+            writeln!(buf, "{annotations}")?;
+        }
+        if let Some(annotations) = &self
+            .library
+            .defaults
+            .as_ref()
+            .and_then(|d| d.union.as_ref())
+            .and_then(|c| c.builder_annotations.as_ref())
+        {
+            writeln!(buf, "{annotations}")?;
+        }
 
         let modifiers = match self.library.is_sealed(union) {
             false => "abstract final",
