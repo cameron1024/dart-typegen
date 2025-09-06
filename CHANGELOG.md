@@ -1,3 +1,8 @@
+## [0.1.14] - 2025-09-06
+
+### 🚀 Features
+
+- Allow customization of annotations for unions and their builders
 ## [0.1.13] - 2025-08-20
 
 ### 🐛 Bug Fixes
