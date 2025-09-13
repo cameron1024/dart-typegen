@@ -21,18 +21,13 @@ pub struct Args {
 
 #[derive(Debug, Subcommand)]
 pub enum Cmd {
-    /// Parse the config file at the given path and check for errors
+    /// Parse the config file at the given path and check for errors.
     Validate { path: PathBuf },
 
     /// Generate the Dart for a given library definition
     Generate {
-        /// Path to the KDL config file
-        #[clap(long, short)]
-        input: PathBuf,
-
-        /// The path to write the output to. If not provided, it will be printed to stdout
-        #[clap(long, short)]
-        output: Option<PathBuf>,
+        /// Path to the KDL config file, or a directory containing KDL config files.
+        path: PathBuf,
     },
 }
 
@@ -42,7 +37,8 @@ pub fn run(args: &Args) -> miette::Result<()> {
             let context = Context::from_path(path)?;
             context.validate(args.deny_warnings)?;
         }
-        Cmd::Generate { input, output } => {
+        Cmd::Generate { path } => {
+
             let context = Context::from_path(input)?;
             context.validate(args.deny_warnings)?;
 
@@ -63,3 +59,5 @@ pub fn run(args: &Args) -> miette::Result<()> {
 
     Ok(())
 }
+
+fn generate_single()

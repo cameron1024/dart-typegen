@@ -1,4 +1,4 @@
-use std::{collections::VecDeque, fmt::Write};
+use std::{collections::VecDeque, fmt::Write, path::PathBuf};
 
 use knus::{
     ast::{Decimal, Integer, Literal, Radix, Value},
@@ -19,14 +19,7 @@ mod union;
 mod util;
 
 impl Context {
-    #[cfg(test)]
-    pub fn codegen_to_string(&self) -> Result<String> {
-        let mut buf = Vec::new();
-        self.codegen(&mut buf)?;
-        Ok(String::from_utf8(buf).unwrap())
-    }
-
-    pub fn codegen(&self, out: &mut impl std::io::Write) -> Result<()> {
+    pub fn codegen(&self) -> Result<(String, Option<&SpannedScalar<PathBuf>>)> {
         let mut buf = String::new();
 
         writeln!(buf, "// ignore_for_file: unnecessary_cast").into_diagnostic()?;
@@ -62,10 +55,10 @@ impl Context {
             .and_then(|d| d.dart_format_language_version.as_ref())
             .map(|v| v.as_str());
 
-        let formatted = dart_format(buf, lang_version)?;
-        out.write_all(formatted.as_bytes()).into_diagnostic()?;
+        let output = dart_format(buf, lang_version)?;
+        let path = self.library.output.as_ref().and_then(|o| o.path.as_ref());
 
-        Ok(())
+        Ok((output, path))
     }
 
     fn write_doc_comment(&self, buf: &mut String, source: &str) -> std::fmt::Result {

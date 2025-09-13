@@ -1,15 +1,15 @@
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use knus::DecodeScalar;
 use knus::{Decode, ast::Value, span::Span};
 use miette::IntoDiagnostic;
 
-pub use options::*;
 pub use meta::*;
+pub use options::*;
 pub use util::*;
 
-mod options;
 mod meta;
+mod options;
 mod util;
 
 #[cfg(test)]
@@ -24,7 +24,10 @@ pub struct Library {
     pub preamble: Option<String>,
     #[knus(child, unwrap(argument))]
     pub postamble: Option<String>,
-    
+
+    #[knus(child)]
+    pub output: Option<Output>,
+
     #[knus(child)]
     pub meta: Option<Meta>,
 
@@ -61,6 +64,16 @@ impl Library {
 
         Ok(library)
     }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Decode)]
+#[knus(span_type = Span)]
+pub struct Output {
+    #[knus(unwrap(span))]
+    pub span: Span,
+
+    #[knus(child, unwrap(argument))]
+    pub path: Option<SpannedScalar<PathBuf>>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Decode)]
@@ -175,3 +188,4 @@ pub struct EnumVariant {
     #[knus(child, unwrap(argument))]
     pub json_value: Option<Value<Span>>,
 }
+
