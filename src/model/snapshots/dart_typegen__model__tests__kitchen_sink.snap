@@ -9,6 +9,7 @@ Library {
     postamble: Some(
         "\n  class _CustomAnnotation {\n    const _CustomAnnotation();\n  }\n",
     ),
+    output: None,
     meta: None,
     defaults: Some(
         Defaults {

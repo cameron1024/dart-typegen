@@ -226,7 +226,7 @@ fn integration_test() {
     println!("package_dir: {}", package_dir.to_string_lossy());
 
     let context = Context::from_str(include_str!(crate::test_file!(kitchen_sink))).unwrap();
-    let generated = context.codegen_to_string().unwrap();
+    let generated = context.codegen().unwrap().0;
     let main = dart_format(main_dart(), Some("3.8")).unwrap();
 
     std::fs::write(package_dir.join("pubspec.yaml"), PUBSPEC).unwrap();

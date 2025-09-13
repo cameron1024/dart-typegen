@@ -18,6 +18,7 @@ ignore = "0.4.23"
 insta = "1.43.1"
 knus = "3.3.1"
 miette = { version = "7.6.0", features = ["fancy", "syntect-highlighter"] }
+rayon = "1.11.0"
 semver = "1.0.26"
 thiserror = "2.0.12"
 

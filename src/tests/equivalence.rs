@@ -3,14 +3,8 @@
 use crate::context::Context;
 
 fn assert_equivalent(left: &str, right: &str) {
-    let left = Context::from_str(left)
-        .unwrap()
-        .codegen_to_string()
-        .unwrap();
-    let right = Context::from_str(right)
-        .unwrap()
-        .codegen_to_string()
-        .unwrap();
+    let left = Context::from_str(left).unwrap().codegen().unwrap().0;
+    let right = Context::from_str(right).unwrap().codegen().unwrap().0;
 
     pretty_assertions::assert_eq!(left, right)
 }

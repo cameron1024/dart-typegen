@@ -1,13 +1,17 @@
 use std::{
-    fs::File,
-    io::{BufWriter, stdout},
-    path::PathBuf,
+    ops::Deref,
+    path::{Path, PathBuf},
+    process::exit,
+    sync::{
+        Arc,
+        atomic::{AtomicBool, Ordering},
+    },
 };
 
 use clap::{Parser, Subcommand};
 use miette::IntoDiagnostic;
 
-use crate::{context::Context};
+use crate::context::Context;
 
 #[derive(Debug, Parser)]
 #[command(version, about)]
@@ -38,21 +42,46 @@ pub fn run(args: &Args) -> miette::Result<()> {
             context.validate(args.deny_warnings)?;
         }
         Cmd::Generate { path } => {
+            let has_errors = rayon::scope(|scope| {
+                let has_errors = Arc::new(AtomicBool::new(false));
 
-            let context = Context::from_path(input)?;
-            context.validate(args.deny_warnings)?;
+                for result in ignore::Walk::new(path) {
+                    let entry = match result {
+                        Ok(entry) => entry,
+                        Err(e) => {
+                            eprintln!("failed to read FS entry, skipping: {e}");
+                            continue;
+                        }
+                    };
 
-            match &output {
-                Some(output) => {
-                    let output = File::create(output).into_diagnostic()?;
-                    let mut output = BufWriter::new(output);
+                    let Ok(meta) = entry.metadata() else {
+                        eprintln!(
+                            "failed to read metadata for {}, skipping",
+                            entry.path().to_string_lossy()
+                        );
+                        continue;
+                    };
 
-                    context.codegen(&mut output)?;
+                    if meta.is_dir() {
+                        continue;
+                    }
+
+                    let deny_warnings = args.deny_warnings;
+
+                    let has_errors = Arc::clone(&has_errors);
+                    scope.spawn(move |_scope| {
+                        if let Err(e) = generate_single(entry.path(), deny_warnings) {
+                            eprintln!("{e:?}");
+                            has_errors.store(true, Ordering::SeqCst);
+                        }
+                    });
                 }
-                None => {
-                    let mut output = BufWriter::new(stdout().lock());
-                    context.codegen(&mut output)?;
-                }
+
+                has_errors.load(Ordering::SeqCst)
+            });
+
+            if has_errors {
+                exit(1);
             }
         }
     }
@@ -60,4 +89,21 @@ pub fn run(args: &Args) -> miette::Result<()> {
     Ok(())
 }
 
-fn generate_single()
+fn generate_single(input_path: &Path, deny_warnings: bool) -> miette::Result<()> {
+    let context = Context::from_path(input_path)?;
+    context.validate(deny_warnings)?;
+    let (output, output_path) = context.codegen()?;
+
+    match output_path {
+        Some(path) => std::fs::write(path.deref(), output).into_diagnostic()?,
+        None => {
+            eprintln!(
+                "no `output.path` directive for {} - writing to stdout",
+                input_path.to_string_lossy()
+            );
+            println!("{output}");
+        }
+    }
+
+    Ok(())
+}

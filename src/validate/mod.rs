@@ -1,8 +1,8 @@
-use std::collections::HashMap;
-
 use convert_case::{Case, Casing};
 use knus::ast::{Integer, Literal, Radix};
-use miette::{Diagnostic, NamedSource, Result, Severity, SourceSpan};
+use miette::{Diagnostic, IntoDiagnostic, NamedSource, Result, Severity, SourceSpan};
+use std::io::Write;
+use std::{collections::HashMap, io::stderr};
 use thiserror::Error;
 
 use crate::{
@@ -26,8 +26,9 @@ impl Context {
                 .iter()
                 .all(|e| e.severity() == Some(Severity::Warning))
         {
+            let mut stderr = stderr().lock();
             for error in errors {
-                eprintln!("{error:?}");
+                writeln!(&mut stderr, "{error:?}").into_diagnostic()?;
             }
             return Ok(());
         }
