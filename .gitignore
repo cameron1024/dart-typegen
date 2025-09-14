@@ -1,2 +1,3 @@
 /target
 /.direnv
+__dart_typegen_failed.dart

@@ -1,5 +1,4 @@
 use std::{
-    ops::Deref,
     path::{Path, PathBuf},
     process::exit,
     sync::{
@@ -94,16 +93,48 @@ fn generate_single(input_path: &Path, deny_warnings: bool) -> miette::Result<()>
     context.validate(deny_warnings)?;
     let (output, output_path) = context.codegen()?;
 
-    match output_path {
-        Some(path) => std::fs::write(path.deref(), output).into_diagnostic()?,
-        None => {
-            eprintln!(
-                "no `output.path` directive for {} - writing to stdout",
-                input_path.to_string_lossy()
-            );
-            println!("{output}");
-        }
-    }
+    let output_path = output_path
+        .map(|p| &p.value)
+        .cloned()
+        .unwrap_or_else(|| input_path.with_extension("dart"));
+
+    std::fs::write(output_path, output).into_diagnostic()?;
 
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use std::ffi::OsStr;
+
+    use clap::Parser;
+    use tempdir::TempDir;
+
+    use crate::{
+        args::{Args, run},
+        test_file,
+    };
+
+    #[test]
+    fn walks_directories_recursively() {
+        let dir = TempDir::new("dart-typegen-test").unwrap();
+
+        std::fs::create_dir(dir.path().join("directory")).unwrap();
+        std::fs::write(dir.path().join("foo.kdl"), test_file!(class_docs)).unwrap();
+        std::fs::write(
+            dir.path().join("directory").join("bar.kdl"),
+            test_file!(class_docs),
+        )
+        .unwrap();
+
+        run(&Args::parse_from([
+            OsStr::new("dart-typegen"),
+            OsStr::new("generate"),
+            dir.path().as_os_str(),
+        ]))
+        .unwrap();
+
+        assert!(dir.path().join("foo.kdl").exists());
+        assert!(dir.path().join("directory").join("bar.kdl").exists());
+    }
 }
