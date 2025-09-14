@@ -70,8 +70,6 @@ pub fn run(args: &Args) -> miette::Result<()> {
                         continue;
                     }
 
-                    println!("generating {}", entry.path().to_string_lossy());
-
                     let deny_warnings = args.deny_warnings;
 
                     let has_errors = Arc::clone(&has_errors);
@@ -101,8 +99,14 @@ fn generate_single(input_path: &Path, deny_warnings: bool) -> miette::Result<()>
     let (output, output_path) = context.codegen()?;
 
     let output_path = output_path
-        .map(|p| &p.value)
-        .cloned()
+        .map(|p| {
+            input_path
+                .parent()
+                .unwrap()
+                .join(&p.value)
+                .canonicalize()
+                .unwrap()
+        })
         .unwrap_or_else(|| input_path.with_extension("dart"));
 
     std::fs::write(output_path, output).into_diagnostic()?;
