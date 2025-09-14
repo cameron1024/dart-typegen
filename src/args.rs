@@ -1,4 +1,5 @@
 use std::{
+    ffi::OsStr,
     path::{Path, PathBuf},
     process::exit,
     sync::{
@@ -53,6 +54,10 @@ pub fn run(args: &Args) -> miette::Result<()> {
                         }
                     };
 
+                    if entry.path().extension() != Some(OsStr::new("kdl")) {
+                        continue;
+                    }
+
                     let Ok(meta) = entry.metadata() else {
                         eprintln!(
                             "failed to read metadata for {}, skipping",
@@ -64,6 +69,8 @@ pub fn run(args: &Args) -> miette::Result<()> {
                     if meta.is_dir() {
                         continue;
                     }
+
+                    println!("generating {}", entry.path().to_string_lossy());
 
                     let deny_warnings = args.deny_warnings;
 
@@ -120,12 +127,24 @@ mod tests {
         let dir = TempDir::new("dart-typegen-test").unwrap();
 
         std::fs::create_dir(dir.path().join("directory")).unwrap();
-        std::fs::write(dir.path().join("foo.kdl"), test_file!(class_docs)).unwrap();
         std::fs::write(
-            dir.path().join("directory").join("bar.kdl"),
-            test_file!(class_docs),
+            dir.path().join("foo.kdl"),
+            include_str!(test_file!(class_docs)),
         )
         .unwrap();
+        // std::fs::write(
+        //     dir.path().join("ignored.kdl"),
+        //     include_str!(test_file!(class_docs)),
+        // )
+        // .unwrap();
+        std::fs::write(
+            dir.path().join("directory").join("bar.kdl"),
+            include_str!(test_file!(class_docs)),
+        )
+        .unwrap();
+
+        // std::fs::write(dir.path().join(".gitignore"), "/ignored.kdl\n").unwrap();
+        std::fs::write(dir.path().join("not-kdl.foobar"), "something something").unwrap();
 
         run(&Args::parse_from([
             OsStr::new("dart-typegen"),
@@ -134,7 +153,8 @@ mod tests {
         ]))
         .unwrap();
 
-        assert!(dir.path().join("foo.kdl").exists());
-        assert!(dir.path().join("directory").join("bar.kdl").exists());
+        assert!(dir.path().join("foo.dart").exists());
+        // assert!(!dir.path().join("ignored.dart").exists());
+        assert!(dir.path().join("directory").join("bar.dart").exists());
     }
 }
