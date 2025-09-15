@@ -1,5 +1,7 @@
 # Motivation
 
+This section is covered more thoroughly in [this blog post][blog];
+
 > [!NOTE]
 > For usage information, skip this section
 
@@ -245,5 +247,6 @@ But, if your use cases align with mine, you may want to use it.
     `build_runner`.
 
 
+[blog]: https://blog.cmrn.dev/dart-typegen
 [pub multiple versions]: https://github.com/dart-lang/pub/issues/2272
 [json serializable sealed]: https://github.com/google/json_serializable.dart/issues/1342

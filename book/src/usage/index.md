@@ -2,6 +2,27 @@
 
 The following sections explain how to use `dart-typegen`.
 
-All of the following chapters assume you are writing your config in a file
-called `user.kdl`, and running `dart-typegen generate -i user.kdl -o
-user.dart`.
+The basics are quite straightforward. Imagine you have the following directory
+structure:
+```
+types:
+- foo.kdl
+- bar.kdl
+```
+Running `dart-typegen generate ./types` will, by default, result in the
+following output:
+```
+types:
+- foo.kdl
+- foo.dart
+- bar.kdl
+- bar.dart
+```
+If you want `foo.dart` to be generated in a different location (with a
+different filename perhaps), you can add the following section to `foo.kdl`:
+```kdl
+output {
+  path "../relative/or/absolute/path/to/output.dart"
+}
+```
+
